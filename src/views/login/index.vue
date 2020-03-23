@@ -45,8 +45,8 @@
 
       <div class="tips">
         <span> G03 @ 2020 软件开发实践</span>
-        <span style="margin-right:20px;">username: admin</span>
-        <span> password: any</span>
+        <span style="margin-right:20px;">username: Alias</span>
+        <span> password: 123456</span>
       </div>
 
     </el-form>
@@ -54,14 +54,14 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
+// import { validUsername } from '@/utils/validate'
 
 export default {
   name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
+      if (value.length < 3) {
+        callback(new Error('The username can not be less than 3 characters'))
       } else {
         callback()
       }
@@ -75,8 +75,8 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '111111'
+        username: 'Alias',
+        password: '123456'
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],

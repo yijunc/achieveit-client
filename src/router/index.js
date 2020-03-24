@@ -150,7 +150,8 @@ export const asyncRoutes = [
     name: 'approval-manage',
     meta: {
       title: '我的审批',
-      icon: 'example'
+      icon: 'example',
+      role: ['pm_manager', 'configurer', 'pm', 'epg_leader', 'qa_manager']
     },
     children: [
       {

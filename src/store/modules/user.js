@@ -1,4 +1,4 @@
-import { login, logout, getInfo } from '@/api/user'
+import { login, getMyInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
@@ -48,18 +48,19 @@ const actions = {
   },
 
   // get user info
-  getInfo({ commit, state }) {
+  getInfo({ commit }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
+      getMyInfo().then(response => {
         const { responseMap } = response
         const { employee } = responseMap
-        const { title, name } = employee
+        const { title, name, portrait } = employee
         if (!title) {
           reject('getInfo: title must be exist')
         }
 
         commit('SET_ROLES', [title])
         commit('SET_NAME', name)
+        commit('SET_AVATAR', portrait)
         resolve(employee)
       }).catch(error => {
         reject(error)
@@ -68,17 +69,10 @@ const actions = {
   },
 
   // user logout
-  logout({ commit, state }) {
-    return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
-        removeToken() // must remove  token  first
-        resetRouter()
-        commit('RESET_STATE')
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
-    })
+  logout({ commit }) {
+    removeToken() // must remove  token  first
+    resetRouter()
+    commit('RESET_STATE')
   },
 
   // remove token

@@ -68,11 +68,11 @@ export const constantRoutes = [
   },
 
   {
-    path: '/projects',
+    path: '/project',
     component: Layout,
-    redirect: '/projects/list',
+    redirect: '/project/list',
     name: 'project-manage',
-    meta: { title: '我的项目管理', icon: 'example' },
+    meta: { title: '我的项目', icon: 'example' },
     children: [
       {
         path: 'list',
@@ -90,27 +90,11 @@ export const constantRoutes = [
   },
 
   {
-    path: '/requirement',
-    component: Layout,
-    redirect: '/requirement/list',
-    name: 'requirement-manage',
-    meta: { title: '我的需求管理', icon: 'example' },
-    children: [
-      {
-        path: 'list',
-        name: 'requirement-list',
-        component: () => import('@/views/requirements/index'),
-        meta: { title: '我的需求列表', icon: 'table' }
-      }
-    ]
-  },
-
-  {
     path: '/defect',
     component: Layout,
     redirect: '/defect/list',
     name: 'defect-manage',
-    meta: { title: '我的缺陷管理', icon: 'example' },
+    meta: { title: '我的缺陷', icon: 'example' },
     children: [
       {
         path: 'list',
@@ -122,15 +106,21 @@ export const constantRoutes = [
   },
 
   {
-    path: '/work',
+    path: '/manhour',
     component: Layout,
-    redirect: '/work/list',
-    name: 'work-manage',
-    meta: { title: '我的工时管理', icon: 'example' },
+    redirect: '/manhour/list',
+    name: 'manhour-manage',
+    meta: { title: '我的工时', icon: 'example' },
     children: [
       {
+        path: 'new',
+        name: 'manhour-new',
+        component: () => import('@/views/form/index'),
+        meta: { title: '上报工时', icon: 'form'}
+      },
+      {
         path: 'list',
-        name: 'work-list',
+        name: 'manhour-list',
         component: () => import('@/views/form/index'),
         meta: { title: '我的工时列表', icon: 'form' }
       }

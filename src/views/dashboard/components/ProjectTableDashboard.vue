@@ -1,8 +1,10 @@
 <template>
   <div>
+    <el-divider content-position="left"><el-link type="primary" href="#/project">项目速览</el-link></el-divider>
     <el-table
       :data="tableData"
       stripe
+      border
       style="width: 100%; padding-top: 15px; margin-bottom: 5px"
       :default-sort="{prop: 'date', order: 'descending'}"
     >
@@ -11,13 +13,13 @@
           {{ scope.row.project_id }}
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="项目名称" min-width="30">
+      <el-table-column prop="name" label="项目名称" min-width="30" align="center">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
             <p>客户: {{ scope.row.project.client.name }}</p>
             <p>技术: {{ scope.row.project.technique }}</p>
             <div slot="reference" class="name-wrapper">
-              <el-tag size="medium">{{ scope.row.project.name | projectNameFilter }}</el-tag>
+              <el-tag>{{ scope.row.project.name | projectNameFilter }}</el-tag>
             </div>
           </el-popover>
         </template>
@@ -36,11 +38,11 @@
       <el-table-column prop="status" label="状态" width="100" align="center">
         <template slot-scope="scope">
           <el-tag type="warning">
-            正在进行
+            {{ scope.row.project.workflow.status }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" min-width="30">
+      <el-table-column label="操作" min-width="30" align="center">
         <template slot="header" slot-scope="scope">
           <el-input
             v-model="search"
@@ -110,11 +112,11 @@ export default {
 
   },
   methods: {
-    handleCurrentChange(currentPage){
+    handleCurrentChange(currentPage) {
       this.currentPage = currentPage
     },
     clickRow(pid) {
-      this.$router.push('/project' + pid)
+      this.$router.push('/project/' + pid)
     }
   }
 }

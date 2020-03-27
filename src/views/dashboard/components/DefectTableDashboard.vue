@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-divider content-position="left"><el-link type="primary" href="#/risk">风险速览</el-link></el-divider>
+    <el-divider content-position="left"><el-link type="primary" href="#/defect">缺陷速览</el-link></el-divider>
     <el-table
       :data="tableData"
       stripe
@@ -10,22 +10,19 @@
     >
       <el-table-column prop="id" sortable min-width="10" align="center">
         <template slot-scope="scope">
-          {{ scope.row.rid }}
+          {{ scope.row.did }}
         </template>
       </el-table-column>
-      <el-table-column prop="type" label="风险类别" min-width="30" align="center">
+      <el-table-column prop="authority" label="缺陷Authority" min-width="30" align="center">
         <template slot-scope="scope">
-          <el-popover trigger="hover" placement="top">
-            <p>影响: {{ scope.row.influence }}</p>
-            <p>策略: {{ scope.row.strategy }}</p>
-            <div slot="reference" class="name-wrapper">
-              <el-tag>{{ scope.row.type | projectNameFilter }}</el-tag>
-            </div>
-          </el-popover>
+          <div slot="reference" class="name-wrapper">
+          <el-tag size="medium">{{ scope.row.authority }}</el-tag>
+        </div>
         </template>
       </el-table-column>
       <el-table-column prop="desc" label="描述" min-width="60" align="center">
         <template slot-scope="scope">
+          <i class="el-icon-time" />
           {{ scope.row.desc }}
         </template>
       </el-table-column>
@@ -35,15 +32,15 @@
             <p>项目ID: {{ scope.row.project.pid }}</p>
             <p>领域: {{ scope.row.project.domain }}</p>
             <div slot="reference" class="name-wrapper">
-              <el-tag>{{ scope.row.project.name | projectNameFilter }}</el-tag>
+              <el-tag size="medium">{{ scope.row.project.name | projectNameFilter }}</el-tag>
             </div>
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column prop="grade" sortable label="紧急度" width="100" align="center">
+      <el-table-column prop="grade" sortable label="状态" width="100" align="center">
         <template slot-scope="scope">
           <el-tag type="warning">
-            {{ scope.row.grade }}
+            {{ scope.row.status }}
           </el-tag>
         </template>
       </el-table-column>
@@ -93,7 +90,7 @@ export default {
     }
   },
   // eslint-disable-next-line vue/require-prop-types
-  props: ['riskList'],
+  props: ['defectList'],
   data() {
     return {
       search: '',
@@ -103,12 +100,12 @@ export default {
   },
   computed: {
     tableData: function() {
-      return this.riskList
+      return this.defectList
         .filter(data => !this.search || data.project.name.toLowerCase().includes(this.search.toLowerCase()))
         .slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize)
     },
     total: function() {
-      return this.riskList
+      return this.defectList
         .filter(data => !this.search || data.project.name.toLowerCase().includes(this.search.toLowerCase())).length
     }
   },

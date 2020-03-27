@@ -4,14 +4,17 @@
     <panel-group :panel-data="panelData" />
 
     <el-row :gutter="8">
-      <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 24}" :xl="{span: 24}" style="padding-right:8px;margin-bottom:30px;">
+      <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 24}" :xl="{span: 12}" style="padding-right:8px;margin-bottom:30px;">
         <ProjectTableDashboard :project-list="projectData" />
       </el-col>
-      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
-        <ProjectTableDashboard />
+      <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 12}" :xl="{span: 12}" style="margin-bottom:30px;">
+        <RiskTableDashboard :risk-list="riskData" />
       </el-col>
-      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
-        <ProjectTableDashboard />
+      <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 12}" :xl="{span: 12}" style="margin-bottom:30px;">
+        <RiskTableDashboard />
+      </el-col>
+      <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 12}" :xl="{span: 12}" style="margin-bottom:30px;">
+        <RiskTableDashboard />
       </el-col>
     </el-row>
   </div>
@@ -20,13 +23,15 @@
 <script>
 import PanelGroup from './components/PanelGroup'
 import ProjectTableDashboard from './components/ProjectTableDashboard'
+import RiskTableDashboard from './components/RiskTableDashboard'
 
 import { fetchDashboard } from '@/api/dashboard'
-import { parseTime } from '@/utils/index';
+import { parseTime } from '@/utils/index'
 
 export default {
   name: 'Dashboard',
   components: {
+    RiskTableDashboard,
     ProjectTableDashboard,
     PanelGroup
   },
@@ -39,28 +44,15 @@ export default {
         defectCount: 0,
         manhourCount: 0
       },
-      projectData: [
-        {
-          project_id: "1",
-          project: {
-            name: "千亿大项目",
-            endtime: parseTime("2020-03-28T15:19:37.000+0800"),
-            "technique": "没有技术含量的",
-            domain: "01语言",
-            "function": "{0:\"能用就行\"}",
-            "client_id": 1,
-            "workflow_id": 1,
-            "client": null,
-            "workflow": null
-          }
-        },
-        {
-          project_id: "2",
-          project: {
-            name: "千亿大项目",
-            endtime: parseTime("2020-03-29T15:19:37.000+0800"),
-          }
-        }
+      projectData: [],
+      riskData: [
+
+      ],
+      defectData: [
+
+      ],
+      manhourData: [
+
       ]
     }
   },
@@ -78,7 +70,7 @@ export default {
     populateDashboardData() {
       fetchDashboard().then(response => {
         this.dashboardData = response.responseMap
-        const { projects, risks, defects, manhours } = this.dashboardData
+        const { projects, risks, defects, manhours, proterties } = this.dashboardData
         let manhoursTotal = 0
         for (const it of manhours) {
           const endDate = new Date(parseTime(it.endtime))
@@ -91,6 +83,14 @@ export default {
           defectCount: defects.length,
           manhourCount: manhoursTotal
         }
+        this.projectData = projects
+        for (let i = 0; i < 10; i++) {
+          this.projectData.push(projects[0])
+        }
+        for (const it of this.projectData) {
+          it.project.endtime = parseTime(it.project.endtime)
+        }
+
       })
     }
   }

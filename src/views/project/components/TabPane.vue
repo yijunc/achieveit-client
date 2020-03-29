@@ -1,5 +1,5 @@
 <template>
-  <el-table :data="list" border fit highlight-current-row style="width: 100%">
+  <el-table :data="list" border fit highlight-current-row style="width: 100%" @row-click="openProjectDetails">
     <el-table-column
       v-loading="loading"
       align="center"
@@ -50,15 +50,15 @@
     </el-table-column>
 
     <!--<el-table-column align="center" label="Readings" width="95">-->
-      <!--<template slot-scope="scope">-->
-        <!--<span>{{ scope.row.pageviews }}</span>-->
-      <!--</template>-->
+    <!--<template slot-scope="scope">-->
+    <!--<span>{{ scope.row.pageviews }}</span>-->
+    <!--</template>-->
     <!--</el-table-column>-->
 
     <el-table-column class-name="status-col" label="Status" width="110">
       <template slot-scope="{row}">
         <el-tag :type="row.workflow.status | statusTypeFilter">
-          {{ row.workflow.status | statusFilter}}
+          {{ row.workflow.status | statusFilter }}
         </el-tag>
       </template>
     </el-table-column>
@@ -143,8 +143,11 @@ export default {
         this.loading = false
         console.log(response.responseMap)
       })
+    },
+    openProjectDetails(row) {
+      console.log('you click ' + row.name)
+      this.$router.push(`/project/manage?id=${row.pid}`)
     }
   }
 }
 </script>
-

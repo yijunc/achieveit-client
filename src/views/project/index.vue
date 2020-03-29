@@ -38,7 +38,8 @@ export default {
         { label: '已完成', key: 'done' }
       ],
       activeName: 'all',
-      createdTimes: 0
+      createdTimes: 0,
+      input: ''
     }
   },
   computed: {},

@@ -8,12 +8,12 @@
       style="width: 100%; padding-top: 15px; margin-bottom: 5px"
       :default-sort="{prop: 'date', order: 'descending'}"
     >
-      <el-table-column prop="id" sortable min-width="10" align="center">
+      <el-table-column prop="id" sortable min-width="15" align="center">
         <template slot-scope="scope">
           {{ scope.row.project_id }}
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="项目名称" min-width="30" align="center">
+      <el-table-column prop="name" label="项目名称" min-width="40" align="center">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
             <p>客户: {{ scope.row.project.client.name }}</p>
@@ -30,7 +30,7 @@
           {{ scope.row.project.endtime }}
         </template>
       </el-table-column>
-      <el-table-column prop="domain" label="领域" min-width="40" align="center">
+      <el-table-column prop="domain" label="领域" min-width="20" align="center">
         <template slot-scope="scope">
           {{ scope.row.project.domain }}
         </template>
@@ -93,7 +93,7 @@ export default {
   data() {
     return {
       search: '',
-      pageSize: 3,
+      pageSize: 4,
       currentPage: 1
     }
   },

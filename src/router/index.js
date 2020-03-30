@@ -77,14 +77,36 @@ export const constantRoutes = [
       {
         path: 'list',
         name: 'project-list',
-        component: () => import('@/views/table/index'),
-        meta: { title: '我的项目列表', icon: 'table' }
+        component: () => import('@/views/project/index'),
+        meta: { title: '我的项目', icon: 'table' }
       },
       {
         path: 'new',
         name: 'project-new',
         component: () => import('@/views/tree/index'),
         meta: { title: '新建项目', icon: 'tree' }
+      },
+      {
+        path: 'manage',
+        name: 'project-detail',
+        component: () => import('@/views/project/manage/index2'),
+        meta: { title: '项目信息' },
+        hidden: true,
+        children: [
+          {
+            path: 'overview',
+            name: 'project-manage-overview',
+            component: () => import('@/views/project/manage/Overview'),
+            meta: { title: '项目基本信息', icon: 'table' }
+          }
+        ]
+      },
+      {
+        path: 'manager',
+        name: 'project-detail2',
+        component: () => import('@/views/project/manage/index'),
+        meta: { title: '项目信息' },
+        hidden: true
       }
     ]
   },

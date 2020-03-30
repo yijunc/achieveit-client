@@ -10,7 +10,7 @@
       <el-divider />
       <el-main>
         <div>基本信息</div>
-        <div v-for="(key,item) in project">
+        <div :v-for="(key,item) in project">
           <h5>{{ item }}: {{ key }}</h5>
         </div>
       </el-main>

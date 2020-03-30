@@ -24,7 +24,7 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column prop="date" sortable label="截止日期" min-width="40" align="center">
+      <el-table-column prop="date" sortable label="截止日期" min-width="30" align="center">
         <template slot-scope="scope">
           <i class="el-icon-time" />
           {{ scope.row.project.endtime }}
@@ -93,7 +93,7 @@ export default {
   data() {
     return {
       search: '',
-      pageSize: 5,
+      pageSize: 3,
       currentPage: 1
     }
   },

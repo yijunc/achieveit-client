@@ -90,7 +90,7 @@ export default {
   data() {
     return {
       search: '',
-      pageSize: 5,
+      pageSize: 3,
       currentPage: 1
     }
   },

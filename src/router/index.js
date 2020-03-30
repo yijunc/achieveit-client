@@ -71,7 +71,7 @@ export const constantRoutes = [
     path: '/project',
     component: Layout,
     redirect: '/project/list',
-    name: 'project-manage',
+    name: 'project',
     meta: { title: '我的项目', icon: 'example' },
     children: [
       {
@@ -114,7 +114,7 @@ export const constantRoutes = [
     path: '/defect',
     component: Layout,
     redirect: '/defect/list',
-    name: 'defect-manage',
+    name: 'defect',
     meta: { title: '我的缺陷', icon: 'example' },
     children: [
       {
@@ -130,7 +130,7 @@ export const constantRoutes = [
     path: '/manhour',
     component: Layout,
     redirect: '/manhour/list',
-    name: 'manhour-manage',
+    name: 'manhour',
     meta: { title: '我的工时', icon: 'example' },
     children: [
       {

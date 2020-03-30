@@ -87,8 +87,8 @@ export const constantRoutes = [
         meta: { title: '新建项目', icon: 'tree' }
       },
       {
-        path: 'manage',
-        name: 'project-detail',
+        path: 'manage/:pid',
+        name: 'project-manage',
         component: () => import('@/views/project/manage/index'),
         meta: { title: '项目管理' },
         hidden: true,
@@ -96,8 +96,14 @@ export const constantRoutes = [
           {
             path: 'overview',
             name: 'project-manage-overview',
-            component: () => import('@/views/project/manage/Overview'),
+            component: () => import('@/views/project/manage/overview/index'),
             meta: { title: '项目基本信息', icon: 'table' }
+          },
+          {
+            path: 'status',
+            name: 'project-manage-status',
+            component: () => import('@/views/project/manage/status/index'),
+            meta: { title: '项目状态', icon: 'table' }
           }
         ]
       }

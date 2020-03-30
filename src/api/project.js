@@ -8,3 +8,10 @@ export function fetchProjects(data) {
   })
 }
 
+export function fetchProjectByPid(pid) {
+  return request({
+    url: '/project/getByPid/' + pid,
+    method: 'get'
+  })
+}
+

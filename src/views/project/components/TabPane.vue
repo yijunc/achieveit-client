@@ -159,8 +159,14 @@ export default {
     },
     openProjectDetails(row) {
       console.log('you click ' + row.name)
-      this.$router.push(`/project/manage?id=${row.pid}`)
-    },
+      this.$router.push({
+        name: 'project-manage',
+        params: {
+          pid: row.pid
+        }
+      })
+    }, // `/project/manage?pid=${row.pid}`)
+
     handleCurrentChange(val) {
       console.log(val)
       this.getList('', val)

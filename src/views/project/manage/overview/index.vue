@@ -10,22 +10,24 @@
       <el-divider />
       <el-main>
         <div>基本信息</div>
-        <div :v-for="(key,item) in project">
-          <h5>{{ item }}: {{ key }}</h5>
-        </div>
+        <!--<div :v-for="item in project">-->
+          <!--<h5>{{ item }}</h5>-->
+        <!--</div>-->
       </el-main>
     </el-container>
   </div>
 </template>
 <script>
-import { fetchProjects } from '@/api/project'
+import { fetchProjectByPid } from '@/api/project'
 
 export default {
   name: 'Overview',
-  props: ['id'],
+  props: {
+    pid: { type: String }
+  },
   data() {
     return {
-      project: null,
+      project: { name: '', technique: '' },
       defaultProps: {
         children: 'children',
         label: 'label'
@@ -33,20 +35,11 @@ export default {
     }
   },
   created() {
-    console.log('overview created')
-    fetchProjects({
-      length: 1,
-      page: 0,
-      // type: this.type,
-      name: ''
-    },).then(response => {
-      this.project = response.responseMap.Project[0]
+    fetchProjectByPid(this.pid).then(response => {
+      this.project = response.responseMap.Project
     })
   },
   methods: {
-    handleNodeClick(data) {
-      console.log(data)
-    }
   }
 }
 </script>

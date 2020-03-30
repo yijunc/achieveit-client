@@ -89,8 +89,8 @@ export const constantRoutes = [
       {
         path: 'manage',
         name: 'project-detail',
-        component: () => import('@/views/project/manage/index2'),
-        meta: { title: '项目信息' },
+        component: () => import('@/views/project/manage/index'),
+        meta: { title: '项目管理' },
         hidden: true,
         children: [
           {
@@ -100,13 +100,6 @@ export const constantRoutes = [
             meta: { title: '项目基本信息', icon: 'table' }
           }
         ]
-      },
-      {
-        path: 'manager',
-        name: 'project-detail2',
-        component: () => import('@/views/project/manage/index'),
-        meta: { title: '项目信息' },
-        hidden: true
       }
     ]
   },

@@ -1,106 +1,181 @@
 <template>
   <div class="app-container">
-    <div>
+    <div class="headerspan">
       <span style="font-size:20px;padding-top:20px;display:inline-block;">创建一个全新的项目</span>
       <el-divider />
     </div>
-    <el-form ref="projectForm" :model="projectForm" :rules="rules" label-width="100px" class="demo-projectForm">
-      <el-form-item label="项目名称" prop="name">
-        <el-input v-model="projectForm.name" />
-      </el-form-item>
-<!--      <el-form-item label="活动区域" prop="region">-->
-<!--        <el-select v-model="projectForm.region" placeholder="请选择活动区域">-->
-<!--          <el-option label="区域一" value="shanghai" />-->
-<!--          <el-option label="区域二" value="beijing" />-->
-<!--        </el-select>-->
-<!--      </el-form-item>-->
-      <el-form-item label="活动起止时间" required>
-        <el-col :span="11">
-          <el-form-item prop="date1">
-            <el-date-picker v-model="projectForm.starttime" type="date" placeholder="选择日期" style="width: 100%;" />
+    <el-row>
+      <el-col :span="16">
+        <el-form
+          ref="projectForm"
+          :model="projectForm"
+          :rules="rules"
+          label-width="150px"
+          onautocomplete="on"
+          class="projectForm"
+          span="12"
+        >
+          <el-form-item label="项目名称" prop="name">
+            <el-input v-model="projectForm.name" />
           </el-form-item>
-        </el-col>
-        <el-col class="line" :span="2">-</el-col>
-        <el-col :span="11">
-          <el-form-item prop="date2">
-            <el-time-picker v-model="projectForm.endtime" placeholder="选择时间" style="width: 100%;" />
+          <el-form-item label="项目起止时间" prop="date">
+            <el-date-picker
+              v-model="projectForm.date"
+              type="datetimerange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+            />
           </el-form-item>
-        </el-col>
-      </el-form-item>
-      <el-form-item label="即时配送" prop="delivery">
-        <el-switch v-model="projectForm.delivery" />
-      </el-form-item>
-      <el-form-item label="活动性质" prop="type">
-        <el-checkbox-group v-model="projectForm.type">
-          <el-checkbox label="美食/餐厅线上活动" name="type" />
-          <el-checkbox label="地推活动" name="type" />
-          <el-checkbox label="线下主题活动" name="type" />
-          <el-checkbox label="单纯品牌曝光" name="type" />
-        </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="特殊资源" prop="resource">
-        <el-radio-group v-model="projectForm.resource">
-          <el-radio label="线上品牌商赞助" />
-          <el-radio label="线下场地免费" />
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="活动形式" prop="desc">
-        <el-input v-model="projectForm.desc" type="textarea" />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="submitForm('projectForm')">立即创建</el-button>
-        <el-button @click="resetForm('projectForm')">重置</el-button>
-      </el-form-item>
-    </el-form>
+          <el-form-item label="项目技术" prop="technique">
+            <el-input v-model="projectForm.technique" />
+          </el-form-item>
+          <el-form-item label="项目领域" prop="domain">
+            <el-input v-model="projectForm.domain" />
+          </el-form-item>
+          <el-form-item label="项目客户" prop="client">
+            <el-select v-model="projectForm.client" class="selector" filterable placeholder="请选择">
+              <el-option
+                v-for="item in clients"
+                :key="item.cid"
+                :label="item.name"
+                :value="item.cid"
+              >
+                <span style="float: left">{{ item.name }}</span>
+                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.company }}</span>
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="项目配置人员" prop="configurer_eid">
+            <el-select v-model="projectForm.configurer_eid" class="selector" filterable placeholder="请选择配置人员">
+              <el-option
+                v-for="item in configuerers"
+                :key="item.eid"
+                :label="item.name"
+                :value="item.eid"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="项目EPG Leader" prop="epgleader_eid">
+            <el-select v-model="projectForm.epgleader_eid" class="selector" filterable placeholder="请选择EPG Leader">
+              <el-option
+                v-for="item in epgleaders"
+                :key="item.eid"
+                :label="item.name"
+                :value="item.eid"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="项目QA Manager" prop="qamanager_eid">
+            <el-select v-model="projectForm.qamanager_eid" class="selector" filterable placeholder="请选择QA Manager">
+              <el-option
+                v-for="item in qamanagers"
+                :key="item.eid"
+                :label="item.name"
+                :value="item.eid"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button :loading="loading" type="primary" @click="submitForm('projectForm')">立即创建</el-button>
+            <el-button @click="resetForm('projectForm')">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+      <el-col :span="8">
+        <div>
+          <img src="@/assets/fast_company_lab.gif" class="emptyGif">
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script>
+import { getByTitle, getAllClient } from '@/api/user'
+import { newProject } from '@/api/project'
+
 export default {
   name: 'ProjectNew',
   data() {
     return {
       projectForm: {
         name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        date: '',
+        technique: '',
+        domain: '',
+        client: '',
+        configurer_eid: '',
+        epgleader_eid: '',
+        qamanager_eid: ''
       },
+
       rules: {
         name: [
           { required: true, message: '请输入项目名称', trigger: 'blur' },
           { min: 3, message: '长度需要大于 3 个字符', trigger: 'blur' }
         ],
-        region: [
-          { required: true, message: '请选择活动区域', trigger: 'change' }
+        date: [
+          { type: 'array', required: true, message: '需要填写起止时间', trigger: 'change' }
         ],
-        starttime: [
-          { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+        technique: [
+          { required: true, message: '请输入项目技术', trigger: 'blur' },
+          { min: 3, message: '长度需要大于 3 个字符', trigger: 'blur' }
         ],
-        endtime: [
-          { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
+        domain: [
+          { required: true, message: '请输入项目领域', trigger: 'blur' },
+          { min: 3, message: '长度需要大于 3 个字符', trigger: 'blur' }
         ],
-        type: [
-          { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
+        client: [
+          { required: true, message: '请填写客户', trigger: 'change' }
         ],
-        resource: [
-          { required: true, message: '请选择活动资源', trigger: 'change' }
+        configurer_eid: [
+          { required: true, message: '请填写配置人员', trigger: 'change' }
         ],
-        desc: [
-          { required: true, message: '请填写活动形式', trigger: 'blur' }
+        epgleader_eid: [
+          { required: true, message: '请填写EPG Leader', trigger: 'change' }
+        ],
+        qamanager_eid: [
+          { required: true, message: '请填写QA Manager', trigger: 'change' }
         ]
-      }
+      },
+      clients: [],
+      configuerers: [],
+      epgleaders: [],
+      qamanagers: [],
+      loading: false
     }
   },
+  created() {
+    this.populateSelectorData()
+  },
   methods: {
+    populateSelectorData() {
+      getAllClient().then(response => {
+        this.clients = response.responseMap.clients
+        console.log(this.clients)
+      })
+      getByTitle('configurer').then(response => {
+        this.configuerers = response.responseMap.employees
+      })
+      getByTitle('epg_leader').then(response => {
+        this.epgleaders = response.responseMap.employees
+      })
+      getByTitle('qa_manager').then(response => {
+        this.qamanagers = response.responseMap.employees
+      })
+    },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!')
+          this.loading = true
+          newProject(this.projectForm).then(() => {
+            // this.$router.push({ path: this.redirect || '/' })
+            console.log(this.projectForm)
+            this.loading = false
+          }).catch(() => {
+            this.$message.error('新建项目网络错误或意外发生')
+          })
         } else {
           console.log('error submit!!')
           return false
@@ -114,7 +189,20 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+  .emptyGif {
+    width: 100%;
+  }
+  .headerspan{
+    padding-left: 30px;
+  }
+  .projectForm{
+    width: 100%;
+    position: relative;
+    padding: 20px;
+    .selector{
+      width: 400px;
+    }
+  }
 </style>
 

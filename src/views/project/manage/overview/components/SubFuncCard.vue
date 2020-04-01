@@ -1,8 +1,14 @@
 <template>
   <el-card class="box-card" shadow="hover">
     <div slot="header" class="clearfix">
-      <span>{{ cardname }}</span>
-      <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+      <span>{{ cardname }}
+        <el-avatar
+          v-if="type === 'member'"
+          :src="content.portrait"
+          fit="scale-down"
+        />
+      </span>
+      <!--<el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
     </div>
     <div v-if="type === 'member'" class="text item">
       <div v-for="(value,key) in memberInfoMap" :key="key" class="info-line">
@@ -29,7 +35,6 @@ export default {
         'address': '地址🏠',
         'department': '部门',
         'phone': '联系方式',
-        'portrait': '头像',
         'title': '职称'
       },
       companyInfoMap: {
@@ -46,5 +51,7 @@ export default {
 </script>
 
 <style scoped>
-
+  .info-line{
+    line-height: 1.5;
+  }
 </style>

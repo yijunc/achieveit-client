@@ -28,7 +28,7 @@
           </el-collapse-item>
         </el-collapse>
         <el-row :gutter="24">
-          <el-col :xs="12" :sm="12" :lg="12">
+          <el-col :xs="16" :sm="16" :lg="12">
             <div class="chart-wrapper">
               <SubFuncCard cardname="客户" type="company" :content="project.client" />
             </div>
@@ -36,8 +36,8 @@
           <el-col
             v-for="(value,key) in cardMap"
             :key="key"
-            :xs="12"
-            :sm="12"
+            :xs="16"
+            :sm="16"
             :lg="12"
           >
             <div class="chart-wrapper">
@@ -65,7 +65,13 @@ export default {
       project: {
         'name': '',
         'client': null,
-        'workflow': null
+        'workflow': {
+          'pm': null,
+          'sup': null,
+          'configurer': null,
+          'epgleader': null,
+          'qamanager': null
+        }
       },
       projectInfoMap: {
         'pid': '项目id',

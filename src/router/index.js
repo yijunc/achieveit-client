@@ -152,7 +152,8 @@ export const asyncRoutes = [
         component: () => import('@/views/project/new/index'),
         meta: {
           title: '新建项目',
-          icon: 'edit'
+          icon: 'edit',
+          role: ['pm']
         }
       },
       {

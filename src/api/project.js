@@ -15,3 +15,11 @@ export function fetchProjectByPid(pid) {
   })
 }
 
+export function newProject(data) {
+  return request({
+    url: '/project/new',
+    method: 'put',
+    data
+  })
+}
+

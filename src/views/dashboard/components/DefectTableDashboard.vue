@@ -110,6 +110,9 @@ export default {
         case '来自于':
           this.$router.push({
             name: 'project-manage',
+            meta: {
+              title: '测试一波'
+            },
             params: {
               pid: row.project.pid
             }

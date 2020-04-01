@@ -3,20 +3,20 @@
     <div slot="header" class="clearfix">
       <span>{{ cardname }}
         <el-avatar
-          v-if="type === 'member'"
+          v-if="type === 'member' && content!==null"
           :src="content.portrait"
           fit="scale-down"
         />
       </span>
       <!--<el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
     </div>
-    <div v-if="type === 'member'" class="text item">
+    <div v-if="type === 'member' && content!==null" class="text item">
       <div v-for="(value,key) in memberInfoMap" :key="key" class="info-line">
         {{ value }} : {{ content[key] }}
       </div>
     </div>
 
-    <div v-if="type==='company'" class="text item">
+    <div v-if="type==='company' && content!==null" class="text item">
       <div v-for="(value,key) in companyInfoMap" :key="key" class="info-line">
         {{ value }} : {{ content[key] }}
       </div>

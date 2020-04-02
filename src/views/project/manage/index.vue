@@ -9,10 +9,12 @@
           <Status :pid="pid" />
         </el-tab-pane>
         <el-tab-pane key="member" label="人员管理" name="member" />
-        <el-tab-pane key="function" label="功能管理" name="function" />
+        <el-tab-pane key="function" label="功能管理" name="function">
+          <Function :pid="pid" />
+        </el-tab-pane>
         <el-tab-pane key="bug" label="缺陷管理" name="bug" />
+        <el-tab-pane key="device" label="设备管理" name="device" />
         <el-tab-pane key="archive" label="归档管理" name="archive" />
-
       </el-tabs>
     </div>
   </div>
@@ -21,10 +23,11 @@
 <script>
 import Overview from './overview/index'
 import Status from './status/index'
+import Function from './function/index'
 
 export default {
   name: 'Manage',
-  components: { Overview, Status },
+  components: { Overview, Status, Function },
   data() {
     return {
       pid: null,
@@ -34,6 +37,7 @@ export default {
         { label: '人员管理', key: 'member' },
         { label: '功能管理', key: 'function' },
         { label: '缺陷管理', key: 'bug' },
+        { label: '设备管理', key: 'device' },
         { label: '归档管理', key: 'archive' }
       ],
       activeName: 'overview',

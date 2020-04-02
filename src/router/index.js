@@ -114,14 +114,15 @@ export const constantRoutes = [
     path: '/defect',
     component: Layout,
     redirect: '/defect/list',
+    alwaysShow: 'true',
     name: 'defect',
-    meta: { title: '我的缺陷', icon: 'example' },
+    meta: { title: '我的缺陷', icon: 'bug' },
     children: [
       {
         path: 'list',
-        name: 'bug-list',
+        name: 'defect-list',
         component: () => import('@/views/defect/index'),
-        meta: { title: '我的缺陷列表', icon: 'form' }
+        meta: { title: '我的缺陷', icon: 'table' }
       }
     ]
   },

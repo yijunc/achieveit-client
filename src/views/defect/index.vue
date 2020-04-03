@@ -137,7 +137,7 @@ export default {
       defectList: [],
 
       queryParam: {
-        status: '',
+        status: null,
         desc: '',
         page: 0,
         length: 20
@@ -172,7 +172,8 @@ export default {
       })
     },
     deleteDefect(did) {
-      defectApi.deleteDefect(did).then(() => {
+      defectApi.deleteDefect(did).then((response) => {
+        console.log(response)
         this.$message('删除成功!')
         this.handleFilter()
       })

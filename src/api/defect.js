@@ -12,25 +12,26 @@ export function getDefects(params) {
 // 获取某个项目的缺陷列表
 export function getDefectsByPid(pid) {
   return request({
-    url: '/defect/getByPid' + pid,
+    url: '/defect/getByPid/' + pid,
     method: 'get'
   })
 }
 
 /* 新增一个缺陷
 */
-export function createDefect(pid, param) {
+export function createDefect(pid, data) {
+  console.log(data)
   return request({
-    url: '/defect/' + pid,
+    url: `/defect/${pid}`,
     method: 'post',
-    params: param
+    data
   })
 }
 
 // 删除一个缺陷
 export function deleteDefect(did) {
   return request({
-    url: '/defect/' + did,
+    url: `/defect/${did}`,
     method: 'delete'
   })
 }

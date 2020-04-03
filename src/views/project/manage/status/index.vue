@@ -26,22 +26,49 @@ export default {
   data() {
     return {
       activities: [{
-        content: '创建项目',
+        name: 'rejected',
+        content: '立项拒绝',
+        timestamp: '2019-04-02 20:46',
+        size: 'large',
+        type: 'danger',
+        icon: 'el-icon-more'
+      }, {
+        name: 'applying',
+        content: '项目申请中',
         timestamp: '2019-04-02 20:46',
         size: 'large',
         type: 'primary',
         icon: 'el-icon-more'
       }, {
-        content: '部门初审',
+        name: 'approved',
+        content: '立项已批准,Config、EPG、QA、PM未进行项目配置',
         timestamp: '2019-04-03 20:46',
         color: '#0bbd87'
       }, {
-        content: '财务复核',
+        name: 'started',
+        content: '项目启动',
         timestamp: '2019-04-04 20:46',
-        size: 'large'
+        size: 'large',
+        type: 'warning'
       }, {
-        content: '项目完成',
-        timestamp: '2019-04-05 20:46'
+        name: 'delivering',
+        content: '项目正在交付',
+        timestamp: '2019-04-05 20:46',
+        size: 'large',
+        type: 'warning'
+      },
+      {
+        name: 'submitted',
+        content: '项目已交付',
+        timestamp: '2019-04-05 20:46',
+        size: 'large',
+        type: 'success'
+      },
+      {
+        name: 'achieved',
+        content: '项目已归档',
+        timestamp: '2019-04-05 20:46',
+        type: 'success'
       }]
     }
   }

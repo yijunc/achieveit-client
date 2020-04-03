@@ -23,3 +23,11 @@ export function newProject(data) {
   })
 }
 
+// 项目管理里的项目状态时间线
+export function fetchTimeline(wid) {
+  return request({
+    url: '/workflow/timeline/' + wid,
+    method: 'get'
+  })
+}
+

@@ -57,7 +57,7 @@
           </el-link>
         </template>
       </el-table-column>
-      
+
       <el-table-column prop="commit" label="commit" width="150" align="center" show-overflow-tooltip>
         <template slot-scope="{row}">
           <el-link :href="row.git_repo" target="_blank" type="primary">{{ row.commit }}</el-link>
@@ -127,7 +127,7 @@
 
 import * as defectApi from '@/api/defect'
 
-const dayjs = require('dayjs');
+const dayjs = require('dayjs')
 
 export default {
 
@@ -140,21 +140,21 @@ export default {
         status: '',
         desc: '',
         page: 0,
-        length: 20,
+        length: 20
       },
 
       currentPage: 1
     }
   },
-  mounted() {
-    this.handleFilter()
-  },
   computed: {
     total: function() {
       return this.defectList
-        .filter(data => !this.queryParam.desc 
-        || data.projectName.toLowerCase().includes(this.queryParam.desc.toLowerCase())).length
+        .filter(data => !this.queryParam.desc ||
+        data.projectName.toLowerCase().includes(this.queryParam.desc.toLowerCase())).length
     }
+  },
+  mounted() {
+    this.handleFilter()
   },
   methods: {
     handleEdit(did) {
@@ -178,7 +178,7 @@ export default {
       })
     },
 
-  initDefectData(defects) {
+    initDefectData(defects) {
       this.defectList = []
       for (const key in defects) {
         const data = defects[key]
@@ -188,10 +188,10 @@ export default {
           commit: data.commit,
           git_repo: data.git_repo,
           projectName: data.project.name,
-          frontUrl:"#",
+          frontUrl: '#',
           createTime: dayjs(data.updateTime).format('YYYY-MM-DD HH:mm'),
           updateTime: dayjs(data.updateTime).format('YYYY-MM-DD HH:mm'),
-          status: data.status,
+          status: data.status
         }
         this.defectList.push(defect)
       }
@@ -203,7 +203,7 @@ export default {
         this.initDefectData(response.responseMap.Defect)
       })
     },
-     handleCurrentChange(currentPage) {
+    handleCurrentChange(currentPage) {
       this.currentPage = currentPage
     }
   }

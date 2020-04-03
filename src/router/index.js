@@ -80,31 +80,51 @@ export const constantRoutes = [
         name: 'defect-list',
         component: () => import('@/views/defect/index'),
         meta: { title: '我的缺陷', icon: 'table' }
+      },
+      {
+        path: 'new',
+        name: 'defect-new',
+        component: () => import('@/views/defect/new/index'),
+        meta: { title: '新建缺陷', icon: 'edit' }
+      },
+      {
+        path: 'edit/:did(\\d+)',
+        component: () => import('@/views/defect/edit/index'),
+        name: 'EditDefect',
+        meta: { title: '编辑缺陷'},
+        hidden: true
       }
     ]
   },
 
-  // {
-  //   path: '/manhour',
-  //   component: Layout,
-  //   redirect: '/manhour/list',
-  //   name: 'manhour',
-  //   meta: { title: '我的工时', icon: 'example' },
-  //   children: [
-  //     {
-  //       path: 'new',
-  //       name: 'manhour-new',
-  //       component: () => import('@/views/form/index'),
-  //       meta: { title: '上报工时', icon: 'edit' }
-  //     },
-  //     {
-  //       path: 'list',
-  //       name: 'manhour-list',
-  //       component: () => import('@/views/form/index'),
-  //       meta: { title: '我的工时列表', icon: 'table' }
-  //     }
-  //   ]
-  // }
+  {
+    path: '/manhour',
+    component: Layout,
+    redirect: '/manhour/list',
+    name: 'manhour',
+    meta: { title: '我的工时', icon: 'example' },
+    children: [
+      {
+        path: 'list',
+        name: 'manhour-list',
+        component: () => import('@/views/manhour/index'),
+        meta: { title: '我的工时列表', icon: 'table' }
+      },
+      {
+        path: 'new',
+        name: 'manhour-new',
+        component: () => import('@/views/manhour/new/index'),
+        meta: { title: '上报工时', icon: 'edit' }
+      },
+      {
+        path: 'edit/:mid(\\d+)',
+        component: () => import('@/views/manhour/edit/index'),
+        name: 'edit-manhour',
+        meta: { title: '编辑工时'},
+        hidden: true
+      }
+    ]
+  }
 ]
 
 /**

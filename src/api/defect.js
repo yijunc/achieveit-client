@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 获取缺陷列表
+// 获取我的缺陷列表
 export function getDefects(params) {
   return request({
     url: '/defect/myDefect',
@@ -9,67 +9,77 @@ export function getDefects(params) {
   })
 }
 
-//获取一个缺陷
-export function getDefect(id) {
+//获取某个项目的缺陷列表
+export function getDefectsByPid(pid){
   return request({
-    url: '/defect/myDefect/' + id,
+    url: '/defect/getByPid'+pid,
     method: 'get'
   })
 }
 
-// 保存一个缺陷
-export function saveDefect(data) {
+/* 新增一个缺陷
+*/ 
+export function createDefect(pid, param) {
   return request({
-    url: '/defect/myDefect',
+    url: '/defect/' + pid,
     method: 'post',
-    data
+    params: param
   })
 }
 
 //删除一个缺陷
-export function deleteDefect(id) {
+export function deleteDefect(did) {
   return request({
-    url: '/defect/myDefect/' + id,
+    url: '/defect/' + did,
     method: 'delete'
+  })
+}
+
+//更新一个缺陷
+export function updateDefect(did, param){
+  return request({
+    url: '/defect/'+did,
+    method: 'put',
+    params: param
   })
 }
 
 //缺陷状态，仅支持’bug’,’reopen’,’fixed’,’wontfix’,’feature’,’closed’
 export function defectStatus() {
   return ({
-    FIXED: {
-      value: 'FIXED',
+    'fixed': {
+      value: 'fixed',
       color: 'success',
       status: 'success',
       text: 'fixed'
     },
-    CLOSED: {
-      value: 'CLOSED',
+    'closed': {
+      value: 'closed',
       color: 'success',
       status: 'success',
       text: 'closed'
     },
-    REOPEN: {
-      value: 'REOPEN',
+    'reopen': {
+      value: 'reopen',
       color: 'warning',
       status: 'warning',
       text: 'reopen'
     },
-    WONTFIX: {
-      value: 'WONTFIX',
+    'wontfix': {
+      value: 'wontfix',
       color: 'info',
       status: 'warning',
       text: 'wontfix'
     },
-    BUG: {
-      value: 'BUG',
+    'bug': {
+      value: 'bug',
       color: 'danger',
       status: 'error',
       text: 'bug'
     },
-    FEATURE: {
-      value: 'FEATURE',
-      color: 'blue',
+    'feature': {
+      value: 'feature',
+      color: 'warning',
       status: 'success',
       text: 'feature'
     }

@@ -141,7 +141,6 @@ export default {
         if (valid) {
           this.loading = true
           this.defectForm['authority_desc'] = 'pmAuthority'
-          console.log(this.defectForm)
           defectApi.createDefect(this.defectForm.project_pid, this.defectForm).then(() => {
             this.$router.push('/defect/list')
             this.loading = false

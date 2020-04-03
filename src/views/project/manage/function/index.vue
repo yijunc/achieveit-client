@@ -4,8 +4,33 @@
       :data="data"
       default-expand-all
       :props="defaultProps"
+      :expand-on-click-node="false"
       @node-click="handleNodeClick"
-    />
+    >
+      <span slot-scope="{ node, data }" class="custom-tree-node">
+        <span>{{ node.label }}</span>
+        <span style="padding-left: 20px">
+          <el-button
+            icon="el-icon-document-add"
+            type="text"
+            size="mini"
+            @click="() => append(data)"
+          />
+          <el-button
+            icon="el-icon-edit"
+            type="text"
+            size="mini"
+            @click="() => append(data)"
+          />
+          <el-button
+            type="text"
+            size="mini"
+            icon="el-icon-delete"
+            @click="() => remove(node, data)"
+          />
+        </span>
+      </span>
+    </el-tree>
 
     <el-divider />
     <upload-excel-component :on-success="handleSuccess" :before-upload="beforeUpload" />
@@ -74,7 +99,8 @@ export default {
   },
   created() {
     // this.generateTreeData()
-  }, methods: {
+  },
+  methods: {
     handleNodeClick(data) {
       console.log(data)
     },
@@ -122,6 +148,20 @@ export default {
       }
       console.log(treeData)
       this.data = treeData
+    },
+    append(data) {
+      const newChild = { label: 'testtest', children: [] }
+      if (!data.children) {
+        this.$set(data, 'children', [])
+      }
+      data.children.push(newChild)
+    },
+
+    remove(node, data) {
+      const parent = node.parent
+      const children = parent.data.children || parent.data
+      const index = children.findIndex(d => d.id === data.id)
+      children.splice(index, 1)
     }
   }
 }

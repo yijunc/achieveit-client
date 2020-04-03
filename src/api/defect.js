@@ -20,7 +20,6 @@ export function getDefectsByPid(pid) {
 /* 新增一个缺陷
 */
 export function createDefect(pid, data) {
-  console.log(data)
   return request({
     url: `/defect/${pid}`,
     method: 'post',

@@ -12,8 +12,9 @@
         <el-tab-pane key="function" label="功能管理" name="function">
           <Function :pid="pid" />
         </el-tab-pane>
-        <el-tab-pane key="bug" label="缺陷管理" name="bug" />
-        <Defect :pid="pid" />
+        <el-tab-pane key="bug" label="缺陷管理" name="bug">
+          <Defect :pid="pid" />
+        </el-tab-pane>
         <el-tab-pane key="device" label="设备管理" name="device" />
         <el-tab-pane key="archive" label="归档管理" name="archive" />
       </el-tabs>

@@ -49,12 +49,7 @@
       <el-table-column prop="did" label="ID" width="70" align="center" />
       <el-table-column prop="desc" label="缺陷描述" show-overflow-tooltip>
         <template slot-scope="{row}">
-          <el-link
-            :href="row.frontUrl"
-            target="_blank"
-            type="primary"
-          >{{ row.desc }}
-          </el-link>
+            <span style="margin-left: 10px">{{ row.desc }}</span>
         </template>
       </el-table-column>
       
@@ -72,7 +67,12 @@
 
       <el-table-column label="git仓库地址" width="150" show-overflow-tooltip align="center">
         <template slot-scope="{row}">
-          <span style="margin-left: 10px">{{ row.git_repo }}</span>
+          <el-link
+            :href="row.git_repo"
+            target="_blank"
+            type="primary"
+          >{{ row.git_repo }}
+          </el-link>
         </template>
       </el-table-column>
 
@@ -188,7 +188,6 @@ export default {
           commit: data.commit,
           git_repo: data.git_repo,
           projectName: data.project.name,
-          frontUrl:"#",
           createTime: dayjs(data.updateTime).format('YYYY-MM-DD HH:mm'),
           updateTime: dayjs(data.updateTime).format('YYYY-MM-DD HH:mm'),
           status: data.status,

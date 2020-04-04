@@ -20,7 +20,7 @@ export function createManhour(eid, pid, aid, fid, data) {
   })
 }
 
-// todo修改一个工时
+// 修改一个工时
 export function updateManhour(eid, mid, data) {
   return request({
     url: `/manhour/${eid}/${mid}`,
@@ -29,7 +29,7 @@ export function updateManhour(eid, mid, data) {
   })
 }
 
-//todo删除一个工时
+//删除一个工时
 export function deleteManhour(eid, mid) {
   return request({
     url: `/manhour/${eid}/${mid}`,

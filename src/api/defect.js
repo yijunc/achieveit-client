@@ -36,11 +36,11 @@ export function deleteDefect(did) {
 }
 
 // 更新一个缺陷
-export function updateDefect(did, param) {
+export function updateDefect(did, data) {
   return request({
-    url: '/defect/' + did,
+    url: `/defect/${did}`,
     method: 'put',
-    params: param
+    data
   })
 }
 
@@ -94,19 +94,19 @@ export function defectStatus() {
 // 拥有[pmAuthority]的成员能管理所有缺陷
 export function defectAuthority() {
   return ({
-    noneAuthority: {
+    'noneAuthority': {
       value: 'noneAuthority',
       text: '项目成员均可修改'
     },
-    rdLeaderAuthority: {
+    'rdLeaderAuthority': {
       value: 'rdLeaderAuthority',
       text: '项目经理、RD领导和本人均可以修改'
     },
-    qaLeaderAuthority: {
+    'qaLeaderAuthority': {
       value: 'qaLeaderAuthority',
       text: '项目经理、QA领导和本人均可以修改'
     },
-    pmAuthority: {
+    'pmAuthority': {
       value: 'pmAuthority',
       text: '只有项目经理和本人可以修改'
     },

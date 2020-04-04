@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="headerspan">
-      <span style="font-size:20px;padding-top:20px;display:inline-block;">新建缺陷</span>
+      <span style="font-size:20px;padding-top:20px;display:inline-block;">缺陷详情</span>
       <el-divider />
     </div>
     <el-row>
@@ -16,8 +16,8 @@
           span="12"
         >
 
-          <el-form-item label="项目名称" prop="project_pid">   
-            <el-select v-model="defectForm.project_pid" class="selector" placeholder="请选择您的项目">
+          <el-form-item label="项目名称" prop="project_id">   
+            <el-select v-model="defectForm.project_id" class="selector" placeholder="请选择您的项目" :disabled="isEditting" >
               <el-option
                 v-for="item in projects_doing"
                 :key="item.pid"
@@ -40,7 +40,7 @@
         </el-form-item>
     
           <el-form-item label="缺陷类型" prop="status">
-            <el-select v-model="defectForm.status" class="selector" placeholder="请选择缺陷类型" disabled="">
+            <el-select v-model="defectForm.status" class="selector" placeholder="请选择缺陷类型" :disabled="!isEditting">
               <el-option
                 v-for="item in allStatus"
                 :key="item.value"
@@ -62,7 +62,7 @@
           </el-form-item>
 
           <el-form-item>
-            <el-button :loading="loading" type="primary" @click="submitForm('defectForm')">上传</el-button>
+            <el-button :loading="loading" type="primary" @click="submitForm('defectForm')">保存</el-button>
             <el-button @click="resetForm('defectForm')">重置</el-button>
           </el-form-item>
         </el-form>
@@ -81,7 +81,7 @@ export default {
   data() {
     return {
       defectForm: {
-        project_pid: '',
+        project_id: '',
         desc: '',
         git_repo: '',
         commit: '',
@@ -90,7 +90,7 @@ export default {
       },
 
       rules: {
-        project_pid: [
+        project_id: [
           { required: true, message: '请选择项目', trigger: 'change' },
         ],
         desc: [
@@ -120,11 +120,18 @@ export default {
       projects_doing: [],
       allStatus:[],
       authorities: [],
-      loading: false
+      loading: false,
+      isEditting: false
     }
   },
   created() {
+    this.isEditting = this.$route.params.did ? true:false
     this.populateSelectorData()
+  },
+  mounted() {
+    if(this.isEditting){
+      this.initDefect()
+    }
   },
   methods: {
     populateSelectorData() {
@@ -161,17 +168,39 @@ export default {
       }
     },
 
+// isEditting == true
+    initDefect() {
+      this.defectForm.did = this.$route.params.did
+      this.defectForm.project_id = this.$route.params.project_id
+      this.defectForm.desc = this.$route.params.desc
+      this.defectForm.git_repo = this.$route.params.git_repo
+      this.defectForm.commit = this.$route.params.commit
+      this.defectForm.status = this.$route.params.status
+      this.defectForm.authority_desc = this.$route.params.authority_desc
+    },
+
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
-          defectApi.createDefect(this.defectForm.project_pid, this.defectForm).then(() => {
-            this.$message.success('创建成功!')
-            this.$router.push('/defect/list')
-            this.loading = false
-          }).catch(() => {
-            this.$message.error('新建项目网络错误或意外发生')
-          })
+          if(!this.isEditting){  //新增
+            defectApi.createDefect(this.defectForm.project_id, this.defectForm).then(() => {
+              this.$message.success('保存成功!')
+              this.$router.push('/defect/list')
+              this.loading = false
+            }).catch(() => {
+              this.$message.error('网络错误或意外发生')
+            })
+          }
+          else{  //编辑
+            defectApi.updateDefect(this.defectForm.did, this.defectForm).then(() => {
+              this.$message.success('保存成功!')
+              this.$router.push('/defect/list')
+              this.loading = false
+            }).catch(() => {
+              this.$message.error('网络错误或意外发生')
+            })
+          }
         } else {
           console.log('error submit!!')
           return false

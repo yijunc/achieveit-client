@@ -4,7 +4,6 @@
 
       <div style="display: flex">
         <el-select v-model="queryParams.status" placeholder="审核状态" class="mr-2" @change="handleFilter">
-          <el-option label="所有状态" value = null />
           <el-option
               v-for="status in Object.keys(manhourStatus)"
               :key="status"
@@ -64,7 +63,7 @@ export default {
         prop: 'projectName',
         label: '所属项目'
       }, {
-        prop: 'fid',
+        prop: 'function_desc',
         label: '功能名称'
       },{
         prop: 'activityName',
@@ -118,8 +117,7 @@ export default {
   computed: {
     total: function() {
       return  this.manhourList
-        .filter(data => !this.queryParams.date 
-        || data.date.includes(this.queryParams.date)).length
+        .filter(data => !this.queryParams.date || data.date.includes(this.queryParams.date)).length
     }
   },
 
@@ -132,10 +130,10 @@ export default {
         const m = {
           eid: data.employeeProject.employee.eid,
           mid: data.mid,
-          fid: data.fid,
+          function_desc: data.function_desc,
           pid: data.employeeProject.project_id,
           projectName: data.employeeProject.project.name,
-          activity_aid: data.activity.aid,
+          aid: data.activity.aid,
           activityName: data.activity.def1 + " - " + data.activity.def2,
           startTime: dayjs(data.starttime).format('YYYY-MM-DD HH:mm'),
           endTime: dayjs(data.endtime).format('YYYY-MM-DD HH:mm'),
@@ -147,7 +145,7 @@ export default {
     },
 
     handleEdit(row){
-      this.$router.push('/manhour/edit/' + row.mid)
+      this.$router.push({path: '/manhour/edit/' + row.mid, name: 'edit-manhour',params: row})
     },
 
     handleDelete(row) {

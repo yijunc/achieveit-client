@@ -4,7 +4,6 @@
       <el-row style="width: 100%">
         <el-col :xs="24" :sm="24" :md="12" :lg="3">
           <el-select v-model="queryParam.status" placeholder="缺陷状态" @change="handleFilter">
-            <el-option label="all" /> 
             <el-option
               v-for="status in Object.keys(defectStatus)"
               :key="defectStatus[status].value"
@@ -87,9 +86,9 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="创建日期" width="150" show-overflow-tooltip align="center">
+      <el-table-column label="权限" width="150" show-overflow-tooltip align="center">
         <template slot-scope="{row}">
-          <span style="margin-left: 10px">{{ row.createTime }}</span>
+          <span style="margin-left: 10px">{{ defectAuthority[row.authority_desc].text }}</span>
         </template>
       </el-table-column>
 
@@ -97,7 +96,7 @@
         <template slot-scope="{row}">
           <el-button
             size="small"
-            @click="handleEdit(row.did)"
+            @click="handleEdit(row)"
           >编辑
           </el-button>
           <el-button
@@ -127,13 +126,13 @@
 
 import * as defectApi from '@/api/defect'
 
-const dayjs = require('dayjs')
 
 export default {
 
   data: function() {
     return {
       defectStatus: defectApi.defectStatus(),
+      defectAuthority: defectApi.defectAuthority(),
       defectList: [],
 
       queryParam: {
@@ -150,15 +149,16 @@ export default {
     total: function() {
       return this.defectList
         .filter(data => !this.queryParam.desc ||
-        data.projectName.toLowerCase().includes(this.queryParam.desc.toLowerCase())).length
+        data.desc.toLowerCase().includes(this.queryParam.desc.toLowerCase())).length
     }
   },
   mounted() {
     this.handleFilter()
   },
   methods: {
-    handleEdit(did) {
-      this.$router.push('/defect/edit/' + did)
+    handleEdit(row) {
+      // 爸爸给儿子传值了
+      this.$router.push({path: '/defect/edit/' + row.id, name: 'edit-defect',params: row})
     },
     handleDelete(did) {
       this.$confirm('此操作将永久删除该缺陷, 是否继续?', '提示', {
@@ -187,10 +187,10 @@ export default {
           desc: data.desc,
           commit: data.commit,
           git_repo: data.git_repo,
+          project_id:data.project_id,
           projectName: data.project.name,
-          createTime: dayjs(data.updateTime).format('YYYY-MM-DD HH:mm'),
-          updateTime: dayjs(data.updateTime).format('YYYY-MM-DD HH:mm'),
-          status: data.status
+          status: data.status,
+          authority_desc: data.authority_desc,
         }
         this.defectList.push(defect)
       }

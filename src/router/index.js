@@ -90,7 +90,7 @@ export const constantRoutes = [
       {
         path: 'edit/:did(\\d+)',
         component: () => import('@/views/defect/new/index'),
-        name: 'EditDefect',
+        name: 'edit-defect',
         meta: { title: '编辑缺陷'},
         hidden: true
       }

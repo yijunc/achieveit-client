@@ -4,7 +4,7 @@
 
       <div style="display: flex">
         <el-select v-model="queryParams.status" placeholder="审核状态" class="mr-2" @change="handleFilter">
-          <el-option label="所有状态" value="" />
+          <el-option label="所有状态" value = null />
           <el-option
               v-for="status in Object.keys(manhourStatus)"
               :key="status"
@@ -99,14 +99,13 @@ export default {
         ]
       }],
       
-      //todo: date: '' causes 400 error
       queryParams: {
         page: 0,
         length: 20,
-        date: '2020-03-24'
+        date: null
       },
       
-    selectedDate:'', //日期filter使用
+    selectedDate:null, //日期filter使用
     currentPage: 1
 
     }
@@ -131,6 +130,7 @@ export default {
       for (const key in manhours) {
         const data = manhours[key]
         const m = {
+          eid: data.employeeProject.employee.eid,
           mid: data.mid,
           fid: data.fid,
           pid: data.employeeProject.project_id,
@@ -156,24 +156,25 @@ export default {
         cancelButtonText: '取消',
         type: 'danger'
       }).then(() => {
-        this.deleteManhour(row.mid)
+        this.deleteManhour(row.eid, row.mid)
       }).catch(() => {
       })
     },
-    deleteManhour(mid) {
-      manhourApi.deleteManhour(mid).then(() => {
-        this.$message('删除成功!')
+    deleteManhour(eid, mid) {
+      manhourApi.deleteManhour(eid, mid).then((response) => {
+        console.log(response)
+        this.$message.success('删除成功!')
         this.handleFilter()
       })
     },
 
     handleFilter() {
         // 若选择了日期filter，则转变一下日期格式
-        if(this.selectedDate != ''){
+        if(this.selectedDate){
             this.queryParams.date = dayjs(this.selectedDate).format('YYYY-MM-DD')
+            this.selectedDate = null
         }
         manhourApi.getManhour(this.queryParams).then(response => {
-        //   console.log(this.selectedDate, this.queryParams)
           this.initManhourData(response.responseMap.Manhour)
       })
     },

@@ -9,36 +9,30 @@ export function getManhour(params) {
   })
 }
 
-//todo获取一条工时
-export function getManhourById(id) {
+/* 保存一个工时
+* @params 起止时间
+*/
+export function createManhour(eid, pid, aid, fid, data) {
   return request({
-    url: '/manhour/myManhour/' + id,
-    method: 'get'
-  })
-}
-
-// todo保存一个工时
-export function saveManhour(data) {
-  return request({
-    url: '/manhour/myManhour',
+    url: `/manhour/${eid}/${pid}/${aid}/${fid}`,
     method: 'post',
     data
   })
 }
 
 // todo修改一个工时
-export function updateManhour(data) {
+export function updateManhour(eid, mid, data) {
   return request({
-    url: '/manhour/myManhour',
-    method: 'post',
+    url: `/manhour/${eid}/${mid}`,
+    method: 'put',
     data
   })
 }
 
 //todo删除一个工时
-export function deleteManhour(id) {
+export function deleteManhour(eid, mid) {
   return request({
-    url: '/manhour/myManhour' + id,
+    url: `/manhour/${eid}/${mid}`,
     method: 'delete'
   })
 }
@@ -64,11 +58,5 @@ export function manhourStatus() {
       status: 'success',
       text: '未审核'
     },
-    EXPIRED: {
-      value: 'EXPIRED',
-      color: 'danger',
-      status: 'error',
-      text: '已过期'
-    }
   })
 }

@@ -2,6 +2,7 @@
   <div class="app-container">
     <div class="headerspan">
       <span style="font-size:20px;padding-top:20px;display:inline-block;">上报工时</span>
+      <span style="font-size:10px;padding-top:10px;display:inline-block;">测试中，这个功能请用Kiki账号</span>
       <el-divider />
     </div>
     <el-row>
@@ -16,8 +17,8 @@
           span="12"
         >
 
-          <el-form-item label="项目名称" prop="project_pid">   
-            <el-select v-model="manhourForm.project_pid" class="selector" filterable placeholder="请选择项目名称" @change="getCurrentFunctions">
+          <el-form-item label="项目名称" prop="pid">   
+            <el-select v-model="manhourForm.pid" class="selector" placeholder="请选择项目名称" @change="getCurrentFunctions">
               <el-option
                 v-for="item in projects_doing"
                 :key="item.pid"
@@ -27,8 +28,8 @@
             </el-select>
           </el-form-item>
 
-        <el-form-item label="功能名称" prop="function_id">
-            <el-select v-model="manhourForm.function_id" class="selector" filterable placeholder="请选择功能名称">
+        <el-form-item label="功能名称" prop="fid">
+            <el-select v-model="manhourForm.fid" class="selector" placeholder="请选择功能名称">
               <el-option
                 v-for="item in functions"
                 :key="item.id"
@@ -38,8 +39,8 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="活动名称" prop="activity_aid">
-            <el-select v-model="manhourForm.activity_aid" class="selector" filterable placeholder="请选择活动名称">
+          <el-form-item label="活动名称" prop="aid">
+            <el-select v-model="manhourForm.aid" class="selector" placeholder="请选择活动名称">
               <el-option
                 v-for="item in activities"
                 :key="item.aid"
@@ -49,23 +50,26 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="开始时间" prop="startTime">
+          <el-form-item label="开始时间" prop="starttime">
             <el-date-picker
-              v-model="manhourForm.startTime"
+              v-model="manhourForm.starttime"
               type="datetime"
               placeholder="选择时间"
             />
           </el-form-item>
 
-          <el-form-item label="结束时间" prop="endTime">
+          <el-form-item label="结束时间" prop="endtime">
             <el-date-picker
-              v-model="manhourForm.endTime"
+              v-model="manhourForm.endtime"
               type="datetime"
               placeholder="选择时间"
             />
           </el-form-item>
          
-          <el-form-item>
+         <el-form-item v-if="!hasSup">
+            <el-alert title="您在当前项目中没有上级，无法提交工时单！" type="error"></el-alert>
+          </el-form-item>
+          <el-form-item v-if="hasSup">
             <el-button :loading="loading" type="primary" @click="submitForm('manhourForm')">保存</el-button>
             <el-button @click="resetForm('manhourForm')">重置</el-button>
           </el-form-item>
@@ -90,27 +94,27 @@ export default {
   data() {
     return {
       manhourForm: {
-        project_pid: '',
-        function_id: '',
-        activity_aid: '',
-        startTime: '',
-        endTime: '',
+        pid: '',
+        aid: '',
+        fid: '',
+        starttime: '',
+        endtime: '',
       },
 
       rules: {
-        project_pid: [
+        pid: [
           { required: true, message: '请选择项目', trigger: 'change' },
         ],
-        function_id: [
+        fid: [
           { required: true, message: '请选择功能', trigger: 'change' }
         ],
-        activity_aid: [
+        aid: [
           { required: true, message: '请选择活动', trigger: 'change' }
         ],
-        startTime: [
+        starttime: [
           { type: 'date', required: true, message: '需要填写开始时间', trigger: 'change' }
         ],
-        endTime: [
+        endtime: [
           { type: 'date', required: true, message: '需要填写结束时间', trigger: 'change' }
         ],
       },
@@ -119,14 +123,14 @@ export default {
       functions: [],
       activities: [],
       loading: false,
+      eid: '10',  // 为方便测试用一个member
+      hasSup: true,  // 在选中项目中有无上级
 
       projectParams: {
         length: 20,
         page: 0,
         status: 'doing'
       },
-
-      currentPid: ''
     }
   },
   created() {
@@ -135,6 +139,7 @@ export default {
   methods: {
     populateSelectorData() {
       projectApi.fetchProjects(this.projectParams).then(response => {
+        console.log(response.responseMap)
         this.initProjects(response.responseMap.Project);
       })
       activityApi.getActivities().then(response => {
@@ -162,11 +167,12 @@ export default {
             this.activities.push(ac)
         }
     },
-
+    // 设置当前选中项目的功能，并判断此人在该项目中有无上级
     getCurrentFunctions(){
-        this.currentPid = this.manhourForm.project_pid
-        projectApi.fetchProjectByPid(this.currentPid).then(response => {
-          this.initFunctions(response.responseMap.Project);   
+        projectApi.fetchProjectByPid(this.manhourForm.pid).then(response => {
+          console.log(response.responseMap)
+          this.initFunctions(response.responseMap.Project)
+          this.initSup(response.responseMap.EmployeeProjects)  
       })
     },
     initFunctions(proj){
@@ -181,14 +187,26 @@ export default {
       }
     }
   ,
+    // 检查在该项目中有无上级
+    initSup(employeeProjects){
+      this.hasSup = false
+        for(const key in employeeProjects){
+          if(employeeProjects[key].employee_id == this.eid && employeeProjects[key].sup){
+            this.hasSup = true
+            break
+          }
+        }
+    },
 
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
-          //todo: 这个接口还木有
-          manhourApi.saveManhour(this.manhourForm).then(() => {
-            // console.log(this.manhourForm)
+          manhourApi.createManhour(this.eid, this.manhourForm.pid, this.manhourForm.aid, this.manhourForm.fid, this.manhourForm)
+          .then((response) => {
+            console.log(response)
+            this.$message.success('创建成功!')
+            this.$router.push('/manhour/list')
             this.loading = false
           }).catch(() => {
             this.$message.error('新建项目网络错误或意外发生')

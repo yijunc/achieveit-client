@@ -4,7 +4,7 @@
       <el-row style="width: 100%">
         <el-col :xs="24" :sm="24" :md="12" :lg="3">
           <el-select v-model="queryParam.status" placeholder="缺陷状态" @change="handleFilter">
-            <el-option label="all" value="" />
+            <el-option label="all" /> 
             <el-option
               v-for="status in Object.keys(defectStatus)"
               :key="defectStatus[status].value"
@@ -17,7 +17,7 @@
         <el-col :xs="24" :sm="24" :md="12" :lg="7" style="margin-left: 10px">
           <el-input
             v-model.trim="queryParam.desc"
-            placeholder="搜索项目名称"
+            placeholder="搜索缺陷描述"
             clearable
             @keyup.enter.native="handleFilter"
           />
@@ -160,7 +160,6 @@ export default {
     handleEdit(did) {
       this.$router.push('/defect/edit/' + did)
     },
-    // todo: 404?
     handleDelete(did) {
       this.$confirm('此操作将永久删除该缺陷, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -174,7 +173,7 @@ export default {
     deleteDefect(did) {
       defectApi.deleteDefect(did).then((response) => {
         console.log(response)
-        this.$message('删除成功!')
+        this.$message.success('删除成功!')
         this.handleFilter()
       })
     },
@@ -189,10 +188,6 @@ export default {
           commit: data.commit,
           git_repo: data.git_repo,
           projectName: data.project.name,
-<<<<<<< HEAD
-=======
-          frontUrl: '#',
->>>>>>> 08474d227e7dee58876e7a44092562d272fc7039
           createTime: dayjs(data.updateTime).format('YYYY-MM-DD HH:mm'),
           updateTime: dayjs(data.updateTime).format('YYYY-MM-DD HH:mm'),
           status: data.status

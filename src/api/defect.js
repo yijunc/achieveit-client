@@ -12,11 +12,7 @@ export function getDefects(params) {
 // 获取某个项目的缺陷列表
 export function getDefectsByPid(pid) {
   return request({
-<<<<<<< HEAD
     url: '/defect/getByPid/'+pid,
-=======
-    url: '/defect/getByPid/' + pid,
->>>>>>> 08474d227e7dee58876e7a44092562d272fc7039
     method: 'get'
   })
 }
@@ -89,3 +85,30 @@ export function defectStatus() {
     }
   })
 }
+
+// 缺陷权限，注意这里的权限的主语是【缺陷】
+// 成员的authority：[noneAuthority/rdLeaderAuthority/qaLeaderAuthority/pmAuthority]
+// 拥有[noneAuthority]的成员只能管理自己发起的缺陷
+// 拥有[rdLeaderAuthority]的成员只能管理自己发起的缺陷，noneAuthority/rdLeaderAuthority的缺陷
+// 拥有[qaLeaderAuthority]的成员只能管理自己发起的缺陷，noneAuthority/qaLeaderAuthority的缺陷
+// 拥有[pmAuthority]的成员能管理所有缺陷
+export function defectAuthority() {
+  return ({
+    noneAuthority: {
+      value: 'noneAuthority',
+      text: '项目成员均可修改'
+    },
+    rdLeaderAuthority: {
+      value: 'rdLeaderAuthority',
+      text: '项目经理、RD领导和本人均可以修改'
+    },
+    qaLeaderAuthority: {
+      value: 'qaLeaderAuthority',
+      text: '项目经理、QA领导和本人均可以修改'
+    },
+    pmAuthority: {
+      value: 'pmAuthority',
+      text: '只有项目经理和本人可以修改'
+    },
+  })
+} 

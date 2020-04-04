@@ -17,7 +17,7 @@
                     <svg-icon :icon-class="item.icon" />
                   </el-button>
                   <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item v-for="(btn, index) in item.options" :key="index" v-permission="btn.code ? btn.code : 'no-permission'">
+                    <el-dropdown-item v-for="(btn, index) in item.options" :key="index">
                       <el-link
                         :key="$index"
                         :underline="false"
@@ -32,7 +32,6 @@
                 <template v-for="(btn, index) in item.options">
                   <el-button
                     :key="index"
-                    v-permission="btn.code ? btn.code : 'no-permission'"
                     :type="btn.type"
                     :circle="!!btn.icon"
                     :class="{'border-none': btn.icon}"

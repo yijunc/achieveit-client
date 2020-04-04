@@ -9,42 +9,46 @@ export function getDefects(params) {
   })
 }
 
-//获取某个项目的缺陷列表
-export function getDefectsByPid(pid){
+// 获取某个项目的缺陷列表
+export function getDefectsByPid(pid) {
   return request({
+<<<<<<< HEAD
     url: '/defect/getByPid/'+pid,
+=======
+    url: '/defect/getByPid/' + pid,
+>>>>>>> 08474d227e7dee58876e7a44092562d272fc7039
     method: 'get'
   })
 }
 
 /* 新增一个缺陷
-*/ 
-export function createDefect(pid, param) {
+*/
+export function createDefect(pid, data) {
   return request({
-    url: '/defect/' + pid,
+    url: `/defect/${pid}`,
     method: 'post',
-    params: param
+    data
   })
 }
 
-//删除一个缺陷
+// 删除一个缺陷
 export function deleteDefect(did) {
   return request({
-    url: '/defect/' + did,
+    url: `/defect/${did}`,
     method: 'delete'
   })
 }
 
-//更新一个缺陷
-export function updateDefect(did, param){
+// 更新一个缺陷
+export function updateDefect(did, param) {
   return request({
-    url: '/defect/'+did,
+    url: '/defect/' + did,
     method: 'put',
     params: param
   })
 }
 
-//缺陷状态，仅支持’bug’,’reopen’,’fixed’,’wontfix’,’feature’,’closed’
+// 缺陷状态，仅支持’bug’,’reopen’,’fixed’,’wontfix’,’feature’,’closed’
 export function defectStatus() {
   return ({
     'fixed': {

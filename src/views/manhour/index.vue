@@ -3,14 +3,15 @@
     <div class="filter-wrap mb-2">
 
       <div style="display: flex">
-        <el-select v-model="queryParams.status" placeholder="审核状态" class="mr-2" @change="handleFilter">
+        <!-- 没有接口就不做了 -->
+        <!-- <el-select v-model="queryParams.status" placeholder="审核状态" class="mr-2" @change="handleFilter">
           <el-option
               v-for="status in Object.keys(manhourStatus)"
               :key="status"
               :label="manhourStatus[status].text"
               :value="manhourStatus[status].value"
             />
-        </el-select>
+        </el-select> -->
         <el-date-picker
               v-model="selectedDate"
               type="date"
@@ -31,15 +32,11 @@
       />
     </el-card>
 
-     <el-pagination
-      small
-      background
-      :current-page="currentPage"
-      :page-size="queryParams.length"
-      layout="total, jumper, prev, pager, next"
-      :total="total"
-      @current-change="handleCurrentChange"
-    />
+    <el-pagination
+        layout="prev, pager, next"
+        :page-count="pageCount"
+        @current-change="handleCurrentChange"
+      />
 
   </div>
 </template>
@@ -97,16 +94,13 @@ export default {
           },
         ]
       }],
-      
       queryParams: {
         page: 0,
-        length: 20,
+        length: 10,
         date: null
       },
-      
-    selectedDate:null, //日期filter使用
-    currentPage: 1
-
+      selectedDate: null, //日期filter使用
+      pageCount: 1
     }
   },
 
@@ -173,12 +167,14 @@ export default {
             this.selectedDate = null
         }
         manhourApi.getManhour(this.queryParams).then(response => {
+          this.pageCount = response.responseMap.page_length
           this.initManhourData(response.responseMap.Manhour)
       })
     },
-     handleCurrentChange(currentPage) {
-      this.currentPage = currentPage
-    },
+     handleCurrentChange(currentPage){
+      this.queryParam.page = currentPage - 1
+      this.handleFilter()
+    }
   }
 }
 

@@ -122,6 +122,12 @@ export const constantRoutes = [
         name: 'edit-manhour',
         meta: { title: '编辑工时'},
         hidden: true
+      },
+      {
+        path: 'approval',
+        component: () => import('@/views/manhour/approval/index'),
+        name: 'approval-manhour',
+        meta: { title: '审批工时', icon: 'eye-open'},
       }
     ]
   }

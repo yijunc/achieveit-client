@@ -109,15 +109,11 @@
       </el-table-column>
     </el-table>
 
-    <el-pagination
-      small
-      background
-      :current-page="currentPage"
-      :page-size="queryParam.length"
-      layout="total, jumper, prev, pager, next"
-      :total="total"
-      @current-change="handleCurrentChange"
-    />
+      <el-pagination
+        layout="prev, pager, next"
+        :page-count="pageCount"
+        @current-change="handleCurrentChange"
+      />
 
   </div>
 </template>
@@ -134,24 +130,16 @@ export default {
       defectStatus: defectApi.defectStatus(),
       defectAuthority: defectApi.defectAuthority(),
       defectList: [],
-
       queryParam: {
         status: null,
         desc: '',
         page: 0,
-        length: 20
+        length: 10
       },
-
-      currentPage: 1
+      pageCount: 1
     }
   },
-  computed: {
-    total: function() {
-      return this.defectList
-        .filter(data => !this.queryParam.desc ||
-        data.desc.toLowerCase().includes(this.queryParam.desc.toLowerCase())).length
-    }
-  },
+  
   mounted() {
     this.handleFilter()
   },
@@ -199,11 +187,13 @@ export default {
     handleFilter() {
       defectApi.getDefects(this.queryParam).then(response => {
         console.log(response.responseMap.Defect, this.queryParam)
+        this.pageCount = response.responseMap.page_length
         this.initDefectData(response.responseMap.Defect)
       })
     },
-    handleCurrentChange(currentPage) {
-      this.currentPage = currentPage
+    handleCurrentChange(currentPage){
+      this.queryParam.page = currentPage - 1
+      this.handleFilter()
     }
   }
 }

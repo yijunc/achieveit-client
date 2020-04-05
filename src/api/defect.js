@@ -12,7 +12,7 @@ export function getDefects(params) {
 // 获取某个项目的缺陷列表
 export function getDefectsByPid(pid) {
   return request({
-    url: '/defect/getByPid/'+pid,
+    url: `/defect/getByPid/${pid}`,
     method: 'get'
   })
 }

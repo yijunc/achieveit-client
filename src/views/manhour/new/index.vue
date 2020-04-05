@@ -129,7 +129,7 @@ export default {
       isEditting: false,
 
       projectParams: {
-        length: 20,
+        length: 10,
         page: 0,
         status: 'doing'
       },

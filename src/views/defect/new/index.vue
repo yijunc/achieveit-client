@@ -112,7 +112,7 @@ export default {
       },
 
       projectParams: {
-        length: 20,
+        length: 10,
         page: 0,
         status: 'doing'
       },
@@ -186,7 +186,7 @@ export default {
           if(!this.isEditting){  //新增
             defectApi.createDefect(this.defectForm.project_id, this.defectForm).then(() => {
               this.$message.success('保存成功!')
-              this.$router.push('/defect/list')
+              this.$router.go(-1)
               this.loading = false
             }).catch(() => {
               this.$message.error('网络错误或意外发生')
@@ -195,7 +195,7 @@ export default {
           else{  //编辑
             defectApi.updateDefect(this.defectForm.did, this.defectForm).then(() => {
               this.$message.success('保存成功!')
-              this.$router.push('/defect/list')
+              this.$router.go(-1)
               this.loading = false
             }).catch(() => {
               this.$message.error('网络错误或意外发生')

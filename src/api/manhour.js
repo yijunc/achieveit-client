@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-//获取自己所有的工时记录
+// 获取自己所有的工时记录
 export function getManhour(params) {
   return request({
     url: '/manhour/myManhour',
@@ -9,7 +9,15 @@ export function getManhour(params) {
   })
 }
 
-/* 保存一个工时
+// 获取所有项目中下级的工时记录
+export function getSubManhour(eid) {
+  return request({
+    url: `/manhour/subManhour/${eid}`,
+    method: 'get'
+  })
+}
+
+/**  保存一个工时
 * @params 起止时间
 */
 export function createManhour(eid, pid, aid, fid, data) {
@@ -29,7 +37,7 @@ export function updateManhour(eid, mid, data) {
   })
 }
 
-//删除一个工时
+// 删除一个工时
 export function deleteManhour(eid, mid) {
   return request({
     url: `/manhour/${eid}/${mid}`,
@@ -37,26 +45,26 @@ export function deleteManhour(eid, mid) {
   })
 }
 
-//仅支持’unfilled’,’unchecked’,’checked’,’expired’
+// 仅支持’unfilled’,’unchecked’,’checked’
 export function manhourStatus() {
   return ({
-    CHECKED: {
-      value: 'CHECKED',
-      color: 'success',
-      status: 'success',
-      text: '已审核'
-    },
-    UNFILLED: {
-      value: 'UNFILLED',
+    'unfilled': {
+      value: 'unfilled',
       color: 'warning',
       status: 'warning',
-      text: '未完成'
-    },
-    UNCHECKED: {
-      value: 'UNCHECKED',
-      color: 'blue',
-      status: 'success',
       text: '未审核'
     },
+    'checked': {
+      value: 'checked',
+      color: 'success',
+      status: 'success',
+      text: '审核通过'
+    },
+    'unchecked': {
+      value: 'unchecked',
+      color: 'blue',
+      status: 'success',
+      text: '审核不通过'
+    }
   })
 }

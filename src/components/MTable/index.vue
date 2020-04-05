@@ -7,8 +7,8 @@
   >
     <template v-for="(item, $index) in columns">
       <el-table-column v-if="item.prop === 'selection'" :key="item.prop" type="selection" :width="item.width" />
-      <template v-else-if="item.prop === 'options'">
-        <template v-if="item.options.length">
+      <template v-else-if="item.prop === 'options' || item.prop === 'options1' || item.prop === 'options2'">
+        <template v-if="item.options.length >= 1">
           <el-table-column :key="$index" :label="item.label" :align="item.align" :width="item.width" :fixed="item.fixed">
             <template slot-scope="scope">
               <template v-if="item.icon">
@@ -32,13 +32,12 @@
                 <template v-for="(btn, index) in item.options">
                   <el-button
                     :key="index"
+                    :disabled="!(item.prop === 'options2' && scope.row.canSendBack) && !((item.prop === 'options' || item.prop === 'options1') && scope.row.status === 'unfilled')"
+                    size="small"
                     :type="btn.type"
-                    :circle="!!btn.icon"
-                    :class="{'border-none': btn.icon}"
                     @click="btn.event(scope.row)"
-                  >
-                    <span v-if="btn.icon"><svg-icon icon-class="item.icon" class="icon" /></span>
-                    <span v-else>{{ btn.label }}</span> </el-button>
+                  >{{ btn.label }}
+                  </el-button>
                 </template>
               </template>
             </template>
@@ -107,6 +106,10 @@ export default {
       default: () => []
     },
     columns: {
+      type: Array,
+      default: () => []
+    },
+    disabledList: {
       type: Array,
       default: () => []
     }

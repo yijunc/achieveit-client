@@ -91,7 +91,7 @@ export const constantRoutes = [
         path: 'edit/:did(\\d+)',
         component: () => import('@/views/defect/new/index'),
         name: 'edit-defect',
-        meta: { title: '编辑缺陷'},
+        meta: { title: '编辑缺陷' },
         hidden: true
       }
     ]
@@ -120,14 +120,14 @@ export const constantRoutes = [
         path: 'edit/:mid(\\d+)',
         component: () => import('@/views/manhour/new/index'),
         name: 'edit-manhour',
-        meta: { title: '编辑工时'},
+        meta: { title: '编辑工时' },
         hidden: true
       },
       {
         path: 'approval',
         component: () => import('@/views/manhour/approval/index'),
         name: 'approval-manhour',
-        meta: { title: '审批工时', icon: 'eye-open'},
+        meta: { title: '审批工时', icon: 'eye-open' }
       }
     ]
   }

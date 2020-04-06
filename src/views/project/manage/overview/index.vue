@@ -80,7 +80,7 @@ export default {
         }
       },
       projectInfoMap: {
-        'pid': '项目id',
+        'pid': '项目ID',
         'technique': '技术',
         'starttime': '项目开始时间',
         'endtime': '项目结束时间',

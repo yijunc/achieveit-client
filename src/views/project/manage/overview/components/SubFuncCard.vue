@@ -51,7 +51,17 @@ export default {
 </script>
 
 <style scoped>
+
+  .clearfix:before,
+  .clearfix:after {
+    display: table;
+    content: "";
+  }
+  .clearfix:after {
+    clear: both
+  }
+
   .info-line{
-    line-height: 1.5;
+    line-height: 1.8;
   }
 </style>

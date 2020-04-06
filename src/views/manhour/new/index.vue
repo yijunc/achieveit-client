@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-    <h2>测试中，请使用Kiki登录</h2>
     <div class="headerspan">
       <span style="font-size:20px;padding-top:20px;display:inline-block;">上报工时</span>
       <el-divider />
@@ -84,6 +83,7 @@
 import * as projectApi from '@/api/project'
 import * as activityApi from '@/api/activity'
 import * as manhourApi from '@/api/manhour'
+import { mapGetters } from 'vuex'
 import dayjs from 'dayjs'
 
 export default {
@@ -121,7 +121,6 @@ export default {
       functions: [],
       activities: [],
       loading: false,
-      eid: '10', // todo:为方便测试用一个member
       isEditting: false,
 
       projectParams: {
@@ -136,6 +135,11 @@ export default {
         endtime: ''
       }
     }
+  },
+  computed: {
+    ...mapGetters([
+      'eid'
+    ])
   },
   created() {
     this.populateSelectorData()
@@ -200,16 +204,16 @@ export default {
     },
     // isEditting == true
     initManhour() {
-      this.manhourForm.mid = this.$route.params.mid
-      this.manhourForm.pid = this.$route.params.pid
-      this.manhourForm.aid = this.$route.params.aid
+      const { mid, pid, aid } = this.$route.params
+      this.manhourForm.mid = mid
+      this.manhourForm.pid = pid
+      this.manhourForm.aid = aid
       // this.manhourForm.fid = this.$route.params.fid
     },
     submitForm(formName) {
-      // 注意顺序不然会剪出负数来
       var gap1 = dayjs(this.manhourForm.starttime).diff(dayjs(), 'day')
       var gap2 = dayjs(this.manhourForm.endtime).diff(this.manhourForm.starttime, 'minute')
-      console.log(gap1, gap2)
+      // console.log(gap1, gap2)
       if (gap1 > 3) {
         this.$message.error('只能填写三天内的工时单！')
         return
@@ -224,11 +228,12 @@ export default {
           if (!this.isEditting) {
             this.queryParams.starttime = this.manhourForm.starttime
             this.queryParams.endtime = this.manhourForm.endtime
-            manhourApi.createManhour(this.eid, this.manhourForm.pid, this.manhourForm.aid, this.manhourForm.fid, this.queryParams)
+            const { pid, aid, fid } = this.manhourForm
+            manhourApi.createManhour(this.eid, pid, aid, fid, this.queryParams)
               .then((response) => {
                 console.log(response)
                 this.$message.success('保存成功!')
-                this.$router.push('/manhour/list')
+                this.$router.push({ name: 'manhour' })
                 this.loading = false
               }).catch(() => {
                 this.$message.error('网络错误或意外发生')
@@ -243,7 +248,7 @@ export default {
               .then((response) => {
                 console.log(response)
                 this.$message.success('修改成功!')
-                this.$router.push('/manhour/list')
+                this.$router.push({ name: 'manhour' })
                 this.loading = false
               }).catch(() => {
                 this.$message.error('网络错误或意外发生')

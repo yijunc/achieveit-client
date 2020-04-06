@@ -144,8 +144,13 @@ export default {
   },
   methods: {
     handleEdit(row) {
-      // 爸爸给儿子传值了
-      this.$router.push({ path: '/defect/edit/' + row.id, name: 'edit-defect', params: row })
+      this.$router.push({
+        name: 'edit-defect',
+        params: {
+          did: row.did,
+          row: row
+        }
+      })
     },
     handleDelete(did) {
       this.$confirm('此操作将永久删除该缺陷, 是否继续?', '提示', {

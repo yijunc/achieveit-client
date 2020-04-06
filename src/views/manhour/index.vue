@@ -19,7 +19,6 @@
       <m-table
         :data="manhourList"
         :columns="columns"
-        :default-sort="{prop: 'mid', order: 'descending'}"
       />
     </el-card>
 
@@ -47,7 +46,9 @@ export default {
       columns: [{
         prop: 'mid',
         label: 'id',
-        sortable: true
+        width: 100,
+        sortable: true,
+        order: 'descending'
       }, {
         prop: 'projectName',
         label: '所属项目',
@@ -69,6 +70,11 @@ export default {
       {
         prop: 'endtime',
         label: '结束时间',
+        sortable: true
+      },
+      {
+        prop: 'date',
+        label: '上报时间',
         sortable: true
       },
       {
@@ -133,7 +139,13 @@ export default {
     },
 
     handleEdit(row) {
-      this.$router.push({ path: '/manhour/edit/' + row.mid, name: 'edit-manhour', params: row })
+      this.$router.push({
+        name: 'edit-manhour',
+        params: {
+          mid: row.mid,
+          row: row
+        }
+      })
     },
 
     handleDelete(row) {

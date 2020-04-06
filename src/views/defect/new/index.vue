@@ -80,6 +80,7 @@ export default {
   data() {
     return {
       defectForm: {
+        did: '',
         project_id: '',
         desc: '',
         git_repo: '',
@@ -169,13 +170,14 @@ export default {
 
     // isEditting == true
     initDefect() {
-      this.defectForm.did = this.$route.params.did
-      this.defectForm.project_id = this.$route.params.project_id
-      this.defectForm.desc = this.$route.params.desc
-      this.defectForm.git_repo = this.$route.params.git_repo
-      this.defectForm.commit = this.$route.params.commit
-      this.defectForm.status = this.$route.params.status
-      this.defectForm.authority_desc = this.$route.params.authority_desc
+      const { did, project_id, desc, git_repo, commit, status, authority_desc } = this.$route.params.row
+      this.defectForm.did = did
+      this.defectForm.project_id = project_id
+      this.defectForm.desc = desc
+      this.defectForm.git_repo = git_repo
+      this.defectForm.commit = commit
+      this.defectForm.status = status
+      this.defectForm.authority_desc = authority_desc
     },
 
     submitForm(formName) {

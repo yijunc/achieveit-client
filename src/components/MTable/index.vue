@@ -7,7 +7,7 @@
   >
     <template v-for="(item, $index) in columns">
       <el-table-column v-if="item.prop === 'selection'" :key="item.prop" type="selection" :width="item.width" />
-      <template v-else-if="item.prop === 'options' || item.prop === 'options1' || item.prop === 'options2'">
+      <template v-else-if="item.prop.includes('options')">
         <template v-if="item.options.length >= 1">
           <el-table-column :key="$index" :label="item.label" :align="item.align" :width="item.width" :fixed="item.fixed">
             <template slot-scope="scope">
@@ -106,10 +106,6 @@ export default {
       default: () => []
     },
     columns: {
-      type: Array,
-      default: () => []
-    },
-    disabledList: {
       type: Array,
       default: () => []
     }

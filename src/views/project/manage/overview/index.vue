@@ -24,7 +24,12 @@
               :key="key"
               v-loading="infoLoading"
               style="font-size: 14px;line-height: 2"
-            >{{ name }} : {{ project[key] }}</div>
+            >
+              <div v-if="key == 'starttime' || key == 'endtime'">
+                  {{ name }} : {{ convertDate(project[key])}}
+              </div>
+              <div v-else>{{ name }} : {{ project[key] }}</div>
+            </div>
           </el-collapse-item>
         </el-collapse>
         <el-row :gutter="24">
@@ -52,6 +57,7 @@
 <script>
 import { fetchProjectByPid } from '@/api/project'
 import SubFuncCard from './components/SubFuncCard'
+const dayjs = require('dayjs')
 
 export default {
   name: 'Overview',
@@ -110,6 +116,9 @@ export default {
         this.project = response.responseMap.Project
         this.infoLoading = false
       })
+    },
+    convertDate(date) {
+      return dayjs(date).format('YYYY-MM-DD')
     }
   }
 }

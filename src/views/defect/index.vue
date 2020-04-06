@@ -44,11 +44,12 @@
       fit
       highlight-current-row
       style="width: 100%"
+      :default-sort="{prop: 'did', order: 'descending'}"
     >
-      <el-table-column prop="did" label="ID" width="70" align="center" />
+      <el-table-column prop="did" label="ID" width="70" align="center" sortable />
       <el-table-column prop="desc" label="缺陷描述" show-overflow-tooltip>
         <template slot-scope="{row}">
-            <span style="margin-left: 10px">{{ row.desc }}</span>
+          <span style="margin-left: 10px">{{ row.desc }}</span>
         </template>
       </el-table-column>
 
@@ -109,11 +110,11 @@
       </el-table-column>
     </el-table>
 
-      <el-pagination
-        layout="prev, pager, next"
-        :page-count="pageCount"
-        @current-change="handleCurrentChange"
-      />
+    <el-pagination
+      layout="prev, pager, next"
+      :page-count="pageCount"
+      @current-change="handleCurrentChange"
+    />
 
   </div>
 </template>
@@ -121,7 +122,6 @@
 <script type="text/ecmascript-6">
 
 import * as defectApi from '@/api/defect'
-
 
 export default {
 
@@ -139,14 +139,13 @@ export default {
       pageCount: 1
     }
   },
-  
   mounted() {
     this.handleFilter()
   },
   methods: {
     handleEdit(row) {
       // 爸爸给儿子传值了
-      this.$router.push({path: '/defect/edit/' + row.id, name: 'edit-defect',params: row})
+      this.$router.push({ path: '/defect/edit/' + row.id, name: 'edit-defect', params: row })
     },
     handleDelete(did) {
       this.$confirm('此操作将永久删除该缺陷, 是否继续?', '提示', {
@@ -175,10 +174,10 @@ export default {
           desc: data.desc,
           commit: data.commit,
           git_repo: data.git_repo,
-          project_id:data.project_id,
+          project_id: data.project_id,
           projectName: data.project.name,
           status: data.status,
-          authority_desc: data.authority_desc,
+          authority_desc: data.authority_desc
         }
         this.defectList.push(defect)
       }
@@ -191,7 +190,7 @@ export default {
         this.initDefectData(response.responseMap.Defect)
       })
     },
-    handleCurrentChange(currentPage){
+    handleCurrentChange(currentPage) {
       this.queryParam.page = currentPage - 1
       this.handleFilter()
     }

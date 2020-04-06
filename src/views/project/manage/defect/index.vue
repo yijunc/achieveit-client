@@ -3,14 +3,13 @@
     <div class="filter-wrap mb-2">
       <el-row style="width: 100%">
         <el-col :xs="24" :sm="24" :md="12" :lg="3">
-          <!-- todo -->
           <el-select v-model="status" placeholder="缺陷状态">
             <el-option label="all" value="" />
             <el-option
-              v-for="status in Object.keys(defectStatus)"
-              :key="defectStatus[status].value"
-              :label="defectStatus[status].text"
-              :value="defectStatus[status].value"
+              v-for="s in Object.keys(defectStatus)"
+              :key="defectStatus[s].value"
+              :label="defectStatus[s].text"
+              :value="defectStatus[s].value"
             />
           </el-select>
         </el-col>
@@ -41,7 +40,7 @@
       <el-table-column prop="did" label="ID" width="70" align="center" />
       <el-table-column prop="desc" label="缺陷描述" show-overflow-tooltip>
         <template slot-scope="{row}">
-            <span style="margin-left: 10px">{{ row.desc }}</span>
+          <span style="margin-left: 10px">{{ row.desc }}</span>
         </template>
       </el-table-column>
 
@@ -102,13 +101,13 @@
       </el-table-column>
     </el-table>
 
-      <el-pagination
-        :current-page="currentPage"
-        :page-size="length"
-        :total="total"
-        layout="total, jumper, prev, pager, next"
-        @current-change="handleCurrentChange"
-      />
+    <el-pagination
+      :current-page="currentPage"
+      :page-size="length"
+      :total="total"
+      layout="total, jumper, prev, pager, next"
+      @current-change="handleCurrentChange"
+    />
 
   </div>
 </template>
@@ -116,7 +115,6 @@
 <script type="text/ecmascript-6">
 
 import * as defectApi from '@/api/defect'
-
 
 export default {
   name: 'Defect',
@@ -129,17 +127,14 @@ export default {
       status: '',
       desc: '',
       currentPage: 1,
-      length: 10,
+      length: 10
     }
   },
-  mounted() {
-    this.getDefectList()
-  },
-  computed:{
-   tableData: function() {
+  computed: {
+    tableData: function() {
       return this.defectList
         .filter(data => !this.desc || data.desc.toLowerCase().includes(this.desc.toLowerCase()))
-        .filter(data => !this.status || data.status == this.status)
+        .filter(data => !this.status || data.status === this.status)
         .slice((this.currentPage - 1) * this.length, this.currentPage * this.length)
     },
     total: function() {
@@ -147,10 +142,12 @@ export default {
         .filter(data => !this.desc || data.desc.toLowerCase().includes(this.desc.toLowerCase())).length
     }
   },
-  
+  mounted() {
+    this.getDefectList()
+  },
   methods: {
     handleEdit(row) {
-      this.$router.push({path: '/defect/edit/' + row.id, name: 'edit-defect',params: row})
+      this.$router.push({ path: '/defect/edit/' + row.id, name: 'edit-defect', params: row })
     },
     handleDelete(did) {
       this.$confirm('此操作将永久删除该缺陷, 是否继续?', '提示', {
@@ -179,24 +176,23 @@ export default {
           desc: data.desc,
           commit: data.commit,
           git_repo: data.git_repo,
-          project_id:data.project_id,
-          projectName: data.employeeProject.project.name,   // 和defect页面的稍稍有点不一样，因为接口返回的数据有点不同
+          project_id: data.project_id,
+          projectName: data.employeeProject.project.name, // 和defect页面的稍稍有点不一样，因为接口返回的数据有点不同
           status: data.status,
-          authority_desc: data.authority_desc,
+          authority_desc: data.authority_desc
         }
         this.defectList.push(defect)
       }
     },
-
     getDefectList() {
       defectApi.getDefectsByPid(this.pid).then(response => {
         console.log(response.responseMap.Defect, this.pid)
         this.initDefectData(response.responseMap.Defect)
       })
     },
-    handleCurrentChange(currentPage){
+    handleCurrentChange(currentPage) {
       this.currentPage = currentPage
-    },
+    }
   }
 }
 </script>

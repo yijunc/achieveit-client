@@ -16,8 +16,8 @@
           span="12"
         >
 
-          <el-form-item label="项目名称" prop="project_id">   
-            <el-select v-model="defectForm.project_id" class="selector" placeholder="请选择您的项目" :disabled="isEditting" >
+          <el-form-item label="项目名称" prop="project_id">
+            <el-select v-model="defectForm.project_id" class="selector" placeholder="请选择您的项目" :disabled="isEditting">
               <el-option
                 v-for="item in projects_doing"
                 :key="item.pid"
@@ -27,18 +27,18 @@
             </el-select>
           </el-form-item>
 
-        <el-form-item label="缺陷描述" prop="desc">
+          <el-form-item label="缺陷描述" prop="desc">
             <el-input v-model="defectForm.desc" />
-        </el-form-item>
+          </el-form-item>
 
-        <el-form-item label="git仓库地址" prop="git_repo">
+          <el-form-item label="git仓库地址" prop="git_repo">
             <el-input v-model="defectForm.git_repo" />
-        </el-form-item>
+          </el-form-item>
 
-        <el-form-item label="commit" prop="commit">
+          <el-form-item label="commit" prop="commit">
             <el-input v-model="defectForm.commit" />
-        </el-form-item>
-    
+          </el-form-item>
+
           <el-form-item label="缺陷类型" prop="status">
             <el-select v-model="defectForm.status" class="selector" placeholder="请选择缺陷类型" :disabled="!isEditting">
               <el-option
@@ -51,7 +51,7 @@
           </el-form-item>
 
           <el-form-item label="缺陷权限" prop="authority_desc">
-            <el-select v-model="defectForm.authority_desc" class="selector" placeholder="请选择缺陷权限" >
+            <el-select v-model="defectForm.authority_desc" class="selector" placeholder="请选择缺陷权限">
               <el-option
                 v-for="item in authorities"
                 :key="item.value"
@@ -67,7 +67,6 @@
           </el-form-item>
         </el-form>
       </el-col>
-     
     </el-row>
   </div>
 </template>
@@ -91,14 +90,14 @@ export default {
 
       rules: {
         project_id: [
-          { required: true, message: '请选择项目', trigger: 'change' },
+          { required: true, message: '请选择项目', trigger: 'change' }
         ],
         desc: [
           { required: true, message: '请输入缺陷描述', trigger: 'blur' },
           { min: 3, message: '长度需要大于 3 个字符', trigger: 'blur' }
         ],
         git_repo: [
-          { required: true, message: '请输入git仓库地址', trigger: 'blur' },
+          { required: true, message: '请输入git仓库地址', trigger: 'blur' }
         ],
         commit: [
           { required: true, message: '请输入commit', trigger: 'blur' }
@@ -108,7 +107,7 @@ export default {
         ],
         authority_desc: [
           { required: true, message: '需要选择缺陷权限', trigger: 'change' }
-        ],
+        ]
       },
 
       projectParams: {
@@ -118,57 +117,57 @@ export default {
       },
 
       projects_doing: [],
-      allStatus:[],
+      allStatus: [],
       authorities: [],
       loading: false,
       isEditting: false
     }
   },
   created() {
-    this.isEditting = this.$route.params.did ? true:false
+    this.isEditting = !!this.$route.params.did
     this.populateSelectorData()
   },
   mounted() {
-    if(this.isEditting){
+    if (this.isEditting) {
       this.initDefect()
     }
   },
   methods: {
     populateSelectorData() {
       projectApi.fetchProjects(this.projectParams).then(response => {
-        this.initProjects(response.responseMap.Project);
+        this.initProjects(response.responseMap.Project)
       })
       this.initStatus()
       this.initAuthorities()
     },
 
-    initProjects(projects){
+    initProjects(projects) {
       this.projects_doing = []
       for (const key in projects) {
         const data = projects[key]
         const proj = {
           pid: data.pid,
-          name: data.name,
+          name: data.name
         }
         this.projects_doing.push(proj)
       }
     },
-    initStatus(){
+    initStatus() {
       this.allStatus = []
       var s = defectApi.defectStatus()
-      for(const key in s){
+      for (const key in s) {
         this.allStatus.push(s[key])
       }
     },
-    initAuthorities(){
+    initAuthorities() {
       this.authorities = []
       var a = defectApi.defectAuthority()
-      for(const key in a){
+      for (const key in a) {
         this.authorities.push(a[key])
       }
     },
 
-// isEditting == true
+    // isEditting == true
     initDefect() {
       this.defectForm.did = this.$route.params.did
       this.defectForm.project_id = this.$route.params.project_id
@@ -183,7 +182,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
-          if(!this.isEditting){  //新增
+          if (!this.isEditting) { // 新增
             defectApi.createDefect(this.defectForm.project_id, this.defectForm).then(() => {
               this.$message.success('保存成功!')
               this.$router.go(-1)
@@ -191,8 +190,7 @@ export default {
             }).catch(() => {
               this.$message.error('网络错误或意外发生')
             })
-          }
-          else{  //编辑
+          } else { // 编辑
             defectApi.updateDefect(this.defectForm.did, this.defectForm).then(() => {
               this.$message.success('保存成功!')
               this.$router.go(-1)

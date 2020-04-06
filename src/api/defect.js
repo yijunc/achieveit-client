@@ -100,15 +100,15 @@ export function defectAuthority() {
     },
     'rdLeaderAuthority': {
       value: 'rdLeaderAuthority',
-      text: '项目经理、RD领导和本人均可以修改'
+      text: '项目经理、RD领导和创建者均可以修改'
     },
     'qaLeaderAuthority': {
       value: 'qaLeaderAuthority',
-      text: '项目经理、QA领导和本人均可以修改'
+      text: '项目经理、QA领导和创建者均可以修改'
     },
     'pmAuthority': {
       value: 'pmAuthority',
-      text: '只有项目经理和本人可以修改'
-    },
+      text: '只有项目经理和创建者可以修改'
+    }
   })
-} 
+}

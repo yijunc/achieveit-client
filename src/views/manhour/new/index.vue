@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
+    <h2>测试中，请使用Kiki登录</h2>
     <div class="headerspan">
       <span style="font-size:20px;padding-top:20px;display:inline-block;">上报工时</span>
-      <span style="font-size:10px;padding-top:10px;">测试中，请用Kiki账号</span>
       <el-divider />
     </div>
     <el-row>
@@ -16,9 +16,8 @@
           class="manhourForm"
           span="12"
         >
-
-          <el-form-item label="项目名称" prop="pid">   
-            <el-select v-model="manhourForm.pid" class="selector" placeholder="请选择项目名称" @change="handleCurrentProject" :disabled="isEditting">
+          <el-form-item label="项目名称" prop="pid">
+            <el-select v-model="manhourForm.pid" class="selector" placeholder="请选择项目名称" :disabled="isEditting" @change="handleCurrentProject">
               <el-option
                 v-for="item in projects_doing"
                 :key="item.pid"
@@ -28,7 +27,7 @@
             </el-select>
           </el-form-item>
 
-        <el-form-item label="功能名称" prop="fid">
+          <el-form-item label="功能名称" prop="fid">
             <el-select v-model="manhourForm.fid" class="selector" placeholder="请选择功能名称">
               <el-option
                 v-for="item in functions"
@@ -65,11 +64,8 @@
               placeholder="选择时间"
             />
           </el-form-item>
-         
-         <el-form-item v-if="!isEditting && !hasSup">
-            <el-alert title="您在当前项目中没有上级，无法提交工时单！" type="error"></el-alert>
-          </el-form-item>
-          <el-form-item v-if="hasSup">
+
+          <el-form-item>
             <el-button :loading="loading" type="primary" @click="submitForm('manhourForm')">保存</el-button>
             <el-button @click="resetForm('manhourForm')">重置</el-button>
           </el-form-item>
@@ -88,6 +84,7 @@
 import * as projectApi from '@/api/project'
 import * as activityApi from '@/api/activity'
 import * as manhourApi from '@/api/manhour'
+import dayjs from 'dayjs'
 
 export default {
   name: 'ManhourNew',
@@ -99,12 +96,12 @@ export default {
         aid: '',
         fid: '',
         starttime: '',
-        endtime: '',
+        endtime: ''
       },
 
       rules: {
         pid: [
-          { required: true, message: '请选择项目', trigger: 'change' },
+          { required: true, message: '请选择项目', trigger: 'change' }
         ],
         fid: [
           { required: true, message: '请选择功能', trigger: 'change' }
@@ -117,15 +114,14 @@ export default {
         ],
         endtime: [
           { type: 'date', required: true, message: '需要填写结束时间', trigger: 'change' }
-        ],
+        ]
       },
 
       projects_doing: [],
       functions: [],
       activities: [],
       loading: false,
-      eid: '10',  // 为方便测试用一个member
-      hasSup: true,  // 在选中项目中有无上级
+      eid: '10', // todo:为方便测试用一个member
       isEditting: false,
 
       projectParams: {
@@ -133,117 +129,126 @@ export default {
         page: 0,
         status: 'doing'
       },
+      queryParams: {
+        fid: '',
+        activity_id: '',
+        starttime: '',
+        endtime: ''
+      }
     }
   },
   created() {
     this.populateSelectorData()
-    this.isEditting = this.$route.params.mid ? true:false
+    this.isEditting = !!this.$route.params.mid
   },
-   mounted() {
-    if(this.isEditting){
+  mounted() {
+    if (this.isEditting) {
       this.initManhour()
       this.handleCurrentProject()
     }
   },
   methods: {
     populateSelectorData() {
-      if(!this.isEditting){
+      if (!this.isEditting) {
         projectApi.fetchProjects(this.projectParams).then(response => {
           console.log(response.responseMap)
-          this.initProjects(response.responseMap.Project);
+          this.initProjects(response.responseMap.Project)
         })
       }
       activityApi.getActivities().then(response => {
-        this.initActivities(response.responseMap.activities);   
+        this.initActivities(response.responseMap.activities)
       })
     },
-    initProjects(projects){
+    initProjects(projects) {
       this.projects_doing = []
       for (const key in projects) {
         const data = projects[key]
         const proj = {
           pid: data.pid,
-          name: data.name,
+          name: data.name
         }
         this.projects_doing.push(proj)
       }
     },
-    initActivities(a){
-        this.activities = []
-        for(const key in a){
-            const ac = {
-              aid: a[key].aid,
-              name: a[key].def1 + " - " + a[key].def2
-            }
-            this.activities.push(ac)
+    initActivities(a) {
+      this.activities = []
+      for (const key in a) {
+        const ac = {
+          aid: a[key].aid,
+          name: a[key].def1 + ' - ' + a[key].def2
         }
+        this.activities.push(ac)
+      }
     },
-    // 设置当前选中项目的功能，并判断此人在该项目中有无上级
-    handleCurrentProject(){
-        projectApi.fetchProjectByPid(this.manhourForm.pid).then(response => {
-          console.log(response.responseMap)
-          this.initFunctions(response.responseMap.Project)
-          if(!this.isEditting)  // 新建状态下才检查有无上级
-            this.initSup(response.responseMap.EmployeeProjects)  
+    // 设置当前选中项目的功能
+    handleCurrentProject() {
+      projectApi.fetchProjectByPid(this.manhourForm.pid).then(response => {
+        console.log(response.responseMap)
+        this.initFunctions(response.responseMap.Project)
       })
     },
-    initFunctions(proj){
+    initFunctions(proj) {
       this.functions = []
       var funcs = JSON.parse(proj.function)
-      for(const key in funcs){
+      for (const key in funcs) {
         const f = {
           fid: key,
           name: funcs[key]
         }
         this.functions.push(f)
       }
-    }
-  ,
-    // 检查在该项目中有无上级
-    initSup(employeeProjects){
-      this.hasSup = false
-        for(const key in employeeProjects){
-          if(employeeProjects[key].employee_id == this.eid && employeeProjects[key].sup){
-            this.hasSup = true
-            break
-          }
-        }
     },
-
     // isEditting == true
     initManhour() {
       this.manhourForm.mid = this.$route.params.mid
       this.manhourForm.pid = this.$route.params.pid
       this.manhourForm.aid = this.$route.params.aid
-      this.manhourForm.starttime = this.$route.params.starttime
-      this.manhourForm.endtime = this.$route.params.endtime
+      // this.manhourForm.fid = this.$route.params.fid
     },
-
     submitForm(formName) {
+      // 注意顺序不然会剪出负数来
+      var gap1 = dayjs(this.manhourForm.starttime).diff(dayjs(), 'day')
+      var gap2 = dayjs(this.manhourForm.endtime).diff(this.manhourForm.starttime, 'minute')
+      console.log(gap1, gap2)
+      if (gap1 > 3) {
+        this.$message.error('只能填写三天内的工时单！')
+        return
+      } else if (gap2 >= 24 * 60 || gap2 < 0) {
+        this.$message.error('开始时间/结束时间填写有误！')
+        return
+      }
+      console.log(dayjs().diff(this.manhourForm.starttime, 'day'), dayjs(this.manhourForm.starttime).diff(this.manhourForm.endtime, 'hour'))
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
-          if(!this.isEditting){  //todo: eid
-            manhourApi.createManhour(this.eid, this.manhourForm.pid, this.manhourForm.aid, this.manhourForm.fid, this.manhourForm)
-            .then((response) => {
-              console.log(response)
-              this.$message.success('保存成功!')
-              this.$router.push('/manhour/list')
-              this.loading = false
-            }).catch(() => {
-              this.$message.error('网络错误或意外发生')
-            })
-          }
-          else{  //todo: eid
-            manhourApi.updateManhour(this.eid,this.manhourForm.mid, this.manhourForm)
-            .then((response) => {
-              console.log(response)
-              this.$message.success('保存成功!')
-              this.$router.push('/manhour/list')
-              this.loading = false
-            }).catch(() => {
-              this.$message.error('网络错误或意外发生')
-            })
+          if (!this.isEditting) {
+            this.queryParams.starttime = this.manhourForm.starttime
+            this.queryParams.endtime = this.manhourForm.endtime
+            manhourApi.createManhour(this.eid, this.manhourForm.pid, this.manhourForm.aid, this.manhourForm.fid, this.queryParams)
+              .then((response) => {
+                console.log(response)
+                this.$message.success('保存成功!')
+                this.$router.push('/manhour/list')
+                this.loading = false
+              }).catch(() => {
+                this.$message.error('网络错误或意外发生')
+                this.loading = false
+              })
+          } else {
+            this.queryParams.starttime = this.manhourForm.starttime
+            this.queryParams.endtime = this.manhourForm.endtime
+            this.queryParams.fid = this.manhourForm.fid
+            this.queryParams.activity_id = this.manhourForm.aid
+            manhourApi.updateManhour(this.eid, this.manhourForm.mid, this.queryParams)
+              .then((response) => {
+                console.log(response)
+                this.$message.success('修改成功!')
+                this.$router.push('/manhour/list')
+                this.loading = false
+              }).catch(() => {
+                this.$message.error('网络错误或意外发生')
+                this.loading = false
+              })
           }
         } else {
           console.log('error submit!!')

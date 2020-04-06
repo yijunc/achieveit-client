@@ -15,10 +15,10 @@ export function fetchProjectByPid(pid) {
   })
 }
 
-export function newProject(data) {
+export function newProject(data, eid) {
   return request({
-    url: '/project/new',
-    method: 'put',
+    url: '/project/new/' + eid,
+    method: 'post',
     data
   })
 }
@@ -31,3 +31,9 @@ export function fetchTimeline(wid) {
   })
 }
 
+export function toManage() {
+  return request({
+    url: '/project/toManage',
+    method: 'get'
+  })
+}

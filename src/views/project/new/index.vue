@@ -94,9 +94,11 @@
 <script>
 import { getByTitle, getAllClient } from '@/api/user'
 import { newProject } from '@/api/project'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'ProjectNew',
+
   data() {
     return {
       projectForm: {
@@ -146,6 +148,11 @@ export default {
       loading: false
     }
   },
+  computed: {
+    ...mapGetters([
+      'eid'
+    ])
+  },
   created() {
     this.populateSelectorData()
   },
@@ -153,7 +160,6 @@ export default {
     populateSelectorData() {
       getAllClient().then(response => {
         this.clients = response.responseMap.clients
-        console.log(this.clients)
       })
       getByTitle('configurer').then(response => {
         this.configuerers = response.responseMap.employees
@@ -169,15 +175,30 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
-          newProject(this.projectForm).then(() => {
-            // this.$router.push({ path: this.redirect || '/' })
-            console.log(this.projectForm)
+          this.projectForm.startdate = this.projectForm.date[0]
+          this.projectForm.enddate = this.projectForm.date[1]
+          newProject(this.projectForm, this.eid).then((response) => {
+            this.$router.push({
+              name: 'project-manage',
+              params: {
+                pid: response.responseMap.project.pid
+              }
+            })
+            this.$notify({
+              title: '新建项目',
+              message: '新建项目成功，跳转到项目详情页面',
+              type: 'success',
+              duration: 0
+            })
             this.loading = false
           }).catch(() => {
-            this.$message.error('新建项目网络错误或意外发生')
+            this.$notify.error({
+              title: '新建项目',
+              message: '网络错误或意外发生，可以稍后重试'
+            })
+            this.loading = false
           })
         } else {
-          console.log('error submit!!')
           return false
         }
       })

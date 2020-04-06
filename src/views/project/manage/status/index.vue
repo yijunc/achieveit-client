@@ -1,22 +1,30 @@
 <template>
   <div class="block">
-    <el-timeline>
-      <el-timeline-item
-        v-for="(activity, index) in activities"
-        :key="index"
-        placement="top"
-        :icon="activity.icon"
-        :type="activity.type"
-        :color="activity.color"
-        :size="activity.size"
-        :timestamp="activity.timestamp"
-      >
-        <el-card>
-          <h4>{{ activity.content }}</h4>
-          <p>曹老师 提交于 2019/4/12 20:46</p>
-        </el-card>
-      </el-timeline-item>
-    </el-timeline>
+    <el-col :span="12">
+      <el-timeline>
+        <el-timeline-item
+          v-for="(activity, index) in activities"
+          :key="index"
+          placement="top"
+          :icon="activity.icon"
+          :type="activity.type"
+          :color="activity.color"
+          :size="activity.size"
+          :timestamp="activity.timestamp"
+        >
+          <el-card>
+            <h4>{{ activity.content }}</h4>
+            <p>曹老师 提交于 2019/4/12 20:46</p>
+          </el-card>
+        </el-timeline-item>
+      </el-timeline>
+    </el-col>
+    <el-col :span="12">
+      <
+      <div>
+        <img src="@/assets/pivot_dribbble.gif" class="emptyGif">
+      </div>
+    </el-col>
   </div>
 </template>
 
@@ -76,5 +84,7 @@ export default {
 </script>
 
 <style scoped>
-
+  .emptyGif {
+    width: 100%;
+  }
 </style>

@@ -17,7 +17,7 @@
         <!--&gt;-->
         <!--<h5>{{ name }} : {{ project[key] }}</h5>-->
         <!--</div>-->
-        <el-collapse class="basic-info">
+        <el-collapse class="basic-info" value="1">
           <el-collapse-item title="基本信息" name="1">
             <div
               v-for="(name,key) in projectInfoMap"

@@ -30,7 +30,7 @@ export default {
   data() {
     return {
       memberInfoMap: {
-        'name': '姓名👨',
+        'name': '姓名👴🏻',
         'email': '邮箱📮',
         'address': '地址🏠',
         'department': '部门',
@@ -38,8 +38,8 @@ export default {
         'title': '职称'
       },
       companyInfoMap: {
-        'name': '姓名',
-        'company': '公司名',
+        'name': '客户',
+        'company': '公司',
         'grade': '级别',
         'email': '邮箱',
         'phone': '联系方式',

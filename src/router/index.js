@@ -143,7 +143,6 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/approval/list',
     name: 'approval-manage',
-    alwaysShow: 'true',
     meta: {
       title: '我的审批',
       icon: 'message',
@@ -154,7 +153,7 @@ export const asyncRoutes = [
         path: 'list',
         component: () => import('@/views/approval/index'),
         name: 'approval-list',
-        meta: { title: '我的审批', icon: 'table' }
+        meta: { title: '我的审批', icon: 'message' }
       }
     ]
   },

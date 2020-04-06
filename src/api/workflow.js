@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function getActivities(){
+export function fetchWorkflowTimeline(wid) {
   return request({
-    url: 'manhour/activity',
+    url: 'workflow/timeline/' + wid,
     method: 'get'
   })
 }

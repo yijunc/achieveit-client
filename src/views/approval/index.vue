@@ -8,12 +8,12 @@
       style="width: 100%; padding-top: 15px; margin-bottom: 5px"
       :default-sort="{prop: 'todo', order: 'descending'}"
     >
-      <el-table-column prop="id" sortable label="项目ID" min-width="15" align="center">
+      <el-table-column prop="id" sortable label="项目ID" min-width="20" align="center">
         <template slot-scope="scope">
           {{ scope.row.pid }}
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="项目名称" min-width="50" align="center">
+      <el-table-column prop="name" label="项目名称" min-width="30" align="center">
         <template slot="header" slot-scope="scope">
           <el-input
             v-model="search"
@@ -30,9 +30,9 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column prop="todo" sortable class-name="status-col" align="center" min-width="30" label="等待操作">
+      <el-table-column prop="todo" sortable class-name="status-col" align="center" min-width="50" label="WorkFlow操作">
         <template slot-scope="{row}">
-          <el-tag v-for="todo in row.workflow.todo" :type="todo | todoStyleFilter" effect="dark" @click="checkTodoTag(row)">
+          <el-tag v-for="(todo, index) in row.workflow.todo" :key="index" :type="todo | todoStyleFilter" @click="checkTodoTag(row)">
             {{ todo | todoStringFormat }}
           </el-tag>
         </template>
@@ -49,7 +49,7 @@
           {{ scope.row.endtime | formatTime }}
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="客户" min-width="30" align="center">
+      <el-table-column prop="name" label="客户" min-width="20" align="center">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
             <p>公司: {{ scope.row.client.company }}</p>
@@ -64,7 +64,7 @@
           {{ scope.row.domain }}
         </template>
       </el-table-column>
-      <el-table-column class-name="status-col" align="center" min-width="30" label="状态">
+      <el-table-column class-name="status-col" align="center" min-width="25" label="状态">
         <template slot-scope="{row}">
           <el-tag :type="row.workflow.status | statusTypeFilter">
             {{ row.workflow.status | statusFilter }}
@@ -88,7 +88,7 @@
 import { toManage } from '@/api/project'
 import { parseTime } from '@/utils'
 import { mapGetters } from 'vuex'
-import { generateWhatToDo, codeToString } from '@/utils/workflow'
+import { generateWhatToDo, codeToString, generateBits } from '@/utils/workflow'
 
 export default {
   name: 'ApproveList',
@@ -169,7 +169,7 @@ export default {
       toManage().then(response => {
         this.rawData = response.responseMap.Project
         for (const it of this.rawData) {
-          // console.log(it.name, it.workflow.flowbits)
+          console.log(it.name, it.workflow.flowbits, generateBits(it.workflow.flowbits))
           it.workflow.todo = generateWhatToDo(it.workflow.flowbits, this.roles[0])
           // this.projectForm = this.projectList.filter(data => data.workflow.todo[0] !== -1)
           this.projectList.push(it)

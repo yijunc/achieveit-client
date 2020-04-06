@@ -243,7 +243,7 @@ export default {
       })
     },
     handleCurrentChange(currentPage) {
-      this.currentPage = currentPage - 1
+      this.currentPage = currentPage
     }
   }
 }

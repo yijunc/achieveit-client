@@ -45,15 +45,15 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="commit" label="commit" width="150" align="center" show-overflow-tooltip>
-        <template slot-scope="{row}">
-          <el-link :href="row.git_repo" target="_blank" type="primary">{{ row.commit }}</el-link>
-        </template>
-      </el-table-column>
-
       <el-table-column prop="projectName" label="项目名称" width="150" align="center" show-overflow-tooltip>
         <template slot-scope="{row}">
           <span style="margin-left: 10px">{{ row.projectName }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column prop="commit" label="commit" width="150" align="center" show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <el-link :href="row.git_repo" target="_blank" type="primary">{{ row.commit }}</el-link>
         </template>
       </el-table-column>
 
@@ -192,9 +192,9 @@ export default {
         const defect = {
           did: data.did,
           desc: data.desc,
+          project_id: data.project_id,
           commit: data.commit,
           git_repo: data.git_repo,
-          project_id: data.project_id,
           projectName: data.employeeProject.project.name, // 和defect页面的稍稍有点不一样，因为接口返回的数据有点不同
           status: data.status,
           authority_desc: data.authority_desc

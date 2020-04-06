@@ -53,15 +53,15 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="commit" label="commit" width="150" align="center" show-overflow-tooltip>
-        <template slot-scope="{row}">
-          <el-link :href="row.git_repo" target="_blank" type="primary">{{ row.commit }}</el-link>
-        </template>
-      </el-table-column>
-
       <el-table-column prop="projectName" label="项目名称" width="150" align="center" show-overflow-tooltip>
         <template slot-scope="{row}">
           <span style="margin-left: 10px">{{ row.projectName }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column prop="commit" label="commit" width="150" align="center" show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <el-link :href="row.git_repo" target="_blank" type="primary">{{ row.commit }}</el-link>
         </template>
       </el-table-column>
 

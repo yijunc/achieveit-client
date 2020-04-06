@@ -213,15 +213,14 @@ export default {
     submitForm(formName) {
       var gap1 = dayjs(this.manhourForm.starttime).diff(dayjs(), 'day')
       var gap2 = dayjs(this.manhourForm.endtime).diff(this.manhourForm.starttime, 'minute')
-      // console.log(gap1, gap2)
+      console.log(gap1, gap2)
       if (gap1 > 3) {
         this.$message.error('只能填写三天内的工时单！')
         return
-      } else if (gap2 >= 24 * 60 || gap2 < 0) {
+      } else if (gap2 > 24 * 60 || gap2 < 0) {
         this.$message.error('开始时间/结束时间填写有误！')
         return
       }
-      console.log(dayjs().diff(this.manhourForm.starttime, 'day'), dayjs(this.manhourForm.starttime).diff(this.manhourForm.endtime, 'hour'))
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true

@@ -15,7 +15,9 @@
         <el-tab-pane key="bug" label="缺陷管理" name="bug">
           <Defect :pid="pid" />
         </el-tab-pane>
-        <el-tab-pane key="device" label="设备管理" name="device" />
+        <el-tab-pane key="property" label="设备管理" name="property">
+          <Property :pid="pid" />
+        </el-tab-pane>
         <el-tab-pane key="archive" label="归档管理" name="archive" />
       </el-tabs>
     </div>
@@ -27,10 +29,11 @@ import Overview from './overview/index'
 import Status from './status/index'
 import Function from './function/index'
 import Defect from './defect/index'
+import Property from './property/index'
 
 export default {
   name: 'Manage',
-  components: { Overview, Status, Function, Defect },
+  components: { Overview, Status, Function, Defect, Property },
   data() {
     return {
       pid: null,
@@ -40,7 +43,7 @@ export default {
         { label: '人员管理', key: 'member' },
         { label: '功能管理', key: 'function' },
         { label: '缺陷管理', key: 'bug' },
-        { label: '设备管理', key: 'device' },
+        { label: '设备管理', key: 'property' },
         { label: '归档管理', key: 'archive' }
       ],
       activeName: 'overview',

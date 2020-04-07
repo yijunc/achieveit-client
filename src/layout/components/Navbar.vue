@@ -5,6 +5,7 @@
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
+      <span class="welcome">欢迎回来，{{ name }}！</span>
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
@@ -41,7 +42,8 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar',
-      'avatar'
+      'avatar',
+      'name'
     ])
   },
   methods: {
@@ -106,6 +108,11 @@ export default {
           background: rgba(0, 0, 0, .025)
         }
       }
+    }
+    .welcome {
+      margin-right: 10px;
+      color: #5a5e66;
+      font-size: 14px;
     }
 
     .avatar-container {

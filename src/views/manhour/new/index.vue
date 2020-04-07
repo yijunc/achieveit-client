@@ -37,8 +37,8 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="活动名称" prop="aid">
-            <el-select v-model="manhourForm.aid" class="selector" placeholder="请选择活动名称">
+          <el-form-item label="活动名称" prop="activity_id">
+            <el-select v-model="manhourForm.activity_id" class="selector" placeholder="请选择活动名称">
               <el-option
                 v-for="item in activities"
                 :key="item.aid"
@@ -52,7 +52,7 @@
             <el-date-picker
               v-model="manhourForm.starttime"
               type="datetime"
-              placeholder="选择时间"
+              placeholder="选择开始时间"
             />
           </el-form-item>
 
@@ -60,7 +60,7 @@
             <el-date-picker
               v-model="manhourForm.endtime"
               type="datetime"
-              placeholder="选择时间"
+              placeholder="选择结束时间"
             />
           </el-form-item>
 
@@ -93,12 +93,11 @@ export default {
       manhourForm: {
         mid: '',
         pid: '',
-        aid: '',
+        activity_id: '',
         fid: '',
         starttime: '',
         endtime: ''
       },
-
       rules: {
         pid: [
           { required: true, message: '请选择项目', trigger: 'change' }
@@ -106,7 +105,7 @@ export default {
         fid: [
           { required: true, message: '请选择功能', trigger: 'change' }
         ],
-        aid: [
+        activity_id: [
           { required: true, message: '请选择活动', trigger: 'change' }
         ],
         starttime: [
@@ -127,12 +126,6 @@ export default {
         length: 10,
         page: 0,
         status: 'doing'
-      },
-      queryParams: {
-        fid: '',
-        activity_id: '',
-        starttime: '',
-        endtime: ''
       }
     }
   },
@@ -155,7 +148,6 @@ export default {
     populateSelectorData() {
       if (!this.isEditting) {
         projectApi.fetchProjects(this.projectParams).then(response => {
-          console.log(response.responseMap)
           this.initProjects(response.responseMap.Project)
         })
       }
@@ -166,22 +158,21 @@ export default {
     initProjects(projects) {
       this.projects_doing = []
       for (const key in projects) {
-        const data = projects[key]
-        const proj = {
-          pid: data.pid,
-          name: data.name
+        const data = {
+          pid: projects[key].pid,
+          name: projects[key].name
         }
-        this.projects_doing.push(proj)
+        this.projects_doing.push(data)
       }
     },
     initActivities(a) {
       this.activities = []
       for (const key in a) {
-        const ac = {
+        const data = {
           aid: a[key].aid,
           name: a[key].def1 + ' - ' + a[key].def2
         }
-        this.activities.push(ac)
+        this.activities.push(data)
       }
     },
     // 设置当前选中项目的功能
@@ -195,19 +186,19 @@ export default {
       this.functions = []
       var funcs = JSON.parse(proj.function)
       for (const key in funcs) {
-        const f = {
+        const data = {
           fid: key,
           name: funcs[key]
         }
-        this.functions.push(f)
+        this.functions.push(data)
       }
     },
     // isEditting == true
     initManhour() {
-      const { mid, pid, aid } = this.$route.params
+      const { mid, pid, aid } = this.$route.params.row
       this.manhourForm.mid = mid
       this.manhourForm.pid = pid
-      this.manhourForm.aid = aid
+      this.manhourForm.activity_id = aid
       // this.manhourForm.fid = this.$route.params.fid
     },
     submitForm(formName) {
@@ -225,10 +216,8 @@ export default {
         if (valid) {
           this.loading = true
           if (!this.isEditting) {
-            this.queryParams.starttime = this.manhourForm.starttime
-            this.queryParams.endtime = this.manhourForm.endtime
-            const { pid, aid, fid } = this.manhourForm
-            manhourApi.createManhour(this.eid, pid, aid, fid, this.queryParams)
+            const { pid, activity_id, fid } = this.manhourForm
+            manhourApi.createManhour(this.eid, pid, activity_id, fid, this.manhourForm)
               .then((response) => {
                 console.log(response)
                 this.$message.success('保存成功!')
@@ -239,11 +228,7 @@ export default {
                 this.loading = false
               })
           } else {
-            this.queryParams.starttime = this.manhourForm.starttime
-            this.queryParams.endtime = this.manhourForm.endtime
-            this.queryParams.fid = this.manhourForm.fid
-            this.queryParams.activity_id = this.manhourForm.aid
-            manhourApi.updateManhour(this.eid, this.manhourForm.mid, this.queryParams)
+            manhourApi.updateManhour(this.eid, this.manhourForm.mid, this.manhourForm)
               .then((response) => {
                 console.log(response)
                 this.$message.success('修改成功!')

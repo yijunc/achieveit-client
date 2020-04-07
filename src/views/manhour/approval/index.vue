@@ -62,13 +62,13 @@ export default {
         width: 100,
         sortable: true
       }, {
+        prop: 'employeeName',
+        label: '员工姓名'
+      }, {
         prop: 'projectName',
         label: '所属项目',
         width: 230,
         sortable: true
-      }, {
-        prop: 'employeeName',
-        label: '员工姓名'
       }, {
         prop: 'activityName',
         label: '活动名称'

@@ -146,7 +146,7 @@ export default {
       var sorted_map = data
       const treeData = []
       for (var key in sorted_map) {
-        console.log(key)
+        // console.log(key)
         var level1 = parseInt(key.substr(0, 3))
         var level2 = parseInt(key.substr(3, 3))
 

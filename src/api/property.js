@@ -49,3 +49,33 @@ export function getPropertyByProjectId(pid) {
     method: 'get'
   })
 }
+
+export function getIntactStatus() {
+  return ({
+    'true': {
+      value: true,
+      type: 'success',
+      text: '完好'
+    },
+    'false': {
+      value: false,
+      type: 'danger',
+      text: '有损坏'
+    }
+  })
+}
+
+export function getExpireStatus() {
+  return ({
+    'true': {
+      value: true,
+      type: 'danger',
+      text: '已到期'
+    },
+    'false': {
+      value: false,
+      type: 'success',
+      text: '未到期'
+    }
+  })
+}

@@ -39,14 +39,10 @@
           <el-form-item label="设备状态" prop="is_intact">
             <el-select v-model="poForm.is_intact" class="selector" placeholder="请选择设备状态">
               <el-option
-                key="1"
-                label="完好"
-                :value="true"
-              />
-              <el-option
-                key="0"
-                label="有损坏"
-                :value="false"
+                v-for="item in intactStatus"
+                :key="item.value"
+                :label="item.text"
+                :value="item.value"
               />
             </el-select>
           </el-form-item>
@@ -83,6 +79,7 @@ export default {
   name: 'PropertyNew',
   data() {
     return {
+      intactStatus: propertyApi.getIntactStatus(),
       poForm: {
         project_id: '',
         property_id: '',
@@ -97,7 +94,7 @@ export default {
           { required: true, message: '请选择项目', trigger: 'change' }
         ],
         expire_time: [
-          { type: 'date', required: true, message: '需要填写到期时间', trigger: 'change' }
+          { required: true, message: '需要填写到期时间', trigger: 'change' }
         ],
         is_intact: [
           { required: true, message: '请选择设备状态', trigger: 'change' }
@@ -124,8 +121,6 @@ export default {
   created() {
     this.isEditting = !!this.$route.params.poid
     this.populateSelectorData()
-  },
-  mounted() {
     if (this.isEditting) {
       this.initPropertyForm()
     }
@@ -161,9 +156,13 @@ export default {
     },
     // 编辑状态时
     initPropertyForm() {
-      const { project_id, property_id } = this.$route.params.row
-      this.poForm.project_id = project_id
-      this.poForm.property_id = property_id
+      Object.keys(this.poForm).forEach(key => {
+        if (key !== 'expire_time') {
+          this.poForm[key] = this.$route.params.row[key]
+        } else {
+          this.poForm[key] = dayjs(this.$route.params.row[key]).format() // 时间要转化
+        }
+      })
     },
     submitForm(formName) {
       if (dayjs(this.poForm.expire_time).isBefore(dayjs())) {

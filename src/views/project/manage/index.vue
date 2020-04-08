@@ -5,7 +5,7 @@
         <el-tab-pane key="overview" label="基本信息" name="overview">
           <Overview :pid="pid" />
         </el-tab-pane>
-        <el-tab-pane key="status" label="项目状态" name="status">
+        <el-tab-pane key="status" label="项目 WorkFlow" name="status">
           <Status :pid="pid" />
         </el-tab-pane>
         <el-tab-pane key="member" label="人员管理" name="member">
@@ -20,7 +20,6 @@
         <el-tab-pane key="property" label="设备管理" name="property">
           <Property :pid="pid" />
         </el-tab-pane>
-        <el-tab-pane key="archive" label="归档管理" name="archive" />
       </el-tabs>
     </div>
   </div>

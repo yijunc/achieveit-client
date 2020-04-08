@@ -166,21 +166,21 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   {
-    path: '/approval',
+    path: '/workflow',
     component: Layout,
-    redirect: '/approval/list',
-    name: 'approval-manage',
+    redirect: '/workflow/list',
+    name: 'workflow-manage',
     meta: {
-      title: '我的审批',
+      title: '我的 WorkFlow',
       icon: 'message',
       role: ['pm_manager', 'configurer', 'pm', 'epg_leader', 'qa_manager']
     },
     children: [
       {
         path: 'list',
-        component: () => import('@/views/approval/index'),
-        name: 'approval-list',
-        meta: { title: '我的审批', icon: 'message' }
+        component: () => import('@/views/workflow/index'),
+        name: 'workflow-list',
+        meta: { title: '我的 WorkFlow', icon: 'message' }
       }
     ]
   },

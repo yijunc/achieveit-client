@@ -144,8 +144,141 @@
           </div>
           <div>
             <p>填写归档文件</p>
-            <el-button type="success">审批通过</el-button>
-            <el-button type="danger">审批不通过</el-button>
+            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+              <el-form-item label="归档文件1">
+                <el-input v-model="archiveForm[1]" />
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="triggerWorkflow('pm_archive', 1)">配置</el-button>
+              </el-form-item>
+            </el-form>
+            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+              <el-form-item label="归档文件2">
+                <el-input v-model="archiveForm[2]" />
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="triggerWorkflow('pm_archive', 2)">配置</el-button>
+              </el-form-item>
+            </el-form>
+            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+              <el-form-item label="归档文件3">
+                <el-input v-model="archiveForm[3]" />
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="triggerWorkflow('pm_archive', 3)">配置</el-button>
+              </el-form-item>
+            </el-form>
+            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+              <el-form-item label="归档文件4">
+                <el-input v-model="archiveForm[4]" />
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="triggerWorkflow('pm_archive', 4)">配置</el-button>
+              </el-form-item>
+            </el-form>
+            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+              <el-form-item label="归档文件5">
+                <el-input v-model="archiveForm[5]" />
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="triggerWorkflow('pm_archive', 5)">配置</el-button>
+              </el-form-item>
+            </el-form>
+            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+              <el-form-item label="归档文件6">
+                <el-input v-model="archiveForm[6]" />
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="triggerWorkflow('pm_archive', 6)">配置</el-button>
+              </el-form-item>
+            </el-form>
+            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+              <el-form-item label="归档文件7">
+                <el-input v-model="archiveForm[7]" />
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="triggerWorkflow('pm_archive', 7)">配置</el-button>
+              </el-form-item>
+            </el-form>
+            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+              <el-form-item label="归档文件8">
+                <el-input v-model="archiveForm[8]" />
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="triggerWorkflow('pm_archive', 8)">配置</el-button>
+              </el-form-item>
+            </el-form>
+            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+              <el-form-item label="归档文件9">
+                <el-input v-model="archiveForm[9]" />
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="triggerWorkflow('pm_archive', 9)">配置</el-button>
+              </el-form-item>
+            </el-form>
+            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+              <el-form-item label="归档文件10">
+                <el-input v-model="archiveForm[10]" />
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="triggerWorkflow('pm_archive', 10)">配置</el-button>
+              </el-form-item>
+            </el-form>
+            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+              <el-form-item label="归档文件11">
+                <el-input v-model="archiveForm[11]" />
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="triggerWorkflow('pm_archive', 11)">配置</el-button>
+              </el-form-item>
+            </el-form>
+            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+              <el-form-item label="归档文件12">
+                <el-input v-model="archiveForm[12]" />
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="triggerWorkflow('pm_archive', 12)">配置</el-button>
+              </el-form-item>
+            </el-form>
+            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+              <el-form-item label="归档文件13">
+                <el-input v-model="archiveForm[13]" />
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="triggerWorkflow('pm_archive', 13)">配置</el-button>
+              </el-form-item>
+            </el-form>
+            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+              <el-form-item label="归档文件14">
+                <el-input v-model="archiveForm[14]" />
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="triggerWorkflow('pm_archive', 14)">配置</el-button>
+              </el-form-item>
+            </el-form>
+            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+              <el-form-item label="归档文件15">
+                <el-input v-model="archiveForm[15]" />
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="triggerWorkflow('pm_archive', 15)">配置</el-button>
+              </el-form-item>
+            </el-form><el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+              <el-form-item label="归档文件16">
+                <el-input v-model="archiveForm[16]" />
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="triggerWorkflow('pm_archive', 16)">配置</el-button>
+              </el-form-item>
+            </el-form>
+            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+              <el-form-item label="归档文件17">
+                <el-input v-model="archiveForm[17]" />
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="triggerWorkflow('pm_archive', 17)">配置</el-button>
+              </el-form-item>
+            </el-form>
           </div>
           <div>
             <p>确认项目归档</p>
@@ -175,6 +308,25 @@ export default {
   props: ['pid'],
   data() {
     return {
+      archiveForm: {
+        1: '项目基础数据表',
+        2: '项目提案书',
+        3: '项目报价书',
+        4: '项目估算表(功能点)',
+        5: '项目计划书',
+        6: '项目过程裁剪表',
+        7: '项目成本管理表',
+        8: '项目需求变更管理表',
+        9: '项目风险管理表',
+        10: '客户验收问题表',
+        11: '客户验收报告',
+        12: '项目总结',
+        13: '最佳经验和教训',
+        14: '开发工具',
+        15: '开发模板(设计模板，测试模板)',
+        16: '各阶段检查单',
+        17: 'QA 总结'
+      },
       peopleForm: {
         members: {
           rd_leader: '',
@@ -189,9 +341,9 @@ export default {
         epgs: []
       },
       configureForm: {
-        git_repo: '',
-        server_root: '',
-        mail_list: ''
+        git_repo: 'www.github.com',
+        server_root: 'achieveit_G03',
+        mail_list: 'achieveit_G03@ecnu.edu.cn'
       },
       projectData: '',
       activityTemplate: {
@@ -270,6 +422,9 @@ export default {
       this.projectData = (await fetchProjectByPid(this.pid)).responseMap.Project
       this.activities = await this.generateTimeline(this.projectData.workflow.wid)
       this.whatTodo = generateWhatToDo(this.projectData.workflow.flowbits, this.roles[0])
+      for (let i = 1; i <= 17; i++) {
+        this.archiveForm[i] = this.projectData.name + ' ' + this.archiveForm[i]
+      }
     },
     async generateTimeline(wid) {
       const ret = []
@@ -283,7 +438,7 @@ export default {
       // console.log(ret)
       return ret
     },
-    triggerWorkflow(op) {
+    triggerWorkflow(op, args) {
       console.log(op)
       let data = {}
       switch (op) {
@@ -298,6 +453,34 @@ export default {
           break
         case 'epg':
           data = this.epgForm
+          break
+        case 'qa':
+          data = this.qaForm
+          break
+        case 'member':
+          data = this.peopleForm
+          break
+        case 'pm_authority':
+          data = {}
+          break
+        case 'pm_function':
+          data = { 'function': { '000000': '0-1' }}
+          break
+        case 'pm_start':
+          data = {}
+          break
+        case 'pm_submitting':
+          data = {}
+          break
+        case 'pm_submitted':
+          data = {}
+          break
+        case 'pm_archive':
+          data.archive_id = args - 1
+          data.content = this.archiveForm[args]
+          break
+        case 'configurer_archive_done':
+
           break
         default:
           this.$message.error('裂开了')

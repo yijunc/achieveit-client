@@ -54,7 +54,7 @@
           <span style="margin-left: 10px">{{ row.date }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="statusName" label="状态" align="center" show-overflow-tooltip>
+      <el-table-column prop="status" label="状态" align="center" show-overflow-tooltip>
         <template slot-scope="{row}">
           <el-tag
             :type="manhourStatus[row.status].type"
@@ -65,19 +65,21 @@
         </template>
       </el-table-column>
 
-      <el-table-column fixed="right" label="操作" width="150" align="center">
+      <el-table-column fixed="right" label="操作" align="center">
         <template slot-scope="{row}">
-          <el-button
-            size="small"
-            :disabled="!row.status === 'unfilled'"
-            type="primary"
-            @click="handleEdit(row)"
-          >编辑
-          </el-button>
+          <el-tooltip effect="dark" content="三天之内的工时单方可编辑" placement="top">
+            <el-button
+              size="small"
+              :disabled="!row.canEdit"
+              type="primary"
+              @click="handleEdit(row)"
+            >编辑
+            </el-button>
+          </el-tooltip>
           <el-button
             size="small"
             type="danger"
-            :disabled="!row.status === 'unfilled'"
+            :disabled="row.status !== 'unfilled'"
             @click="handleDelete(row)"
           >删除
           </el-button>
@@ -122,19 +124,19 @@ export default {
       for (const key in manhours) {
         const data = manhours[key]
         const m = {
-          eid: data.employeeProject.employee.eid,
+          eid: data.employeeProject.employee_id,
           mid: data.mid,
           fid: data.fid,
           function_desc: data.function_desc,
           pid: data.employeeProject.project_id,
           projectName: data.employeeProject.project.name,
-          aid: data.activity.aid,
+          activity_id: data.activity_id,
           activityName: data.activity.def1 + ' - ' + data.activity.def2,
           starttime: dayjs(data.starttime).format('YYYY-MM-DD HH:mm:ss'),
           endtime: dayjs(data.endtime).format('YYYY-MM-DD HH:mm:ss'),
           date: data.date,
           status: data.status,
-          statusName: this.manhourStatus[data.status].text
+          canEdit: data.status === 'unfilled' && dayjs().diff(data.date, 'day') <= 3
         }
         this.manhourList.push(m)
       }

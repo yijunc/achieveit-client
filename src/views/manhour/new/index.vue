@@ -93,8 +93,8 @@ export default {
       manhourForm: {
         mid: '',
         pid: '',
-        activity_id: '',
         fid: '',
+        activity_id: '',
         starttime: '',
         endtime: ''
       },
@@ -109,10 +109,10 @@ export default {
           { required: true, message: '请选择活动', trigger: 'change' }
         ],
         starttime: [
-          { type: 'date', required: true, message: '需要填写开始时间', trigger: 'change' }
+          { required: true, message: '需要填写开始时间', trigger: 'change' }
         ],
         endtime: [
-          { type: 'date', required: true, message: '需要填写结束时间', trigger: 'change' }
+          { required: true, message: '需要填写结束时间', trigger: 'change' }
         ]
       },
 
@@ -135,21 +135,19 @@ export default {
     ])
   },
   created() {
-    this.populateSelectorData()
     this.isEditting = !!this.$route.params.mid
-  },
-  mounted() {
+    this.populateSelectorData()
     if (this.isEditting) {
       this.initManhour()
-      this.handleCurrentProject()
     }
   },
   methods: {
     populateSelectorData() {
-      if (!this.isEditting) {
-        projectApi.fetchProjects(this.projectParams).then(response => {
-          this.initProjects(response.responseMap.Project)
-        })
+      projectApi.fetchProjects(this.projectParams).then(response => {
+        this.initProjects(response.responseMap.Project)
+      })
+      if (this.isEditting) {
+        this.handleCurrentProject(this.$route.params.row.pid)
       }
       activityApi.getActivities().then(response => {
         this.initActivities(response.responseMap.activities)
@@ -176,9 +174,8 @@ export default {
       }
     },
     // 设置当前选中项目的功能
-    handleCurrentProject() {
-      projectApi.fetchProjectByPid(this.manhourForm.pid).then(response => {
-        console.log(response.responseMap)
+    handleCurrentProject(pid) {
+      projectApi.fetchProjectByPid(pid).then(response => {
         this.initFunctions(response.responseMap.Project)
       })
     },
@@ -192,21 +189,23 @@ export default {
         }
         this.functions.push(data)
       }
+      console.log('functions: ', this.functions)
     },
     // isEditting == true
     initManhour() {
-      const { mid, pid, aid } = this.$route.params.row
-      this.manhourForm.mid = mid
+      const { pid, mid, activity_id, starttime, endtime } = this.$route.params.row
       this.manhourForm.pid = pid
-      this.manhourForm.activity_id = aid
-      // this.manhourForm.fid = this.$route.params.fid
+      this.manhourForm.mid = mid
+      this.manhourForm.activity_id = activity_id
+      this.manhourForm.starttime = dayjs(starttime).format() // 直接传字符串会报参数错误
+      this.manhourForm.endtime = dayjs(endtime).format()
     },
     submitForm(formName) {
-      console.log(dayjs(this.manhourForm.starttime).format('YYYY-MM-DD HH:mm:ss'), dayjs(this.manhourForm.endtime).format('YYYY-MM-DD HH:mm:ss'))
-      var gap1 = dayjs(this.manhourForm.starttime).diff(dayjs(), 'day')
-      var gap2 = dayjs(this.manhourForm.endtime).diff(this.manhourForm.starttime, 'minute')
-      var gap3 = dayjs(this.manhourForm.starttime).isAfter(dayjs())
-      console.log(gap1, gap2)
+      console.log(this.manhourForm)
+      var gap1 = dayjs(this.manhourForm.starttime).diff(dayjs(), 'day') // 开始时间不能早于三天前
+      var gap2 = dayjs(this.manhourForm.endtime).diff(this.manhourForm.starttime, 'minute') // 开始结束间距不能超过 24*60 min, 不能小于 0 min
+      var gap3 = dayjs(this.manhourForm.endtime).isAfter(dayjs()) // 结束时间不能晚于现在
+      console.log(gap1, gap2, 'Before now:', gap3)
       if (gap1 > 3) {
         this.$message.error('只能填写三天内的工时单！')
         return

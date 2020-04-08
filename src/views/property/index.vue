@@ -57,9 +57,9 @@
       <el-table-column prop="is_intact" label="设备状态" align="center" show-overflow-tooltip>
         <template slot-scope="{row}">
           <el-tag
-            :type="row.is_intact | intactTypeFilter"
+            :type="intactStatus[row.is_intact].type"
             effect="plain"
-          >{{ row.is_intact | intactFilter }}
+          >{{ intactStatus[row.is_intact].text }}
           </el-tag>
         </template>
       </el-table-column>
@@ -67,9 +67,9 @@
       <el-table-column prop="expired" label="到期状态" align="center" show-overflow-tooltip>
         <template slot-scope="{row}">
           <el-tag
-            :type="row.expired | expiredTypeFilter"
+            :type="expireStatus[row.expired].type"
             effect="plain"
-          >{{ row.expired | expiredFilter }}
+          >{{ expireStatus[row.expired].text }}
           </el-tag>
         </template>
       </el-table-column>
@@ -113,38 +113,10 @@ const dayjs = require('dayjs')
 
 export default {
   name: 'PropertyList',
-  filters: {
-    intactFilter(is_intact) {
-      const intactMap = {
-        true: '完好',
-        false: '有损坏'
-      }
-      return intactMap[is_intact]
-    },
-    intactTypeFilter(is_intact) {
-      const intactMap = {
-        true: 'success',
-        false: 'danger'
-      }
-      return intactMap[is_intact]
-    },
-    expiredFilter(expired) {
-      const expiredMap = {
-        true: '已到期',
-        false: '未到期'
-      }
-      return expiredMap[expired]
-    },
-    expiredTypeFilter(expired) {
-      const expiredMap = {
-        true: 'danger',
-        false: 'success'
-      }
-      return expiredMap[expired]
-    }
-  },
   data: function() {
     return {
+      intactStatus: propertyApi.getIntactStatus(),
+      expireStatus: propertyApi.getExpireStatus(),
       poList: [],
       status: '',
       search: '',

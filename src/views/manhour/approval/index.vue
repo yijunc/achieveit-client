@@ -25,7 +25,7 @@
     </div>
 
     <el-table
-      :data="manhourList"
+      :data="tableData"
       border
       fit
       highlight-current-row
@@ -84,7 +84,7 @@
         <template slot-scope="{row}">
           <el-button
             size="small"
-            :disabled="!row.status === 'unfilled'"
+            :disabled="row.status !== 'unfilled'"
             type="primary"
             @click="handlePass(row)"
           >通过
@@ -92,7 +92,7 @@
           <el-button
             size="small"
             type="danger"
-            :disabled="!row.status === 'unfilled'"
+            :disabled="row.status !== 'unfilled'"
             @click="handleReject(row)"
           >不通过
           </el-button>

@@ -183,14 +183,14 @@ export default {
     async generateTimeline(wid) {
       const ret = []
       const workflowtl = (await fetchWorkflowTimeline(wid)).responseMap.timelines
-      console.log(workflowtl)
+      // console.log(workflowtl)
       for (const it of workflowtl) {
         const tmp = this.activityTemplate[it.operation]
         tmp.timestamp = parseTime(it.add_time)
         tmp.employeeName = it.employee.name
         ret.push(tmp)
       }
-      console.log(ret)
+      // console.log(ret)
       return ret
     }
   }

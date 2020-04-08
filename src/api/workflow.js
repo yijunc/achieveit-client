@@ -6,3 +6,11 @@ export function fetchWorkflowTimeline(wid) {
     method: 'get'
   })
 }
+
+export function pushWorkflow(wid, eid, data) {
+  return request({
+    url: 'workflow/' + wid + '/' + eid,
+    method: 'put',
+    data
+  })
+}

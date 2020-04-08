@@ -45,3 +45,18 @@ export function toManage() {
     method: 'get'
   })
 }
+
+export function editMemberRole(eid, pid, data) {
+  return request({
+    url: `/project/member/${eid}/${pid}`,
+    method: 'post',
+    data
+  })
+}
+
+export function deleteMemberRole(epid) {
+  return request({
+    url: `/project/member/${epid}`,
+    method: 'delete'
+  })
+}

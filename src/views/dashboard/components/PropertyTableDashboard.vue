@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-divider content-position="left"><el-link type="primary" href="#">设备速览</el-link></el-divider>
+    <el-divider content-position="left"><el-link type="primary" href="#/property">设备速览</el-link></el-divider>
     <el-table
       :data="tableData"
       stripe

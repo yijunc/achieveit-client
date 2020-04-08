@@ -10,8 +10,16 @@ export function fetchProjects(data) {
 
 export function fetchProjectByPid(pid) {
   return request({
-    url: '/project/getByPid/' + pid,
+    url: `/project/getByPid/${pid}`,
     method: 'get'
+  })
+}
+
+export function updateProject(pid, data) {
+  return request({
+    url: `/project/${pid}`,
+    method: 'put',
+    data
   })
 }
 

@@ -53,15 +53,15 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="commit" label="commit" width="150" align="center" show-overflow-tooltip>
-        <template slot-scope="{row}">
-          <el-link :href="row.git_repo" target="_blank" type="primary">{{ row.commit }}</el-link>
-        </template>
-      </el-table-column>
-
       <el-table-column prop="projectName" label="项目名称" width="150" align="center" show-overflow-tooltip>
         <template slot-scope="{row}">
           <span style="margin-left: 10px">{{ row.projectName }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column prop="commit" label="commit" width="150" align="center" show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <el-link :href="row.git_repo" target="_blank" type="primary">{{ row.commit }}</el-link>
         </template>
       </el-table-column>
 
@@ -79,7 +79,7 @@
       <el-table-column prop="status" label="状态" width="85" align="center" show-overflow-tooltip>
         <template slot-scope="{row}">
           <el-tag
-            :type="defectStatus[row.status].color"
+            :type="defectStatus[row.status].type"
             disable-transitions
             effect="plain"
           >{{ defectStatus[row.status].text }}
@@ -144,8 +144,13 @@ export default {
   },
   methods: {
     handleEdit(row) {
-      // 爸爸给儿子传值了
-      this.$router.push({ path: '/defect/edit/' + row.id, name: 'edit-defect', params: row })
+      this.$router.push({
+        name: 'edit-defect',
+        params: {
+          did: row.did,
+          row: row
+        }
+      })
     },
     handleDelete(did) {
       this.$confirm('此操作将永久删除该缺陷, 是否继续?', '提示', {

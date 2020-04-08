@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-    <h2>测试中，请使用Kiki登录</h2>
     <div class="filter-wrap mb-2">
       <el-row style="width: 100%">
         <el-col :xs="24" :sm="24" :md="12" :lg="3">
@@ -17,7 +16,7 @@
 
         <el-col :xs="24" :sm="24" :md="12" :lg="7" style="margin-left: 10px">
           <el-input
-            v-model.trim="projectName"
+            v-model.trim="projectSearch"
             placeholder="搜索项目名称"
             clearable
           />
@@ -25,19 +24,100 @@
       </el-row>
     </div>
 
-    <el-card>
-      <m-table
-        :data="manhourList"
-        :columns="columns"
-        :default-sort="{prop: 'mid', order: 'descending'}"
-      />
-    </el-card>
+    <el-table
+      :data="manhourList"
+      border
+      fit
+      highlight-current-row
+      style="width: 100%"
+      :default-sort="{prop: 'mid', order: 'descending'}"
+    >
+      <el-table-column prop="mid" label="ID" width="60" align="center" sortable />
+      <el-table-column prop="employeeName" label="员工姓名" align="center" show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <span style="margin-left: 10px">{{ row.employeeName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="projectName" label="项目名称" align="center" show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <span style="margin-left: 10px">{{ row.projectName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="fid" label="功能ID" width="70" align="center" show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <span style="margin-left: 10px">{{ row.fid }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="activityName" label="活动名称" align="center" show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <span style="margin-left: 10px">{{ row.activityName }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column prop="starttime" label="开始时间" align="center" sortable show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <span style="margin-left: 10px">{{ row.starttime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="endtime" label="结束时间" align="center" sortable show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <span style="margin-left: 10px">{{ row.endtime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="date" label="上报时间" align="center" sortable show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <span style="margin-left: 10px">{{ row.date }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="status" label="状态" align="center" show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <el-tag
+            :type="manhourStatus[row.status].type"
+            disable-transitions
+            effect="plain"
+          >{{ manhourStatus[row.status].text }}
+          </el-tag>
+        </template>
+      </el-table-column>
+
+      <el-table-column fixed="right" label="审批" width="200" align="center">
+        <template slot-scope="{row}">
+          <el-button
+            size="small"
+            :disabled="!row.status === 'unfilled'"
+            type="primary"
+            @click="handlePass(row)"
+          >通过
+          </el-button>
+          <el-button
+            size="small"
+            type="danger"
+            :disabled="!row.status === 'unfilled'"
+            @click="handleReject(row)"
+          >不通过
+          </el-button>
+        </template>
+      </el-table-column>
+      <el-table-column fixed="right" label="审批" align="center">
+        <template slot-scope="{row}">
+          <el-tooltip effect="dark" content="三天以内的工时才可以打回" placement="top" style="margin: 3px">
+            <el-button
+              size="small"
+              :disabled="!row.canSendBack"
+              type="warning"
+              @click="handleSendBack(row)"
+            >打回
+            </el-button>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+    </el-table>
 
     <el-pagination
       small
       background
       :current-page="currentPage"
-      :page-size="queryParams.length"
+      :page-size="length"
       layout="total, jumper, prev, pager, next"
       :total="total"
       @current-change="handleCurrentChange"
@@ -47,76 +127,15 @@
 
 <script>
 import * as manhourApi from '@/api/manhour'
-import MTable from '@/components/MTable'
+import { mapGetters } from 'vuex'
 const dayjs = require('dayjs')
 
 export default {
   name: 'ManhourList',
-  components: { MTable },
   data() {
     return {
       manhourStatus: manhourApi.manhourStatus(),
       manhourList: [],
-      columns: [{
-        prop: 'mid',
-        label: 'id',
-        sortable: true
-      }, {
-        prop: 'projectName',
-        width: 230,
-        label: '所属项目',
-        sortable: true
-      }, {
-        prop: 'employeeName',
-        label: '员工姓名'
-      }, {
-        prop: 'activityName',
-        width: 200,
-        label: '活动名称'
-      }, {
-        prop: 'starttime',
-        width: 180,
-        label: '开始时间',
-        sortable: true
-      }, {
-        prop: 'endtime',
-        width: 180,
-        label: '结束时间',
-        sortable: true
-      }, {
-        prop: 'statusName',
-        label: '状态',
-        sortable: true
-      }, {
-        prop: 'options1',
-        label: '审批',
-        align: 'center',
-        width: 230,
-        options: [
-          {
-            type: 'primary',
-            label: '通过',
-            event: this.handlePass
-          }, {
-            type: 'danger',
-            label: '不通过',
-            event: this.handleSendBack
-          }
-        ]
-      }, {
-        prop: 'options2',
-        label: '打回',
-        align: 'center',
-        disabled: true,
-        options: [
-          {
-            type: 'warning',
-            label: '打回',
-            event: this.handleSendBack
-          }
-        ]
-      }
-      ],
       queryParams: {
         fid: '',
         activity_id: '',
@@ -124,24 +143,27 @@ export default {
         endtime: '',
         status: ''
       },
-      eid: '10', // todo: 我们仍未知道那天所登录的eid
       statusSearch: '',
-      projectName: '',
+      projectSearch: '',
+      length: 10,
       currentPage: 1
     }
   },
   computed: {
     tableData: function() {
       return this.manhourList
-        .filter(data => !this.projectName || data.projectName.toLowerCase().includes(this.projectName.toLowerCase()))
+        .filter(data => !this.projectSearch || data.projectName.toLowerCase().includes(this.projectSearch.toLowerCase()))
         .filter(data => !this.statusSearch || data.status === this.statusSearch)
         .slice((this.currentPage - 1) * this.length, this.currentPage * this.length)
     },
     total: function() {
       return this.manhourList
-        .filter(data => !this.projectName || data.projectName.toLowerCase().includes(this.projectName.toLowerCase()))
+        .filter(data => !this.projectSearch || data.projectName.toLowerCase().includes(this.projectSearch.toLowerCase()))
         .filter(data => !this.statusSearch || data.status === this.statusSearch).length
-    }
+    },
+    ...mapGetters([
+      'eid'
+    ])
   },
   mounted() {
     this.getManhourList()
@@ -165,12 +187,10 @@ export default {
           projectName: data.employeeProject.project.name,
           aid: data.activity_id,
           activityName: data.activity.def1 + ' - ' + data.activity.def2,
-          starttime: dayjs(data.starttime).format('YYYY-MM-DD HH:mm'),
-          endtime: dayjs(data.endtime).format('YYYY-MM-DD HH:mm'),
+          starttime: dayjs(data.starttime).format('YYYY-MM-DD HH:mm:ss'),
+          endtime: dayjs(data.endtime).format('YYYY-MM-DD HH:mm:ss'),
           date: data.date,
           status: data.status,
-          statusName: this.manhourStatus[data.status].text,
-          // 每次加载都会重新算一遍
           canSendBack: data.status !== 'unfilled' && dayjs().diff(data.date, 'day') <= 3
         }
         this.manhourList.push(m)
@@ -236,7 +256,7 @@ export default {
       })
     },
     handleCurrentChange(currentPage) {
-      this.queryParams.page = currentPage - 1
+      this.currentPage = currentPage
     }
   }
 }

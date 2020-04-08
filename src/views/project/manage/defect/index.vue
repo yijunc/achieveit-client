@@ -36,23 +36,24 @@
       fit
       highlight-current-row
       style="width: 100%"
+      :default-sort="{prop: 'did', order: 'descending'}"
     >
-      <el-table-column prop="did" label="ID" width="70" align="center" />
+      <el-table-column prop="did" label="ID" width="70" align="center" sortable />
       <el-table-column prop="desc" label="缺陷描述" show-overflow-tooltip>
         <template slot-scope="{row}">
           <span style="margin-left: 10px">{{ row.desc }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column prop="commit" label="commit" width="150" align="center" show-overflow-tooltip>
-        <template slot-scope="{row}">
-          <el-link :href="row.git_repo" target="_blank" type="primary">{{ row.commit }}</el-link>
-        </template>
-      </el-table-column>
-
       <el-table-column prop="projectName" label="项目名称" width="150" align="center" show-overflow-tooltip>
         <template slot-scope="{row}">
           <span style="margin-left: 10px">{{ row.projectName }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column prop="commit" label="commit" width="150" align="center" show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <el-link :href="row.git_repo" target="_blank" type="primary">{{ row.commit }}</el-link>
         </template>
       </el-table-column>
 
@@ -70,7 +71,7 @@
       <el-table-column prop="status" label="状态" width="85" align="center" show-overflow-tooltip>
         <template slot-scope="{row}">
           <el-tag
-            :type="defectStatus[row.status].color"
+            :type="defectStatus[row.status].type"
             disable-transitions
             effect="plain"
           >{{ defectStatus[row.status].text }}
@@ -88,12 +89,14 @@
         <template slot-scope="{row}">
           <el-button
             size="small"
+            :disabled="defectAuthority[row.authority_desc].code > authority || (defectAuthority[row.authority_desc].code == 1 && authority == 2)"
             @click="handleEdit(row)"
           >编辑
           </el-button>
           <el-button
             size="small"
             type="danger"
+            :disabled="defectAuthority[row.authority_desc].code > authority || (defectAuthority[row.authority_desc].code == 1 && authority == 2)"
             @click="handleDelete(row.did)"
           >删除
           </el-button>
@@ -115,6 +118,8 @@
 <script type="text/ecmascript-6">
 
 import * as defectApi from '@/api/defect'
+import * as projectApi from '@/api/project'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Defect',
@@ -123,6 +128,7 @@ export default {
     return {
       defectStatus: defectApi.defectStatus(),
       defectAuthority: defectApi.defectAuthority(),
+      authority: 0,
       defectList: [],
       status: '',
       desc: '',
@@ -140,14 +146,24 @@ export default {
     total: function() {
       return this.defectList
         .filter(data => !this.desc || data.desc.toLowerCase().includes(this.desc.toLowerCase())).length
-    }
+    },
+    ...mapGetters([
+      'eid'
+    ])
   },
   mounted() {
     this.getDefectList()
+    this.getAuthority()
   },
   methods: {
     handleEdit(row) {
-      this.$router.push({ path: '/defect/edit/' + row.id, name: 'edit-defect', params: row })
+      this.$router.push({
+        name: 'edit-defect',
+        params: {
+          did: row.did,
+          row: row
+        }
+      })
     },
     handleDelete(did) {
       this.$confirm('此操作将永久删除该缺陷, 是否继续?', '提示', {
@@ -155,18 +171,20 @@ export default {
         cancelButtonText: '取消',
         type: 'danger'
       }).then(() => {
-        this.deleteDefect(did)
+        defectApi.deleteDefect(did).then((response) => {
+          console.log(response)
+          this.$message.success('删除成功!')
+          this.getDefectList()
+        })
       }).catch(() => {
+        this.$message.error('删除失败')
       })
     },
-    deleteDefect(did) {
-      defectApi.deleteDefect(did).then((response) => {
-        console.log(response)
-        this.$message.success('删除成功!')
-        this.getDefectList()
+    getDefectList() {
+      defectApi.getDefectsByPid(this.pid).then(response => {
+        this.initDefectData(response.responseMap.Defect)
       })
     },
-
     initDefectData(defects) {
       this.defectList = []
       for (const key in defects) {
@@ -174,9 +192,9 @@ export default {
         const defect = {
           did: data.did,
           desc: data.desc,
+          project_id: data.project_id,
           commit: data.commit,
           git_repo: data.git_repo,
-          project_id: data.project_id,
           projectName: data.employeeProject.project.name, // 和defect页面的稍稍有点不一样，因为接口返回的数据有点不同
           status: data.status,
           authority_desc: data.authority_desc
@@ -184,11 +202,20 @@ export default {
         this.defectList.push(defect)
       }
     },
-    getDefectList() {
-      defectApi.getDefectsByPid(this.pid).then(response => {
-        console.log(response.responseMap.Defect, this.pid)
-        this.initDefectData(response.responseMap.Defect)
+    getAuthority() {
+      projectApi.fetchProjectByPid(this.pid).then(response => {
+        this.initAuthority(response.responseMap.EmployeeProjects)
       })
+    },
+    initAuthority(employeeProjects) {
+      for (const key in employeeProjects) {
+        const data = employeeProjects[key]
+        if (data.employee_id === this.eid) {
+          this.authority = this.defectAuthority[data.authority_desc].code
+          break
+        }
+      }
+      console.log('缺陷权限: ' + this.authority)
     },
     handleCurrentChange(currentPage) {
       this.currentPage = currentPage

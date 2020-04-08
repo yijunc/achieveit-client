@@ -18,15 +18,23 @@
         <!--<h5>{{ name }} : {{ project[key] }}</h5>-->
         <!--</div>-->
         <el-collapse class="basic-info" value="1">
-          <el-collapse-item title="基本信息" name="1">
+          <el-collapse-item>
+            <template slot="title">
+              基本信息 <i
+                style="padding-left: 10px"
+                class="header-icon el-icon-edit"
+                @click="openDialog"
+              >编辑</i>
+            </template>
             <div
               v-for="(name,key) in projectInfoMap"
               :key="key"
+              v-bind="project"
               v-loading="infoLoading"
               style="font-size: 14px;line-height: 2"
             >
               <div v-if="key == 'starttime' || key == 'endtime'">
-                  {{ name }} : {{ convertDate(project[key])}}
+                {{ name }} : {{ convertDate(project[key]) }}
               </div>
               <div v-else>{{ name }} : {{ project[key] }}</div>
             </div>
@@ -52,16 +60,21 @@
         </el-row>
       </el-main>
     </el-container>
+    <el-dialog title="修改基本信息" :visible.sync="dialogFormVisible">
+      <EditInfo ref="edit_info" :pj-info="pjInfo" :on-dialog-cancel="onDialogCancel" :on-dialog-confirm="onDialogConfirm" />
+    </el-dialog>
   </div>
 </template>
 <script>
 import { fetchProjectByPid } from '@/api/project'
 import SubFuncCard from './components/SubFuncCard'
+import EditInfoDialog from './components/EditInfoDialog'
+
 const dayjs = require('dayjs')
 
 export default {
   name: 'Overview',
-  components: { SubFuncCard },
+  components: { SubFuncCard, EditInfo: EditInfoDialog },
   props: {
     pid: { type: String }
   },
@@ -102,8 +115,16 @@ export default {
         'qamanager': {
           name: 'QA Leader'
         }
+      },
+      dialogFormVisible: false,
+      pjInfo: {
+        'pid': '',
+        'name': '',
+        'technique': '',
+        'starttime': '',
+        'endtime': '',
+        'domain': ''
       }
-
     }
   },
   created() {
@@ -114,11 +135,25 @@ export default {
       this.infoLoading = true
       fetchProjectByPid(this.pid).then(response => {
         this.project = response.responseMap.Project
+        // 编辑基本信息子组建赋值
+        Object.keys(this.pjInfo).forEach(key => { this.pjInfo[key] = this.project[key] })
+        // console.log(this.pjInfo)
         this.infoLoading = false
       })
     },
     convertDate(date) {
       return dayjs(date).format('YYYY-MM-DD')
+    },
+    openDialog() {
+      this.dialogFormVisible = true
+      if (this.$refs.edit_info !== undefined) { this.$refs.edit_info.update() }
+    },
+    onDialogCancel() {
+      this.dialogFormVisible = false
+    },
+    onDialogConfirm() {
+      this.dialogFormVisible = false
+      this.fetchProject()
     }
   }
 }
@@ -143,7 +178,7 @@ export default {
     padding: 0 20px 0 20px;
   }
 
-  .basic-info{
+  .basic-info {
     margin: 10px;
   }
 
@@ -153,7 +188,7 @@ export default {
     margin-bottom: 32px;
   }
 
-  @media (max-width:1024px) {
+  @media (max-width: 1024px) {
     .chart-wrapper {
       padding: 8px;
     }

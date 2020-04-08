@@ -8,20 +8,82 @@
           placeholder="日期查询"
           @keyup.enter.native="handleFilter"
         />
-        <!-- <el-input v-model="queryParams.date" placeholder="日期查询" clearable style="width: 200px;" class="mr-3" @keyup.enter.native="handleFilter" /> -->
         <el-button icon="el-icon-search" type="primary" size="small" style="margin-left: 10px" @click="handleFilter">
           搜索
         </el-button>
       </div>
     </div>
 
-    <el-card>
-      <m-table
-        :data="manhourList"
-        :columns="columns"
-        :default-sort="{prop: 'mid', order: 'descending'}"
-      />
-    </el-card>
+    <el-table
+      :data="manhourList"
+      border
+      fit
+      highlight-current-row
+      style="width: 100%"
+      :default-sort="{prop: 'mid', order: 'descending'}"
+    >
+      <el-table-column prop="mid" label="ID" width="70" align="center" sortable />
+      <el-table-column prop="projectName" label="项目名称" align="center" show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <span style="margin-left: 10px">{{ row.projectName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="function_desc" label="功能名称" show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <span style="margin-left: 10px">{{ row.function_desc }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="activityName" label="活动名称" show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <span style="margin-left: 10px">{{ row.activityName }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column prop="starttime" label="开始时间" align="center" sortable show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <span style="margin-left: 10px">{{ row.starttime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="endtime" label="结束时间" align="center" sortable show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <span style="margin-left: 10px">{{ row.endtime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="date" label="上报时间" align="center" sortable show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <span style="margin-left: 10px">{{ row.date }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="statusName" label="状态" align="center" show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <el-tag
+            :type="manhourStatus[row.status].type"
+            disable-transitions
+            effect="plain"
+          >{{ manhourStatus[row.status].text }}
+          </el-tag>
+        </template>
+      </el-table-column>
+
+      <el-table-column fixed="right" label="操作" width="150" align="center">
+        <template slot-scope="{row}">
+          <el-button
+            size="small"
+            :disabled="!row.status === 'unfilled'"
+            type="primary"
+            @click="handleEdit(row)"
+          >编辑
+          </el-button>
+          <el-button
+            size="small"
+            type="danger"
+            :disabled="!row.status === 'unfilled'"
+            @click="handleDelete(row)"
+          >删除
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
 
     <el-pagination
       layout="prev, pager, next"
@@ -34,68 +96,14 @@
 
 <script>
 import * as manhourApi from '@/api/manhour'
-import MTable from '@/components/MTable'
 const dayjs = require('dayjs')
 
 export default {
   name: 'ManhourList',
-  components: { MTable },
   data() {
     return {
       manhourStatus: manhourApi.manhourStatus(),
       manhourList: [],
-      columns: [{
-        prop: 'mid',
-        label: 'id',
-        sortable: true
-      }, {
-        prop: 'projectName',
-        label: '所属项目',
-        sortable: true
-      },
-      {
-        prop: 'function_desc',
-        label: '功能名称'
-      },
-      {
-        prop: 'activityName',
-        label: '活动名称'
-      },
-      {
-        prop: 'starttime',
-        label: '开始时间',
-        sortable: true
-      },
-      {
-        prop: 'endtime',
-        label: '结束时间',
-        sortable: true
-      },
-      {
-        prop: 'statusName',
-        label: '状态',
-        sortable: true
-      },
-      {
-        prop: 'options',
-        label: '操作',
-        width: 230,
-        align: 'center',
-        // icon: 'edit',  //有图标则是下拉框
-        options: [
-          {
-            type: 'primary',
-            label: '编辑',
-            event: this.handleEdit
-          },
-          {
-            type: 'danger',
-            label: '删除',
-            event: this.handleDelete
-          }
-        ]
-      }
-      ],
       queryParams: {
         page: 0,
         length: 10,
@@ -122,8 +130,8 @@ export default {
           projectName: data.employeeProject.project.name,
           aid: data.activity.aid,
           activityName: data.activity.def1 + ' - ' + data.activity.def2,
-          starttime: dayjs(data.starttime).format('YYYY-MM-DD HH:mm'),
-          endtime: dayjs(data.endtime).format('YYYY-MM-DD HH:mm'),
+          starttime: dayjs(data.starttime).format('YYYY-MM-DD HH:mm:ss'),
+          endtime: dayjs(data.endtime).format('YYYY-MM-DD HH:mm:ss'),
           date: data.date,
           status: data.status,
           statusName: this.manhourStatus[data.status].text
@@ -133,7 +141,13 @@ export default {
     },
 
     handleEdit(row) {
-      this.$router.push({ path: '/manhour/edit/' + row.mid, name: 'edit-manhour', params: row })
+      this.$router.push({
+        name: 'edit-manhour',
+        params: {
+          mid: row.mid,
+          row: row
+        }
+      })
     },
 
     handleDelete(row) {

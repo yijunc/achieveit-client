@@ -49,38 +49,32 @@ export function defectStatus() {
   return ({
     'fixed': {
       value: 'fixed',
-      color: 'success',
-      status: 'success',
+      type: 'success',
       text: 'fixed'
     },
     'closed': {
       value: 'closed',
-      color: 'success',
-      status: 'success',
+      type: 'success',
       text: 'closed'
     },
     'reopen': {
       value: 'reopen',
-      color: 'warning',
-      status: 'warning',
+      type: 'warning',
       text: 'reopen'
     },
     'wontfix': {
       value: 'wontfix',
-      color: 'info',
-      status: 'warning',
+      type: 'info',
       text: 'wontfix'
     },
     'bug': {
       value: 'bug',
-      color: 'danger',
-      status: 'error',
+      type: 'danger',
       text: 'bug'
     },
     'feature': {
       value: 'feature',
-      color: 'warning',
-      status: 'success',
+      type: 'warning',
       text: 'feature'
     }
   })
@@ -96,19 +90,23 @@ export function defectAuthority() {
   return ({
     'noneAuthority': {
       value: 'noneAuthority',
-      text: '项目成员均可修改'
+      text: '项目成员均可修改',
+      code: 0
     },
     'rdLeaderAuthority': {
       value: 'rdLeaderAuthority',
-      text: '项目经理、RD领导和创建者均可以修改'
+      text: '项目经理、RD领导和创建者均可以修改',
+      code: 1
     },
     'qaLeaderAuthority': {
       value: 'qaLeaderAuthority',
-      text: '项目经理、QA领导和创建者均可以修改'
+      text: '项目经理、QA领导和创建者均可以修改',
+      code: 2
     },
     'pmAuthority': {
       value: 'pmAuthority',
-      text: '只有项目经理和创建者可以修改'
+      text: '只有项目经理和创建者可以修改',
+      code: 3
     }
   })
 }

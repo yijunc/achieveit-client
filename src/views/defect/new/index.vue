@@ -20,9 +20,9 @@
             <el-select v-model="defectForm.project_id" class="selector" placeholder="请选择您的项目" :disabled="isEditting">
               <el-option
                 v-for="item in projects_doing"
-                :key="item.pid"
+                :key="item.project_id"
                 :label="item.name"
-                :value="item.pid"
+                :value="item.project_id"
               />
             </el-select>
           </el-form-item>
@@ -80,6 +80,7 @@ export default {
   data() {
     return {
       defectForm: {
+        did: '',
         project_id: '',
         desc: '',
         git_repo: '',
@@ -146,7 +147,7 @@ export default {
       for (const key in projects) {
         const data = projects[key]
         const proj = {
-          pid: data.pid,
+          project_id: data.pid,
           name: data.name
         }
         this.projects_doing.push(proj)
@@ -169,13 +170,14 @@ export default {
 
     // isEditting == true
     initDefect() {
+      const { project_id, desc, git_repo, commit, status, authority_desc } = this.$route.params.row
       this.defectForm.did = this.$route.params.did
-      this.defectForm.project_id = this.$route.params.project_id
-      this.defectForm.desc = this.$route.params.desc
-      this.defectForm.git_repo = this.$route.params.git_repo
-      this.defectForm.commit = this.$route.params.commit
-      this.defectForm.status = this.$route.params.status
-      this.defectForm.authority_desc = this.$route.params.authority_desc
+      this.defectForm.project_id = project_id
+      this.defectForm.desc = desc
+      this.defectForm.git_repo = git_repo
+      this.defectForm.commit = commit
+      this.defectForm.status = status
+      this.defectForm.authority_desc = authority_desc
     },
 
     submitForm(formName) {

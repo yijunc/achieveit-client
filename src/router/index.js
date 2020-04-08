@@ -96,7 +96,6 @@ export const constantRoutes = [
       }
     ]
   },
-
   {
     path: '/manhour',
     component: Layout,
@@ -108,7 +107,7 @@ export const constantRoutes = [
         path: 'list',
         name: 'manhour-list',
         component: () => import('@/views/manhour/index'),
-        meta: { title: '我的工时列表', icon: 'table' }
+        meta: { title: '我的工时', icon: 'table' }
       },
       {
         path: 'new',
@@ -118,8 +117,8 @@ export const constantRoutes = [
       },
       {
         path: 'edit/:mid(\\d+)',
-        component: () => import('@/views/manhour/new/index'),
         name: 'edit-manhour',
+        component: () => import('@/views/manhour/new/index'),
         meta: { title: '编辑工时' },
         hidden: true
       },
@@ -128,6 +127,34 @@ export const constantRoutes = [
         component: () => import('@/views/manhour/approval/index'),
         name: 'approval-manhour',
         meta: { title: '审批工时', icon: 'eye-open' }
+      }
+    ]
+  },
+  {
+    path: '/property',
+    component: Layout,
+    redirect: '/property/list',
+    name: 'property',
+    meta: { title: '设备与资产', icon: 'lock' },
+    children: [
+      {
+        path: 'list',
+        name: 'property-list',
+        component: () => import('@/views/property/index'),
+        meta: { title: '我的设备', icon: 'table' }
+      },
+      {
+        path: 'new',
+        name: 'property-new',
+        component: () => import('@/views/property/new/index'),
+        meta: { title: '租借设备', icon: 'shopping' }
+      },
+      {
+        path: 'edit/:poid(\\d+)',
+        name: 'property-edit',
+        component: () => import('@/views/property/new/index'),
+        meta: { title: '更新租借信息' },
+        hidden: true
       }
     ]
   }

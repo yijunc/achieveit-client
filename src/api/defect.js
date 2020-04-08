@@ -49,38 +49,32 @@ export function defectStatus() {
   return ({
     'fixed': {
       value: 'fixed',
-      color: 'success',
-      status: 'success',
+      type: 'success',
       text: 'fixed'
     },
     'closed': {
       value: 'closed',
-      color: 'success',
-      status: 'success',
+      type: 'success',
       text: 'closed'
     },
     'reopen': {
       value: 'reopen',
-      color: 'warning',
-      status: 'warning',
+      type: 'warning',
       text: 'reopen'
     },
     'wontfix': {
       value: 'wontfix',
-      color: 'info',
-      status: 'warning',
+      type: 'info',
       text: 'wontfix'
     },
     'bug': {
       value: 'bug',
-      color: 'danger',
-      status: 'error',
+      type: 'danger',
       text: 'bug'
     },
     'feature': {
       value: 'feature',
-      color: 'warning',
-      status: 'success',
+      type: 'warning',
       text: 'feature'
     }
   })

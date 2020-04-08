@@ -77,6 +77,7 @@
 import * as projectApi from '@/api/project'
 import * as propertyApi from '@/api/property'
 import { mapGetters } from 'vuex'
+const dayjs = require('dayjs')
 
 export default {
   name: 'PropertyNew',
@@ -165,11 +166,16 @@ export default {
       this.poForm.property_id = property_id
     },
     submitForm(formName) {
+      if (dayjs(this.poForm.expire_time).isBefore(dayjs())) {
+        this.$message.error('错误的到期时间！')
+        return
+      }
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
           if (!this.isEditting) {
             const { project_id, property_id } = this.poForm
+            console.log('Created expire_time: ', this.poForm.expire_time)
             propertyApi.occupy(this.eid, project_id, property_id, this.poForm)
               .then((response) => {
                 console.log(response)
@@ -181,6 +187,7 @@ export default {
                 this.loading = false
               })
           } else {
+            console.log('Updated expire_time: ', this.poForm.expire_time)
             propertyApi.updateOccupy(this.$route.params.poid, this.poForm)
               .then((response) => {
                 console.log(response)

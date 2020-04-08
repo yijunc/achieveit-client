@@ -210,7 +210,7 @@ export default {
         cancelButtonText: '取消',
         type: 'success'
       }).then(() => {
-        row.expire_time = dayjs()
+        row.expire_time = dayjs().format('YYYY-MM-DD HH:mm:ss')
         row.expired = true
         propertyApi.updateOccupy(row.poid, row).then(response => {
           this.$message.success('归还成功!')

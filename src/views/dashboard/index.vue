@@ -107,7 +107,7 @@ export default {
     padding: 32px;
     background-color: rgb(240, 242, 245);
     position: relative;
-    height: 180vh;
+    height: 220vh;
   }
 
 </style>

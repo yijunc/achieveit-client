@@ -50,21 +50,18 @@ export function manhourStatus() {
   return ({
     'unfilled': {
       value: 'unfilled',
-      color: 'warning',
-      status: 'warning',
+      type: 'warning',
       text: '未审核'
     },
     'checked': {
       value: 'checked',
-      color: 'success',
-      status: 'success',
-      text: '审核通过'
+      type: 'success',
+      text: '通过'
     },
     'unchecked': {
       value: 'unchecked',
-      color: 'blue',
-      status: 'success',
-      text: '审核不通过'
+      type: 'danger',
+      text: '不通过'
     }
   })
 }

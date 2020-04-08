@@ -24,12 +24,94 @@
       </el-row>
     </div>
 
-    <el-card>
-      <m-table
-        :data="tableData"
-        :columns="columns"
-      />
-    </el-card>
+    <el-table
+      :data="manhourList"
+      border
+      fit
+      highlight-current-row
+      style="width: 100%"
+      :default-sort="{prop: 'mid', order: 'descending'}"
+    >
+      <el-table-column prop="mid" label="ID" width="60" align="center" sortable />
+      <el-table-column prop="employeeName" label="员工姓名" align="center" show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <span style="margin-left: 10px">{{ row.employeeName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="projectName" label="项目名称" align="center" show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <span style="margin-left: 10px">{{ row.projectName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="fid" label="功能ID" width="70" align="center" show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <span style="margin-left: 10px">{{ row.fid }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="activityName" label="活动名称" align="center" show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <span style="margin-left: 10px">{{ row.activityName }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column prop="starttime" label="开始时间" align="center" sortable show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <span style="margin-left: 10px">{{ row.starttime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="endtime" label="结束时间" align="center" sortable show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <span style="margin-left: 10px">{{ row.endtime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="date" label="上报时间" align="center" sortable show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <span style="margin-left: 10px">{{ row.date }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="status" label="状态" align="center" show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <el-tag
+            :type="manhourStatus[row.status].type"
+            disable-transitions
+            effect="plain"
+          >{{ manhourStatus[row.status].text }}
+          </el-tag>
+        </template>
+      </el-table-column>
+
+      <el-table-column fixed="right" label="审批" width="200" align="center">
+        <template slot-scope="{row}">
+          <el-button
+            size="small"
+            :disabled="!row.status === 'unfilled'"
+            type="primary"
+            @click="handlePass(row)"
+          >通过
+          </el-button>
+          <el-button
+            size="small"
+            type="danger"
+            :disabled="!row.status === 'unfilled'"
+            @click="handleReject(row)"
+          >不通过
+          </el-button>
+        </template>
+      </el-table-column>
+      <el-table-column fixed="right" label="审批" align="center">
+        <template slot-scope="{row}">
+          <el-tooltip effect="dark" content="三天以内的工时才可以打回" placement="top" style="margin: 3px">
+            <el-button
+              size="small"
+              :disabled="!row.canSendBack"
+              type="warning"
+              @click="handleSendBack(row)"
+            >打回
+            </el-button>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+    </el-table>
 
     <el-pagination
       small
@@ -45,83 +127,15 @@
 
 <script>
 import * as manhourApi from '@/api/manhour'
-import MTable from '@/components/MTable'
 import { mapGetters } from 'vuex'
 const dayjs = require('dayjs')
 
 export default {
   name: 'ManhourList',
-  components: { MTable },
   data() {
     return {
       manhourStatus: manhourApi.manhourStatus(),
       manhourList: [],
-      columns: [{
-        prop: 'mid',
-        label: 'id',
-        width: 100,
-        sortable: true
-      }, {
-        prop: 'employeeName',
-        label: '员工姓名'
-      }, {
-        prop: 'projectName',
-        label: '所属项目',
-        width: 230,
-        sortable: true
-      }, {
-        prop: 'activityName',
-        label: '活动名称'
-      }, {
-        prop: 'starttime',
-        label: '开始时间',
-        width: 150,
-        sortable: true
-      }, {
-        prop: 'endtime',
-        label: '结束时间',
-        width: 150,
-        sortable: true
-      },
-      {
-        prop: 'date',
-        label: '上报时间',
-        sortable: true
-      },
-      {
-        prop: 'statusName',
-        label: '状态',
-        sortable: true
-      }, {
-        prop: 'options1',
-        label: '审批',
-        width: 200,
-        align: 'center',
-        options: [
-          {
-            type: 'primary',
-            label: '通过',
-            event: this.handlePass
-          }, {
-            type: 'danger',
-            label: '不通过',
-            event: this.handleReject
-          }
-        ]
-      }, {
-        prop: 'options2',
-        label: '打回',
-        align: 'center',
-        disabled: true,
-        options: [
-          {
-            type: 'warning',
-            label: '打回',
-            event: this.handleSendBack
-          }
-        ]
-      }
-      ],
       queryParams: {
         fid: '',
         activity_id: '',
@@ -173,11 +187,10 @@ export default {
           projectName: data.employeeProject.project.name,
           aid: data.activity_id,
           activityName: data.activity.def1 + ' - ' + data.activity.def2,
-          starttime: dayjs(data.starttime).format('YYYY-MM-DD HH:mm'),
-          endtime: dayjs(data.endtime).format('YYYY-MM-DD HH:mm'),
+          starttime: dayjs(data.starttime).format('YYYY-MM-DD HH:mm:ss'),
+          endtime: dayjs(data.endtime).format('YYYY-MM-DD HH:mm:ss'),
           date: data.date,
           status: data.status,
-          statusName: this.manhourStatus[data.status].text,
           canSendBack: data.status !== 'unfilled' && dayjs().diff(data.date, 'day') <= 3
         }
         this.manhourList.push(m)

@@ -71,7 +71,7 @@
       <el-table-column prop="status" label="状态" width="85" align="center" show-overflow-tooltip>
         <template slot-scope="{row}">
           <el-tag
-            :type="defectStatus[row.status].color"
+            :type="defectStatus[row.status].type"
             disable-transitions
             effect="plain"
           >{{ defectStatus[row.status].text }}

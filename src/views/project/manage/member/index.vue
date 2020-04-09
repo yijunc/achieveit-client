@@ -1,7 +1,7 @@
 <template>
   <div>
     <div style="margin: 10px">人员管理
-      <el-button style="margin: 0 10px" type="primary" plain size="mini" @click="">新增</el-button>
+      <el-button style="margin: 0 10px" type="primary" plain size="mini" @click="openAddNewDialog">新增</el-button>
     </div>
     <el-table v-model="members" v-loading="tableLoading" :data="members" style="width: 100%">
 
@@ -36,13 +36,13 @@
         width="100"
       >
         <template slot-scope="scope">
-          <el-button type="text" size="small" :disabled="validate(scope.row)" @click="handleEdit(scope.row)">编辑</el-button>
+          <el-button type="text" size="small" @click="handleEdit(scope.row)">编辑</el-button>
           <el-button type="text" size="small" :disabled="validate(scope.row)" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <el-dialog title="编辑职位" :visible.sync="dialogVisible">
+    <el-dialog title="编辑职位" :visible.sync="dialogEditRoleVisible" @close="onEditRoleCanceled">
       <h3>选择你要编辑的职位</h3>
       <el-checkbox-group v-model="editRoleCheckList">
         <el-checkbox label="qa" />
@@ -54,14 +54,20 @@
         <el-button type="primary" @click="onEditRole">确 定</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog width="80%" title="添加成员" :visible.sync="dialogAddNewVisible">
+      <AddNewMemberDialog :members-not-in="membersNotIn" :on-add-new-dialog-cancel="onAddNewDialogCancel" :on-add-new-dialog-confirm="onAddNewDialogConfirm" />
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { fetchProjectByPid, editMemberRole, deleteMemberRole } from '@/api/project'
+import { fetchProjectByPid, editMemberRole, deleteMemberRole, fetchMembersNotIn } from '@/api/project'
+import AddNewMemberDialog from './components/AddNewMemberDialog'
 
 export default {
   name: 'Member',
+  components: { AddNewMemberDialog },
   props: { pid: String },
   data() {
     return {
@@ -90,9 +96,11 @@ export default {
         'epg': { priority: 1, editable: false, tag: 'info' }
       },
       tableLoading: false,
-      dialogVisible: false,
+      dialogEditRoleVisible: false,
+      dialogAddNewVisible: false,
       editRoleCheckList: [],
-      selectedRow: null
+      selectedRow: null,
+      membersNotIn: []
     }
   },
   computed: {
@@ -106,6 +114,8 @@ export default {
   },
   methods: {
     getPjMembers() {
+      this.tableLoading = true
+      this.members = []
       fetchProjectByPid(this.pid).then(response => {
         const employees = response.responseMap.EmployeeProjects
         const workflow = response.responseMap.Project.workflow
@@ -143,11 +153,12 @@ export default {
           this.members.push(member)
         }
 
+        this.tableLoading = false
         console.log(this.members)
       })
     },
     handleEdit(row) {
-      this.dialogVisible = true
+      this.dialogEditRoleVisible = true
       this.selectedRow = row
     },
     handleDelete(row) {
@@ -156,7 +167,8 @@ export default {
         deleteMemberRole(row['epid']).then(response => {
           if (response.status === 200) {
             this.$message({ message: '删除成功', type: 'success' })
-            this.members.splice(this.members.indexOf(row), 1)
+            // this.members.splice(this.members.indexOf(row), 1)
+            this.getPjMembers()
             this.tableLoading = false
           }
         })
@@ -164,10 +176,13 @@ export default {
       console.log(row)
     },
     validate(member) {
+      let flag = false
       for (let i = 0; i < member.role.length; i++) {
-        if (member.role[i] === 'qa' || member.role[i] === 'epg' || member.role[i] === 'rd') { return false }
+        if (member.role[i] !== 'qa' && member.role[i] !== 'epg' && member.role[i] !== 'rd') {
+          flag = true
+        }
       }
-      return true
+      return flag
     },
     onEditRole() {
       this.tableLoading = true
@@ -175,15 +190,54 @@ export default {
       editMemberRole(this.selectedRow.eid, this.pid, param).then(response => {
         if (response.status === 200) {
           this.$message({ message: '编辑职位成功', type: 'success' })
-          this.selectedRow.role = this.editRoleCheckList
+          // this.selectedRow.role = this.editRoleCheckList
+          this.getPjMembers()
           this.tableLoading = false
         }
       })
-      this.dialogVisible = false
+      this.dialogEditRoleVisible = false
     },
     onEditRoleCanceled() {
       this.editRoleCheckList = []
-      this.dialogVisible = false
+      this.dialogEditRoleVisible = false
+    },
+    openAddNewDialog() {
+      this.membersNotIn = []
+      fetchMembersNotIn(this.pid).then(response => {
+        const employees = response.responseMap.employees
+
+        for (const employee of employees) {
+          if (employee !== undefined) {
+            const member = {}
+            Object.keys(this.memberMap).forEach((key) => {
+              if (key !== 'role') {
+                // member.set(this.memberMap[key].jsonKey, employee[this.memberMap[key].jsonKey])
+                member[this.memberMap[key].jsonKey] = employee[this.memberMap[key].jsonKey]
+              } else {
+                member['title'] = employee['title']
+              }
+            })
+            // console.log(member)
+            this.membersNotIn.push(member)
+            this.dialogAddNewVisible = true
+          }
+        }
+      })
+    },
+    onAddNewDialogCancel() {
+      this.dialogAddNewVisible = false
+    },
+    onAddNewDialogConfirm(eid, roleList) {
+      this.tableLoading = true
+      const param = { 'roles': roleList }
+      editMemberRole(eid, this.pid, param).then(response => {
+        if (response.status === 200) {
+          this.$message({ message: '新增成员成功', type: 'success' })
+          this.getPjMembers()
+          this.tableLoading = false
+        }
+      })
+      this.dialogAddNewVisible = false
     }
   }
 }

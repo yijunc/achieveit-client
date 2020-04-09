@@ -46,6 +46,13 @@ export function toManage() {
   })
 }
 
+export function fetchMembersNotIn(pid) {
+  return request({
+    url: `/project/getNotInProject/${pid}`,
+    method: 'get'
+  })
+}
+
 export function editMemberRole(eid, pid, data) {
   return request({
     url: `/project/member/${eid}/${pid}`,

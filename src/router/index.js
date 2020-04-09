@@ -135,7 +135,7 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/property/list',
     name: 'property',
-    meta: { title: '设备与资产', icon: 'lock' },
+    meta: { title: '我的设备', icon: 'Tool' },
     children: [
       {
         path: 'list',
@@ -173,7 +173,7 @@ export const asyncRoutes = [
     meta: {
       title: '我的 WorkFlow',
       icon: 'message',
-      role: ['pm_manager', 'configurer', 'pm', 'epg_leader', 'qa_manager']
+      roles: ['pm_manager', 'configurer', 'pm', 'epg_leader', 'qa_manager']
     },
     children: [
       {
@@ -205,14 +205,17 @@ export const asyncRoutes = [
         meta: {
           title: '新建项目',
           icon: 'edit',
-          role: ['pm']
+          roles: ['pm']
         }
       },
       {
         path: 'manage/:pid',
         name: 'project-manage',
         component: () => import('@/views/project/manage/index'),
-        meta: { title: '项目管理' },
+        meta: {
+          title: '项目管理',
+          roles: ['pm_manager', 'configurer', 'pm', 'epg_leader', 'qa_manager']
+        },
         hidden: true,
         children: [
           {

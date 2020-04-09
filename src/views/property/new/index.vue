@@ -160,7 +160,7 @@ export default {
         if (key !== 'expire_time') {
           this.poForm[key] = this.$route.params.row[key]
         } else {
-          this.poForm[key] = dayjs(this.$route.params.row[key]).format() // 时间要转化
+          this.poForm[key] = dayjs(this.$route.params.row[key]).toISOString() // 时间要转化
         }
       })
     },

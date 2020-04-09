@@ -98,7 +98,7 @@
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="审批" align="center">
+      <el-table-column fixed="right" label="打回" align="center">
         <template slot-scope="{row}">
           <el-tooltip effect="dark" content="三天以内的工时才可以打回" placement="top" style="margin: 3px">
             <el-button

@@ -197,13 +197,12 @@ export default {
       this.manhourForm.pid = pid
       this.manhourForm.mid = mid
       this.manhourForm.activity_id = activity_id
-      this.manhourForm.starttime = dayjs(starttime).format() // 直接传字符串会报参数错误
-      this.manhourForm.endtime = dayjs(endtime).format()
+      this.manhourForm.starttime = dayjs(starttime).toISOString() // 直接传字符串会报参数错误
+      this.manhourForm.endtime = dayjs(endtime).toISOString()
     },
     submitForm(formName) {
-      console.log(this.manhourForm)
       var gap1 = dayjs(this.manhourForm.starttime).diff(dayjs(), 'day') // 开始时间不能早于三天前
-      var gap2 = dayjs(this.manhourForm.endtime).diff(this.manhourForm.starttime, 'minute') // 开始结束间距不能超过 24*60 min, 不能小于 0 min
+      var gap2 = dayjs(this.manhourForm.endtime).diff(this.manhourForm.starttime, 'minute') // 开始结束间隔不能超过 24*60 min, 不能小于 0 min
       var gap3 = dayjs(this.manhourForm.endtime).isAfter(dayjs()) // 结束时间不能晚于现在
       console.log(gap1, gap2, 'Before now:', gap3)
       if (gap1 > 3) {

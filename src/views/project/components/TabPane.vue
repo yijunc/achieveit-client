@@ -166,10 +166,9 @@ export default {
         }
       })
     }, // `/project/manage?pid=${row.pid}`)
-
     handleCurrentChange(val) {
       console.log(val)
-      this.getList('', val)
+      this.getList('', val-1)
     }
   }
 }

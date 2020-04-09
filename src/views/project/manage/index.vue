@@ -5,10 +5,12 @@
         <el-tab-pane key="overview" label="基本信息" name="overview">
           <Overview :pid="pid" />
         </el-tab-pane>
-        <el-tab-pane key="status" label="项目状态" name="status">
+        <el-tab-pane key="status" label="项目 WorkFlow" name="status">
           <Status :pid="pid" />
         </el-tab-pane>
-        <el-tab-pane key="member" label="人员管理" name="member" />
+        <el-tab-pane key="member" label="人员管理" name="member">
+          <Member :pid="pid" />
+        </el-tab-pane>
         <el-tab-pane key="function" label="功能管理" name="function">
           <Function :pid="pid" />
         </el-tab-pane>
@@ -18,7 +20,6 @@
         <el-tab-pane key="property" label="设备管理" name="property">
           <Property :pid="pid" />
         </el-tab-pane>
-        <el-tab-pane key="archive" label="归档管理" name="archive" />
       </el-tabs>
     </div>
   </div>
@@ -27,13 +28,14 @@
 <script>
 import Overview from './overview/index'
 import Status from './status/index'
+import Member from './member/index'
 import Function from './function/index'
 import Defect from './defect/index'
 import Property from './property/index'
 
 export default {
   name: 'Manage',
-  components: { Overview, Status, Function, Defect, Property },
+  components: { Overview, Status, Member, Function, Defect, Property },
   data() {
     return {
       pid: null,

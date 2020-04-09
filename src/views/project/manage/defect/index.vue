@@ -215,7 +215,7 @@ export default {
           break
         }
       }
-      console.log('缺陷权限: ' + this.authority)
+      // console.log('缺陷权限: ' + this.authority)
     },
     handleCurrentChange(currentPage) {
       this.currentPage = currentPage

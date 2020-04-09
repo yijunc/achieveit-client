@@ -121,7 +121,11 @@ export default {
       status: '',
       search: '',
       currentPage: 1,
-      length: 10
+      length: 10,
+      queryParams: {
+        expire_time: '',
+        is_intact: ''
+      }
     }
   },
   computed: {
@@ -182,10 +186,11 @@ export default {
         cancelButtonText: '取消',
         type: 'success'
       }).then(() => {
-        row.expire_time = dayjs().format('YYYY-MM-DD HH:mm:ss')
-        row.expired = true
-        propertyApi.updateOccupy(row.poid, row).then(response => {
+        this.queryParams.expire_time = dayjs().toISOString()
+        this.queryParams.is_intact = row.is_intact
+        propertyApi.updateOccupy(row.poid, this.queryParams).then(response => {
           this.$message.success('归还成功!')
+          this.getPoList()
         })
       }).catch(() => {
       })

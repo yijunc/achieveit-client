@@ -16,7 +16,7 @@
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleClick('defect')">
         <div class="card-panel-icon-wrapper icon-defect">
-          <svg-icon icon-class="defect" class-name="card-panel-icon" />
+          <svg-icon icon-class="bug" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
@@ -29,7 +29,7 @@
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleClick('risk')">
         <div class="card-panel-icon-wrapper icon-risk">
-          <svg-icon icon-class="risk" class-name="card-panel-icon" />
+          <svg-icon icon-class="caution" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
@@ -42,7 +42,7 @@
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleClick('manhour')">
         <div class="card-panel-icon-wrapper icon-manhour">
-          <svg-icon icon-class="manhour" class-name="card-panel-icon" />
+          <svg-icon icon-class="example" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
@@ -122,7 +122,7 @@ export default {
       }
 
       .icon-project {
-        background: #40c9c6;
+        background: #42b983;
       }
 
       .icon-defect {
@@ -130,16 +130,16 @@ export default {
       }
 
       .icon-risk {
-        background: #f4516c;
+        background: #ffcb5a;
       }
 
       .icon-manhour {
-        background: #34bfa3
+        background:#f4516c
       }
     }
 
     .icon-project {
-      color: #40c9c6;
+      color: #42b983;
     }
 
     .icon-defect {
@@ -147,11 +147,11 @@ export default {
     }
 
     .icon-risk {
-      color: #f4516c;
+      color: #ffcb5a
     }
 
     .icon-manhour {
-      color: #34bfa3
+      color: #f4516c;
     }
 
     .card-panel-icon-wrapper {

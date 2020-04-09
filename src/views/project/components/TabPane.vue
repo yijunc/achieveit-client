@@ -67,6 +67,7 @@
       <el-pagination
         layout="prev, pager, next"
         :page-count="pageCount"
+        :current-page="currentPage"
         @current-change="handleCurrentChange"
       />
     </div>
@@ -135,7 +136,8 @@ export default {
         name: this.search
       },
       loading: false,
-      pageCount: 1
+      pageCount: 1,
+      currentPage: 1
     }
   },
   created() {
@@ -154,6 +156,7 @@ export default {
         this.pageCount = response.responseMap.page_length
         this.list = response.responseMap.Project
         this.loading = false
+        this.currentPage = curPage + 1
         console.log(response.responseMap)
       })
     },
@@ -167,8 +170,9 @@ export default {
       })
     }, // `/project/manage?pid=${row.pid}`)
     handleCurrentChange(val) {
+      this.currentPage = val
       console.log(val)
-      this.getList('', val-1)
+      this.getList('', val - 1)
     }
   }
 }

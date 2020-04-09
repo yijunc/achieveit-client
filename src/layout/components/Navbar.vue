@@ -5,7 +5,11 @@
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
-      <span class="welcome">欢迎回来，{{ name }}！</span>
+      <template>
+        <notification class="notification-container right-menu-item hover-effect" />
+        <span class="right-menu-item">欢迎回来，{{ name }}！</span>
+      </template>
+
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
@@ -33,11 +37,13 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import Notification from '@/components/Notification'
 
 export default {
   components: {
     Breadcrumb,
-    Hamburger
+    Hamburger,
+    Notification
   },
   computed: {
     ...mapGetters([
@@ -82,6 +88,10 @@ export default {
   .breadcrumb-container {
     float: left;
   }
+  .notification-container {
+    display: inline-block;
+    vertical-align: bottom;
+  }
 
   .right-menu {
     float: right;
@@ -91,14 +101,19 @@ export default {
     &:focus {
       outline: none;
     }
+    // .welcome {
+    //   margin-right: 10px;
+    //   color: #5a5e66;
+    //   font-size: 14px;
+    // }
 
     .right-menu-item {
       display: inline-block;
-      padding: 0 8px;
+      padding: 0 5px;
       height: 100%;
-      font-size: 18px;
+      font-size: 14px;
       color: #5a5e66;
-      vertical-align: text-bottom;
+      // vertical-align: middle;
 
       &.hover-effect {
         cursor: pointer;
@@ -108,11 +123,6 @@ export default {
           background: rgba(0, 0, 0, .025)
         }
       }
-    }
-    .welcome {
-      margin-right: 10px;
-      color: #5a5e66;
-      font-size: 14px;
     }
 
     .avatar-container {

@@ -135,7 +135,7 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/property/list',
     name: 'property',
-    meta: { title: '设备与资产', icon: 'lock' },
+    meta: { title: '设备与资产', icon: 'Tool' },
     children: [
       {
         path: 'list',

@@ -60,8 +60,8 @@ export default {
   name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (value.length < 3) {
-        callback(new Error('The username can not be less than 3 characters'))
+      if (value.length < 1) {
+        callback(new Error('The username can not be less than 1 characters'))
       } else {
         callback()
       }

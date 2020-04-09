@@ -56,6 +56,8 @@ export function codeToString(code) {
 }
 export function generateWhatToDo(flowbits, role) {
   const bits = generateBits(flowbits)
+  console.log(bits, canDo(7))
+
   function canDo(performance_bit) {
     return canProjectDo(flowbits, performance_bit) && bits[performance_bit] === 0
   }
@@ -112,7 +114,6 @@ export function generateWhatToDo(flowbits, role) {
       }
       if (canDo(11)) {
         ret.push(11)
-        return ret
       }
       if (canDo(10)) {
         return [10]
@@ -123,16 +124,17 @@ export function generateWhatToDo(flowbits, role) {
       if (canDo(8)) {
         return [8]
       }
-      // eslint-disable-next-line no-case-declarations
       if (canDo(7)) {
         ret.push(7)
       }
       if (canDo(6)) {
         ret.push(6)
-        return ret
       }
       if (canDo(5)) {
         return [5]
+      }
+      if (ret.length !== 0) {
+        return ret
       }
       return [-1]
     case 'pm_manager':

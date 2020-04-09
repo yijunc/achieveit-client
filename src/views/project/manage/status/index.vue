@@ -22,16 +22,16 @@
         <el-card>
           <h4>你的角色为：{{ roles[0] }}</h4>
           <p>{{ whatTodo }}</p>
-          <div v-if="whatTodo.length === 0">
+          <div v-if="whatTodo.indexOf(-1) !== -1">
             <p>暂时无可操作的内容</p>
             <p>等待Workflow前序完成</p>
           </div>
-          <div>
+          <div v-if="whatTodo.indexOf(1) !== -1">
             <p>项目审批</p>
-            <el-button type="success" @click="triggerWorkflow('sup_agree')">审批通过</el-button>
-            <el-button type="danger" @click="triggerWorkflow('sup_disagree')">审批不通过</el-button>
+            <el-button type="success" @click="triggerWorkflow('agree')">审批通过</el-button>
+            <el-button type="danger" @click="triggerWorkflow('disagree')">审批不通过</el-button>
           </div>
-          <div>
+          <div v-if="whatTodo.indexOf(2) !== -1">
             <p>项目配置</p>
             <el-form ref="projectForm" :model="configureForm" label-position="left" label-width="100" width="'300">
               <el-form-item label="Git仓库" prop="git_repo">
@@ -48,11 +48,11 @@
               </el-form-item>
             </el-form>
           </div>
-          <div>
+          <div v-if="whatTodo.indexOf(3) !== -1">
             <p>指定项目EPG</p>
             <el-form ref="epgForm" :model="epgForm" label-position="left" label-width="100">
               <el-form-item label="项目EPG" prop="epg_eid">
-                <el-select v-model="epgForm.epgs" multiple class="selector" filterable placeholder="请选择EPG" style="width: 400px">
+                <el-select v-model="epgForm.epgs" multiple class="selector" filterable placeholder="请选择EPG" style="width: 300px">
                   <el-option
                     v-for="item in members"
                     :key="item.eid"
@@ -66,11 +66,11 @@
               </el-form-item>
             </el-form>
           </div>
-          <div>
+          <div v-if="whatTodo.indexOf(4) !== -1">
             <p>指定项目QA</p>
             <el-form ref="qaForm" :model="qaForm" label-position="left" label-width="100">
               <el-form-item label="项目QA" prop="qa_eid">
-                <el-select v-model="qaForm.qas" multiple class="selector" filterable placeholder="请选择QA" style="width: 400px">
+                <el-select v-model="qaForm.qas" multiple class="selector" filterable placeholder="请选择QA" style="width: 300px">
                   <el-option
                     v-for="item in members"
                     :key="item.eid"
@@ -84,11 +84,11 @@
               </el-form-item>
             </el-form>
           </div>
-          <div>
+          <div v-if="whatTodo.indexOf(5) !== -1">
             <p>拉入项目成员</p>
             <el-form ref="peopleForm" :model="peopleForm" label-position="left" label-width="100">
               <el-form-item label="项目RD Leader" prop="rd_leader_eid">
-                <el-select v-model="peopleForm.rd_leader" class="selector" filterable placeholder="请选择RD Leader" style="width: 400px">
+                <el-select v-model="peopleForm.members.rd_leader" class="selector" filterable placeholder="请选择RD Leader" style="width: 300px">
                   <el-option
                     v-for="item in members"
                     :key="item.eid"
@@ -98,7 +98,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="项目RD" prop="rd_eid">
-                <el-select v-model="peopleForm.rd" multiple class="selector" filterable placeholder="请选择RD" style="width: 400px">
+                <el-select v-model="peopleForm.members.rd" multiple class="selector" filterable placeholder="请选择RD" style="width: 300px">
                   <el-option
                     v-for="item in members"
                     :key="item.eid"
@@ -108,7 +108,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="项目QA" prop="qa_eid">
-                <el-select v-model="peopleForm.qas" class="selector" multiple filterable placeholder="请选择QA" style="width: 400px">
+                <el-select v-model="peopleForm.members.qas" class="selector" multiple filterable placeholder="请选择QA" style="width: 300px">
                   <el-option
                     v-for="item in members"
                     :key="item.eid"
@@ -122,29 +122,28 @@
               </el-form-item>
             </el-form>
           </div>
-          <div>
+          <div v-if="whatTodo.indexOf(6) !== -1">
             <p>成员配置权限配置</p>
             <el-button type="success" @click="triggerWorkflow('pm_authority')">启动配置</el-button>
           </div>
-          <div>
+          <div v-if="whatTodo.indexOf(7) !== -1">
             <p>初始化功能列表</p>
             <el-button type="success" @click="triggerWorkflow('pm_function')">配置功能列表</el-button>
           </div>
-          <div>
+          <div v-if="whatTodo.indexOf(8) !== -1">
             <p>配置全部完成，可以启动项目</p>
             <el-button type="success" @click="triggerWorkflow('pm_start')">启动项目</el-button>
           </div>
-          <div>
+          <div v-if="whatTodo.indexOf(9) !== -1">
             <p>启动交付项目</p>
             <el-button type="success" @click="triggerWorkflow('pm_submitting')">交付项目</el-button>
           </div>
-          <div>
+          <div v-if="whatTodo.indexOf(10) !== -1">
             <p>交付结束</p>
             <el-button type="success" @click="triggerWorkflow('pm_submitted')">完成交付</el-button>
           </div>
           <div>
-            <p>填写归档文件</p>
-            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+            <el-form v-if="whatTodo.indexOf(11) !== -1" ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
               <el-form-item label="归档文件1">
                 <el-input v-model="archiveForm[1]" />
               </el-form-item>
@@ -152,7 +151,7 @@
                 <el-button type="primary" @click="triggerWorkflow('pm_archive', 1)">配置</el-button>
               </el-form-item>
             </el-form>
-            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+            <el-form v-if="whatTodo.indexOf(12) !== -1" ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
               <el-form-item label="归档文件2">
                 <el-input v-model="archiveForm[2]" />
               </el-form-item>
@@ -160,7 +159,7 @@
                 <el-button type="primary" @click="triggerWorkflow('pm_archive', 2)">配置</el-button>
               </el-form-item>
             </el-form>
-            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+            <el-form v-if="whatTodo.indexOf(13) !== -1" ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
               <el-form-item label="归档文件3">
                 <el-input v-model="archiveForm[3]" />
               </el-form-item>
@@ -168,7 +167,7 @@
                 <el-button type="primary" @click="triggerWorkflow('pm_archive', 3)">配置</el-button>
               </el-form-item>
             </el-form>
-            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+            <el-form v-if="whatTodo.indexOf(14) !== -1" ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
               <el-form-item label="归档文件4">
                 <el-input v-model="archiveForm[4]" />
               </el-form-item>
@@ -176,7 +175,7 @@
                 <el-button type="primary" @click="triggerWorkflow('pm_archive', 4)">配置</el-button>
               </el-form-item>
             </el-form>
-            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+            <el-form v-if="whatTodo.indexOf(15) !== -1" ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
               <el-form-item label="归档文件5">
                 <el-input v-model="archiveForm[5]" />
               </el-form-item>
@@ -184,7 +183,7 @@
                 <el-button type="primary" @click="triggerWorkflow('pm_archive', 5)">配置</el-button>
               </el-form-item>
             </el-form>
-            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+            <el-form v-if="whatTodo.indexOf(16) !== -1" ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
               <el-form-item label="归档文件6">
                 <el-input v-model="archiveForm[6]" />
               </el-form-item>
@@ -192,7 +191,7 @@
                 <el-button type="primary" @click="triggerWorkflow('pm_archive', 6)">配置</el-button>
               </el-form-item>
             </el-form>
-            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+            <el-form v-if="whatTodo.indexOf(17) !== -1" ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
               <el-form-item label="归档文件7">
                 <el-input v-model="archiveForm[7]" />
               </el-form-item>
@@ -200,7 +199,7 @@
                 <el-button type="primary" @click="triggerWorkflow('pm_archive', 7)">配置</el-button>
               </el-form-item>
             </el-form>
-            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+            <el-form v-if="whatTodo.indexOf(18) !== -1" ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
               <el-form-item label="归档文件8">
                 <el-input v-model="archiveForm[8]" />
               </el-form-item>
@@ -208,7 +207,7 @@
                 <el-button type="primary" @click="triggerWorkflow('pm_archive', 8)">配置</el-button>
               </el-form-item>
             </el-form>
-            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+            <el-form v-if="whatTodo.indexOf(19) !== -1" ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
               <el-form-item label="归档文件9">
                 <el-input v-model="archiveForm[9]" />
               </el-form-item>
@@ -216,7 +215,7 @@
                 <el-button type="primary" @click="triggerWorkflow('pm_archive', 9)">配置</el-button>
               </el-form-item>
             </el-form>
-            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+            <el-form v-if="whatTodo.indexOf(20) !== -1" ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
               <el-form-item label="归档文件10">
                 <el-input v-model="archiveForm[10]" />
               </el-form-item>
@@ -224,7 +223,7 @@
                 <el-button type="primary" @click="triggerWorkflow('pm_archive', 10)">配置</el-button>
               </el-form-item>
             </el-form>
-            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+            <el-form v-if="whatTodo.indexOf(21) !== -1" ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
               <el-form-item label="归档文件11">
                 <el-input v-model="archiveForm[11]" />
               </el-form-item>
@@ -232,7 +231,7 @@
                 <el-button type="primary" @click="triggerWorkflow('pm_archive', 11)">配置</el-button>
               </el-form-item>
             </el-form>
-            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+            <el-form v-if="whatTodo.indexOf(22) !== -1" ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
               <el-form-item label="归档文件12">
                 <el-input v-model="archiveForm[12]" />
               </el-form-item>
@@ -240,7 +239,7 @@
                 <el-button type="primary" @click="triggerWorkflow('pm_archive', 12)">配置</el-button>
               </el-form-item>
             </el-form>
-            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+            <el-form v-if="whatTodo.indexOf(23) !== -1" ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
               <el-form-item label="归档文件13">
                 <el-input v-model="archiveForm[13]" />
               </el-form-item>
@@ -248,7 +247,7 @@
                 <el-button type="primary" @click="triggerWorkflow('pm_archive', 13)">配置</el-button>
               </el-form-item>
             </el-form>
-            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+            <el-form v-if="whatTodo.indexOf(24) !== -1" ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
               <el-form-item label="归档文件14">
                 <el-input v-model="archiveForm[14]" />
               </el-form-item>
@@ -256,14 +255,15 @@
                 <el-button type="primary" @click="triggerWorkflow('pm_archive', 14)">配置</el-button>
               </el-form-item>
             </el-form>
-            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+            <el-form v-if="whatTodo.indexOf(25) !== -1" ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
               <el-form-item label="归档文件15">
                 <el-input v-model="archiveForm[15]" />
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="triggerWorkflow('pm_archive', 15)">配置</el-button>
               </el-form-item>
-            </el-form><el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+            </el-form>
+            <el-form v-if="whatTodo.indexOf(26) !== -1" ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
               <el-form-item label="归档文件16">
                 <el-input v-model="archiveForm[16]" />
               </el-form-item>
@@ -271,7 +271,7 @@
                 <el-button type="primary" @click="triggerWorkflow('pm_archive', 16)">配置</el-button>
               </el-form-item>
             </el-form>
-            <el-form ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
+            <el-form v-if="whatTodo.indexOf(27) !== -1" ref="archiveForm" :model="archiveForm" label-position="left" label-width="100" width="'300">
               <el-form-item label="归档文件17">
                 <el-input v-model="archiveForm[17]" />
               </el-form-item>
@@ -280,15 +280,14 @@
               </el-form-item>
             </el-form>
           </div>
-          <div>
+          <div v-if="whatTodo.indexOf(28) !== -1">
             <p>确认项目归档</p>
             <el-button type="success" @click="triggerWorkflow('configurer_archive_done')">审批通过</el-button>
           </div>
-          <!--        <p>{{ activity.employeeName }} 提交于 {{ activity.timestamp }}</p>-->
+          <div>
+            <img src="@/assets/pivot_dribbble.gif" class="emptyGif">
+          </div>
         </el-card>
-        <div>
-          <img src="@/assets/pivot_dribbble.gif" class="emptyGif">
-        </div>
       </el-col>
     </el-row>
   </div>
@@ -296,7 +295,7 @@
 
 <script>
 import { fetchProjectByPid } from '@/api/project'
-import { fetchWorkflowTimeline } from '@/api/workflow'
+import { fetchWorkflowTimeline, pushWorkflow } from '@/api/workflow'
 import { generateWhatToDo } from '@/utils/workflow'
 import { getByTitle } from '@/api/user'
 import { parseTime } from '@/utils'
@@ -439,13 +438,12 @@ export default {
       return ret
     },
     triggerWorkflow(op, args) {
-      console.log(op)
       let data = {}
       switch (op) {
-        case 'sup_agree':
+        case 'agree':
           data = {}
           break
-        case 'sup_disagree':
+        case 'disagree':
           data = {}
           break
         case 'config':
@@ -457,14 +455,14 @@ export default {
         case 'qa':
           data = this.qaForm
           break
-        case 'member':
+        case 'pm_member':
           data = this.peopleForm
           break
         case 'pm_authority':
           data = {}
           break
         case 'pm_function':
-          data = { 'function': { '000000': '0-1' }}
+          data = { 'function': { '001000': '测试一下', '001001': '二级 1-1', '002000': '一级 2', '002001': '二级 2-2', '002002': '二级 2-1', '003000': '一级 3', '003001': 'test', '004000': '一级 4' }}
           break
         case 'pm_start':
           data = {}
@@ -480,13 +478,27 @@ export default {
           data.content = this.archiveForm[args]
           break
         case 'configurer_archive_done':
-
           break
         default:
           this.$message.error('裂开了')
       }
       data.todo = op
-      console.log(data)
+      pushWorkflow(this.projectData.workflow.wid, this.eid, data).then((response) => {
+        this.whatTodo = generateWhatToDo(response.responseMap.workflow.flowbits, this.roles[0])
+        this.$notify({
+          title: 'WorkFlow操作',
+          message: '操作成功，WorkFlow推进至后序操作',
+          type: 'success',
+          duration: 0
+        })
+        this.activities = this.generateTimeline(this.projectData.workflow.wid)
+      }).catch(() => {
+        this.$notify.error({
+          title: 'WorkFlow操作',
+          message: '网络错误或WorkFlow外发生错误'
+        })
+      })
+      console.log(this.projectData.workflow.wid, this.eid, data)
     }
   }
 }

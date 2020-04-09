@@ -3,7 +3,8 @@
     <div class="filter-wrap mb-2">
       <el-row style="width: 100%">
         <el-col :xs="24" :sm="24" :md="12" :lg="3">
-          <el-select v-model="queryParam.status" placeholder="缺陷状态" @change="handleFilter">
+          <el-select v-model="statusSearch" placeholder="缺陷状态" @change="handleFilter">
+            <el-option label="all" value="" />
             <el-option
               v-for="status in Object.keys(defectStatus)"
               :key="defectStatus[status].value"
@@ -15,7 +16,7 @@
 
         <el-col :xs="24" :sm="24" :md="12" :lg="7" style="margin-left: 10px">
           <el-input
-            v-model.trim="queryParam.desc"
+            v-model.trim="descSearch"
             placeholder="搜索缺陷描述"
             clearable
             @keyup.enter.native="handleFilter"
@@ -129,13 +130,9 @@ export default {
     return {
       defectStatus: defectApi.defectStatus(),
       defectAuthority: defectApi.defectAuthority(),
+      statusSearch: '',
+      descSearch: '',
       defectList: [],
-      queryParam: {
-        status: null,
-        desc: '',
-        page: 0,
-        length: 10
-      },
       pageCount: 1
     }
   },
@@ -149,7 +146,9 @@ export default {
         params: {
           did: row.did,
           row: row
-        }
+        },
+        statusSearch: '',
+        descSearch: ''
       })
     },
     handleDelete(did) {
@@ -189,8 +188,16 @@ export default {
     },
 
     handleFilter() {
-      defectApi.getDefects(this.queryParam).then(response => {
-        console.log(response.responseMap.Defect, this.queryParam)
+      var queryParams = {
+        desc: this.descSearch,
+        page: 0,
+        length: 10
+      }
+      if (this.statusSearch !== '') {
+        queryParams.status = this.statusSearch
+      }
+      defectApi.getDefects(queryParams).then(response => {
+        console.log(response.responseMap.Defect, queryParams)
         this.pageCount = response.responseMap.page_length
         this.initDefectData(response.responseMap.Defect)
       })

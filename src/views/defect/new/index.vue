@@ -60,12 +60,16 @@
               />
             </el-select>
           </el-form-item>
-
           <el-form-item>
             <el-button :loading="loading" type="primary" @click="submitForm('defectForm')">保存</el-button>
             <el-button @click="resetForm('defectForm')">重置</el-button>
           </el-form-item>
         </el-form>
+      </el-col>
+      <el-col :span="8">
+        <div>
+          <img src="@/assets/brb.gif" class="emptyGif">
+        </div>
       </el-col>
     </el-row>
   </div>

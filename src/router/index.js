@@ -223,12 +223,6 @@ export const asyncRoutes = [
             name: 'project-manage-overview',
             component: () => import('@/views/project/manage/overview/index'),
             meta: { title: '项目基本信息', icon: 'tree-table' }
-          },
-          {
-            path: 'status',
-            name: 'project-manage-status',
-            component: () => import('@/views/project/manage/status/index'),
-            meta: { title: '项目状态', icon: 'tree-table' }
           }
         ]
       }

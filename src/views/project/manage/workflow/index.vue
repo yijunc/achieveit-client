@@ -20,11 +20,12 @@
       </el-col>
       <el-col :span="12">
         <el-card>
-          <h4>你的角色为：{{ roles[0] }}</h4>
-          <p>{{ whatTodo }}</p>
+          <p>你的角色为：{{ roles[0] }}</p>
+<!--          <p>{{ whatTodo }}</p>-->
           <div v-if="whatTodo.indexOf(-1) !== -1">
-            <p>暂时无可操作的内容</p>
-            <p>等待Workflow前序完成</p>
+            <el-tag type="success">
+              <span style="font-size: medium">你的Workflow暂时无可操作的内容</span>
+            </el-tag>
           </div>
           <div v-if="whatTodo.indexOf(1) !== -1">
             <p>项目审批</p>
@@ -302,7 +303,7 @@ import { parseTime } from '@/utils'
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'Status',
+  name: 'Workflow',
   // eslint-disable-next-line vue/require-prop-types
   props: ['pid'],
   data() {
@@ -483,7 +484,7 @@ export default {
           this.$message.error('裂开了')
       }
       data.todo = op
-      pushWorkflow(this.projectData.workflow.wid, this.eid, data).then((response) => {
+      pushWorkflow(this.projectData.workflow.wid, this.eid, data).then(async(response) => {
         this.whatTodo = generateWhatToDo(response.responseMap.workflow.flowbits, this.roles[0])
         this.$notify({
           title: 'WorkFlow操作',
@@ -491,7 +492,7 @@ export default {
           type: 'success',
           duration: 0
         })
-        this.activities = this.generateTimeline(this.projectData.workflow.wid)
+        this.activities = await this.generateTimeline(this.projectData.workflow.wid)
       }).catch(() => {
         this.$notify.error({
           title: 'WorkFlow操作',

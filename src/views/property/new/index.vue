@@ -62,7 +62,7 @@
       </el-col>
       <el-col :span="8">
         <div>
-          <img src="@/assets/fast_company_lab.gif" class="emptyGif">
+          <img src="@/assets/krue_rocker.gif" class="emptyGif">
         </div>
       </el-col>
     </el-row>

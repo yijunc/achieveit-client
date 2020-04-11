@@ -3,7 +3,7 @@
     <div style="margin: 10px">人员管理
       <el-button style="margin: 0 10px" type="primary" plain size="mini" @click="openAddNewDialog">新增</el-button>
     </div>
-    <el-table v-model="members" v-loading="tableLoading" :data="members" style="width: 100%">
+    <el-table v-loading="tableLoading" border stripe :data="tableData" style="width: 100%">
 
       <!--<el-table-column-->
       <!--:prop="col.jsonKey"-->
@@ -12,19 +12,27 @@
       <!--align="center"-->
       <!--/>-->
 
-      <el-table-column prop="eid" label="ID" align="center" />
+      <el-table-column prop="eid" sortable label="ID" min-width="20" align="center" />
 
-      <el-table-column prop="name" label="姓名" align="center" />
+      <el-table-column prop="name" label="姓名" min-width="30" align="center">
+        <template slot="header" slot-scope="scope">
+          <el-input
+            v-model="search"
+            size="mini"
+            placeholder="搜索成员姓名"
+          />
+        </template>
+      </el-table-column>>
 
-      <el-table-column prop="email" label="邮箱" align="center" />
+      <el-table-column prop="email" label="邮箱" min-width="70" align="center" />
 
-      <el-table-column prop="address" label="地址" align="center" />
+      <el-table-column prop="address" label="地址" min-width="70" align="center" />
 
-      <el-table-column prop="department" label="部门" align="center" />
+      <el-table-column prop="department" label="部门" min-width="30" align="center" />
 
-      <el-table-column prop="phone" label="联系方式" align="center" />
+      <el-table-column prop="phone" label="联系方式" min-width="40" align="center" />
 
-      <el-table-column prop="role" label="职位" align="center">
+      <el-table-column prop="role" label="职位" min-width="50" align="center">
         <template slot-scope="{row}">
           <el-tag v-for="r in row.role" :key="r" :type="roles[r].tag">{{ r }}</el-tag>
         </template>
@@ -34,6 +42,8 @@
         fixed="right"
         label="操作"
         width="100"
+        min-width="30"
+        align="center"
       >
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="handleEdit(scope.row)">编辑</el-button>
@@ -71,6 +81,7 @@ export default {
   props: { pid: String },
   data() {
     return {
+      search: '',
       memberMap: {
         eid: { text: 'ID', jsonKey: 'eid' },
         name: { text: '姓名', jsonKey: 'name' },
@@ -100,13 +111,12 @@ export default {
       dialogAddNewVisible: false,
       editRoleCheckList: [],
       selectedRow: null,
-      membersNotIn: []
+      membersNotIn: [],
     }
   },
   computed: {
     tableData: function() {
-      this.getPjMembers()
-      return this.members
+      return this.members.filter(data => !this.search || data.name.toLowerCase().includes(this.search.toLowerCase()))
     }
   },
   created() {
@@ -154,7 +164,7 @@ export default {
         }
 
         this.tableLoading = false
-        console.log(this.members)
+        // console.log(this.members)
       })
     },
     handleEdit(row) {
@@ -173,7 +183,7 @@ export default {
           }
         })
       }
-      console.log(row)
+      // console.log(row)
     },
     validate(member) {
       let flag = false

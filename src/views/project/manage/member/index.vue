@@ -51,6 +51,15 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+      small
+      background
+      :current-page="currentPage"
+      :page-size="pageSize"
+      layout="total, jumper, prev, pager, next"
+      :total="total"
+      @current-change="handleCurrentChange"
+    />
 
     <el-dialog title="编辑职位" :visible.sync="dialogEditRoleVisible" @close="onEditRoleCanceled">
       <h3>选择你要编辑的职位</h3>
@@ -81,6 +90,8 @@ export default {
   props: { pid: String },
   data() {
     return {
+      pageSize: 15,
+      currentPage: 1,
       search: '',
       memberMap: {
         eid: { text: 'ID', jsonKey: 'eid' },
@@ -111,12 +122,19 @@ export default {
       dialogAddNewVisible: false,
       editRoleCheckList: [],
       selectedRow: null,
-      membersNotIn: [],
+      membersNotIn: []
     }
   },
   computed: {
     tableData: function() {
-      return this.members.filter(data => !this.search || data.name.toLowerCase().includes(this.search.toLowerCase()))
+      return this.members
+        .filter(data => !this.search || data.name.toLowerCase().includes(this.search.toLowerCase()))
+        .slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize)
+    },
+    total: function() {
+      return this.members
+        .filter(data => !this.search || data.name.toLowerCase().includes(this.search.toLowerCase()))
+        .length
     }
   },
   created() {

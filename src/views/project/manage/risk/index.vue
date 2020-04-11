@@ -1,39 +1,11 @@
 <template>
   <div class="app-container">
-    <div class="filter-wrap mb-2">
-      <el-row style="width: 100%">
-        <el-col :xs="24" :sm="24" :md="12" :lg="3">
-          <el-select v-model="status" placeholder="到期状态">
-            <el-option label="全部" value="" />
-            <el-option
-              key="0"
-              label="未到期"
-              value="0"
-            />
-            <el-option
-              key="1"
-              label="已到期"
-              value="1"
-            />
-          </el-select>
-        </el-col>
-        <el-col :xs="24" :sm="24" :md="12" :lg="7" style="margin-left: 10px">
-          <el-input
-            v-model.trim="search"
-            placeholder="搜索设备名称"
-            clearable
-          />
-        </el-col>
-      </el-row>
-    </div>
-
     <el-table
       :data="tableData"
       stripe
       border
       style="width: 100%;"
       :default-sort="{prop: 'grade', order: 'descending'}"
-      @row-click="openProjectDetails"
     >
       <el-table-column prop="id" sortable min-width="10" align="center">
         <template slot-scope="scope">
@@ -41,6 +13,13 @@
         </template>
       </el-table-column>
       <el-table-column prop="type" label="风险类别" min-width="40" align="center">
+        <template slot="header" slot-scope="scope">
+          <el-input
+            v-model="search"
+            size="mini"
+            placeholder="搜索类别"
+          />
+        </template>
         <template slot-scope="scope">
           <el-tag>{{ scope.row.type }}</el-tag>
         </template>
@@ -68,7 +47,14 @@
           <el-tag type="info">{{ scope.row.influence }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="eids" label="拥有者" min-width='15' align="center">
+      <el-table-column prop="eids" label="拥有者" min-width="20" align="center">
+        <template slot="header" slot-scope="scope">
+          <el-input
+            v-model="ownerSearch"
+            size="mini"
+            placeholder="搜索姓名"
+          />
+        </template>
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
             <p>ID: {{ scope.row.employee.eid }}</p>
@@ -79,25 +65,32 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column prop="eids" label="人员分配" min-width='50' align="center">
-        <template slot-scope="scope">
-          <el-tag type="info">{{ scope.row.influence }}</el-tag>
+      <el-table-column prop="eids" label="人员分配" min-width="50" align="center">
+        <template slot-scope="{row}">
+          <el-popover v-for="it in row.relations" :key="it" trigger="hover" placement="top">
+            <p>ID: {{ it.employeeProject.employee.eid }}</p>
+            <p>Email: {{ it.employeeProject.employee.email }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag type="info">{{ it.employeeProject.employee.name }}</el-tag>
+            </div>
+          </el-popover>
         </template>
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="150" align="center">
         <template slot-scope="{row}">
           <el-button
             size="small"
-            :disabled="row.expired || eid!=row.employee_id"
+            type="primary"
+            :disabled="eid!==row.employee.eid"
             @click="handleUpdate(row)"
           >更新
           </el-button>
           <el-button
             size="small"
-            type="primary"
-            :disabled="row.expired || eid!=row.employee_id"
-            @click="handleReturn(row)"
-          >归还
+            type="danger"
+            :disabled="eid!==row.employee.eid"
+            @click="handleDelete(row)"
+          >删除
           </el-button>
         </template>
       </el-table-column>
@@ -156,9 +149,9 @@ export default {
   props: { pid: String },
   data: function() {
     return {
-      riskList: [],
-      status: '',
+      ownerSearch: '',
       search: '',
+      riskList: [],
       currentPage: 1,
       length: 10
     }
@@ -166,13 +159,14 @@ export default {
   computed: {
     tableData: function() {
       return this.riskList
-        .filter(data => !this.status || (data.expired && this.status === '1') || (!data.expired && this.status === '0'))
-        .filter(data => !this.search || data.property_desc.toLowerCase().includes(this.search.toLowerCase()))
+        .filter(data => !this.search || data.type.toLowerCase().includes(this.search.toLowerCase()))
+        .filter(data => !this.ownerSearch || data.employee.name.toLowerCase().includes(this.ownerSearch.toLowerCase()))
         .slice((this.currentPage - 1) * this.length, this.currentPage * this.length)
     },
     total: function() {
       return this.riskList
-        .filter(data => !this.status || (data.expired && this.status === '1') || (!data.expired && this.status === '0'))
+        .filter(data => !this.search || data.type.toLowerCase().includes(this.search.toLowerCase()))
+        .filter(data => !this.ownerSearch || data.employee.name.toLowerCase().includes(this.ownerSearch.toLowerCase()))
         .filter(data => !this.search || data.property_desc.toLowerCase().includes(this.search.toLowerCase()))
         .length
     },
@@ -199,18 +193,16 @@ export default {
         }
       })
     },
-    handleReturn(row) {
-      this.$confirm('确定归还' + row.property_desc + '?', '提示', {
+    handleDelete(row) {
+      this.$confirm('确定删除 ' + row.type + ' ?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'success'
+        type: 'warning'
       }).then(() => {
-        row.expire_time = dayjs()
-        row.expired = true
-        propertyApi.updateOccupy(row.poid, row).then(response => {
-          this.$message.success('归还成功!')
-        })
-      }).catch(() => {
+        // RiskAPI.(row.poid, row).then(response => {
+        //   this.$message.success('归还成功!')
+        // })
+        this.getRiskList()
       })
     },
     handleCurrentChange(currentPage) {

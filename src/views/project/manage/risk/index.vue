@@ -1,5 +1,14 @@
 <template>
   <div class="app-container">
+    <el-row class="new">
+      <el-button
+        size="small"
+        type="primary"
+        icon="el-icon-magic-stick"
+        @click="handleNew"
+      >新建项目风险
+      </el-button>
+    </el-row>
     <el-table
       :data="tableData"
       stripe
@@ -12,39 +21,32 @@
           {{ scope.row.rid }}
         </template>
       </el-table-column>
-      <el-table-column prop="type" label="风险类别" min-width="40" align="center">
-        <template slot="header" slot-scope="scope">
-          <el-input
-            v-model="search"
-            size="mini"
-            placeholder="搜索类别"
-          />
-        </template>
+      <el-table-column prop="type" label="风险类别" min-width="60" align="center">
         <template slot-scope="scope">
-          <el-tag>{{ scope.row.type }}</el-tag>
+          <el-popover trigger="hover" placement="top">
+            <p>风险策略：{{ scope.row.strategy }}</p>
+            <p>风险影响：{{ scope.row.strategy }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag>{{ scope.row.type }}</el-tag>
+            </div>
+          </el-popover>
         </template>
       </el-table-column>
-
-      <el-table-column prop="desc" label="描述" min-width="50" align="center">
+      <el-table-column prop="desc" label="描述" min-width="60" align="center">
         <template slot-scope="scope">
           {{ scope.row.desc }}
         </template>
       </el-table-column>
       <el-table-column prop="grade" sortable label="紧急度" min-width="15" align="center">
         <template slot-scope="scope">
-          <el-tag type="warning">
+          <el-tag :type=" scope.row.grade | gradeTypeFilter ">
             {{ scope.row.grade }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="strategy" label="风险策略" min-width="15" align="center">
+      <el-table-column prop="influence" label="提醒频率" min-width="15" align="center">
         <template slot-scope="scope">
-          <el-tag type="info">{{ scope.row.strategy }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column prop="influence" label="风险影响" min-width="15" align="center">
-        <template slot-scope="scope">
-          <el-tag type="info">{{ scope.row.influence }}</el-tag>
+          {{ scope.row.frequency }}
         </template>
       </el-table-column>
       <el-table-column prop="eids" label="拥有者" min-width="20" align="center">
@@ -67,7 +69,7 @@
       </el-table-column>
       <el-table-column prop="eids" label="人员分配" min-width="50" align="center">
         <template slot-scope="{row}">
-          <el-popover v-for="it in row.relations" :key="it" trigger="hover" placement="top">
+          <el-popover v-for="it in row.relations" :key="it.employeeProject.employee.eid" trigger="hover" placement="top">
             <p>ID: {{ it.employeeProject.employee.eid }}</p>
             <p>Email: {{ it.employeeProject.employee.email }}</p>
             <div slot="reference" class="name-wrapper">
@@ -106,66 +108,60 @@
       @current-change="handleCurrentChange"
     />
 
+    <el-dialog width="50%" :title="dialogTitle" :visible.sync="dialogVisible" @close="handleClose">
+      <RiskDialog
+        :op="dialogOp"
+        :on-dialog-submit="handleClose"
+        :on-dialog-cancel="handleClose"
+        :member-not-in="memberNotIn"
+        :pid="pid"
+      />
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
 import * as RiskAPI from '@/api/risk'
+import * as ProjectAPI from '@/api/project'
 import { mapGetters } from 'vuex'
-const dayjs = require('dayjs')
+import RiskDialog from '@/views/project/manage/risk/components/RiskDialog'
 
 export default {
   name: 'Risk',
+  components: { RiskDialog },
   filters: {
-    intactFilter(is_intact) {
-      const intactMap = {
-        true: '完好',
-        false: '有损坏'
+    gradeTypeFilter(grade) {
+      const gradeMap = {
+        'p0': 'danger',
+        'p1': 'warning',
+        'p2': 'primary'
       }
-      return intactMap[is_intact]
-    },
-    intactTypeFilter(is_intact) {
-      const intactMap = {
-        true: 'success',
-        false: 'danger'
-      }
-      return intactMap[is_intact]
-    },
-    expiredFilter(expired) {
-      const expiredMap = {
-        true: '已到期',
-        false: '未到期'
-      }
-      return expiredMap[expired]
-    },
-    expiredTypeFilter(expired) {
-      const expiredMap = {
-        true: 'danger',
-        false: 'success'
-      }
-      return expiredMap[expired]
+      return gradeMap[grade]
     }
   },
   props: { pid: String },
   data: function() {
     return {
       ownerSearch: '',
-      search: '',
       riskList: [],
+      memberList: [],
       currentPage: 1,
-      length: 10
+      length: 10,
+      dialogTitle: '',
+      dialogVisible: false,
+      dialogOp: '',
+      memberNotIn: []
     }
   },
   computed: {
     tableData: function() {
       return this.riskList
-        .filter(data => !this.search || data.type.toLowerCase().includes(this.search.toLowerCase()))
         .filter(data => !this.ownerSearch || data.employee.name.toLowerCase().includes(this.ownerSearch.toLowerCase()))
         .slice((this.currentPage - 1) * this.length, this.currentPage * this.length)
     },
     total: function() {
       return this.riskList
-        .filter(data => !this.search || data.type.toLowerCase().includes(this.search.toLowerCase()))
         .filter(data => !this.ownerSearch || data.employee.name.toLowerCase().includes(this.ownerSearch.toLowerCase()))
         .filter(data => !this.search || data.property_desc.toLowerCase().includes(this.search.toLowerCase()))
         .length
@@ -176,22 +172,44 @@ export default {
   },
   mounted() {
     this.getRiskList()
+    this.getProjectInfo()
   },
   methods: {
     getRiskList() {
       RiskAPI.getRiskByPid(this.pid).then(response => {
         this.riskList = response.responseMap.risks
-        console.log(this.riskList)
+        // console.log(this.riskList)
       })
     },
-    handleUpdate(row) {
-      this.$router.push({
-        name: 'property-edit',
-        params: {
-          poid: row.poid,
-          row: row
-        }
+    getProjectInfo() {
+      ProjectAPI.fetchProjectByPid(this.pid).then(response => {
+        this.memberList = response.responseMap.EmployeeProjects
+        // console.log(this.memberList)
       })
+    },
+    handleNew() {
+      this.dialogTitle = '新建项目风险'
+      this.dialogOp = 'new'
+      this.dialogVisible = true
+    },
+    handleUpdate(row) {
+      // console.log(row)
+      for (const it of this.memberList) {
+        let ok = true
+        for (const itt of row.relations) {
+          if (it.epid === itt.employee_project_id) {
+            ok = false
+            break
+          }
+        }
+        if (ok) {
+          this.memberNotIn.push(it)
+        }
+      }
+      // console.log(this.memberNotIn)
+      this.dialogTitle = '编辑项目风险'
+      this.dialogOp = 'update'
+      this.dialogVisible = true
     },
     handleDelete(row) {
       this.$confirm('确定删除 ' + row.type + ' ?', '提示', {
@@ -199,11 +217,16 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        // RiskAPI.(row.poid, row).then(response => {
-        //   this.$message.success('归还成功!')
-        // })
+        RiskAPI.deleteRisk(this.eid, row.rid).then(response => {
+          this.$message.success('删除成功!')
+        })
         this.getRiskList()
       })
+    },
+    handleClose() {
+      this.dialogVisible = false
+      this.getRiskList()
+      this.memberNotIn = []
     },
     handleCurrentChange(currentPage) {
       this.currentPage = currentPage
@@ -212,3 +235,10 @@ export default {
 }
 
 </script>
+
+<style>
+  .new{
+    margin-bottom: 10px;
+    width: 300px;
+  }
+</style>

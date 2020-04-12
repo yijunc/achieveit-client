@@ -4,6 +4,8 @@
       ref="singleTable"
       :data="membersNotIn"
       highlight-current-row
+      stripe
+      border
       style="width: 100%"
       @current-change="handleCurrentChange"
     >

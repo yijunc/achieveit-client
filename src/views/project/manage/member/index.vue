@@ -266,6 +266,9 @@ export default {
         }
       })
       this.dialogAddNewVisible = false
+    },
+    handleCurrentChange(currentPage) {
+      this.currentPage = currentPage
     }
   }
 }

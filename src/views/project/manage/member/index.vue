@@ -144,6 +144,7 @@ export default {
     getPjMembers() {
       this.tableLoading = true
       this.members = []
+      const originMember = []
       fetchProjectByPid(this.pid).then(response => {
         const employees = response.responseMap.EmployeeProjects
         const workflow = response.responseMap.Project.workflow
@@ -164,7 +165,7 @@ export default {
               }
             })
             // console.log(member)
-            this.members.push(member)
+            originMember.push(member)
           }
         }
 
@@ -178,9 +179,20 @@ export default {
             }
           })
           // console.log(member)
-          this.members.push(member)
+          originMember.push(member)
         }
 
+        const map = new Map()
+        originMember.forEach(m => {
+          const key = parseInt(m.eid)
+          if (map.has(key)) {
+            map.get(key).role.push(m.role)
+          } else {
+            map.set(key, m)
+          }
+        })
+        this.members = Array.from(map.values())
+        console.log(this.members)
         this.tableLoading = false
         // console.log(this.members)
       })

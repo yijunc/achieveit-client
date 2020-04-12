@@ -108,12 +108,14 @@
       @current-change="handleCurrentChange"
     />
 
-    <el-dialog width="50%" :title="dialogTitle" :visible.sync="dialogVisible" @close="handleClose">
+    <el-dialog width="50%" :title="dialogTitle" :visible.sync="dialogVisible" @open="handleOpen" @close="handleClose">
       <RiskDialog
+        ref="dialog"
         :op="dialogOp"
         :on-dialog-submit="handleClose"
         :on-dialog-cancel="handleClose"
-        :member-not-in="memberNotIn"
+        :members="memberList"
+        :risk="riskForDialog"
         :pid="pid"
       />
     </el-dialog>
@@ -147,11 +149,11 @@ export default {
       riskList: [],
       memberList: [],
       currentPage: 1,
-      length: 10,
+      length: 15,
       dialogTitle: '',
       dialogVisible: false,
       dialogOp: '',
-      memberNotIn: []
+      riskForDialog: null
     }
   },
   computed: {
@@ -191,25 +193,14 @@ export default {
       this.dialogTitle = '新建项目风险'
       this.dialogOp = 'new'
       this.dialogVisible = true
+      this.riskForDialog = null
     },
     handleUpdate(row) {
       // console.log(row)
-      for (const it of this.memberList) {
-        let ok = true
-        for (const itt of row.relations) {
-          if (it.epid === itt.employee_project_id) {
-            ok = false
-            break
-          }
-        }
-        if (ok) {
-          this.memberNotIn.push(it)
-        }
-      }
-      // console.log(this.memberNotIn)
       this.dialogTitle = '编辑项目风险'
       this.dialogOp = 'update'
       this.dialogVisible = true
+      this.riskForDialog = row
     },
     handleDelete(row) {
       this.$confirm('确定删除 ' + row.type + ' ?', '提示', {
@@ -223,10 +214,13 @@ export default {
         this.getRiskList()
       })
     },
+    handleOpen() {
+      this.$refs.dialog.populateDialog()
+    },
     handleClose() {
       this.dialogVisible = false
       this.getRiskList()
-      this.memberNotIn = []
+      this.riskForDialog = null
     },
     handleCurrentChange(currentPage) {
       this.currentPage = currentPage

@@ -34,7 +34,7 @@
       <el-form-item label="风险人员" prop="ep_ids">
         <el-select v-model="riskForm.ep_ids" multiple class="selector" filterable placeholder="请选择">
           <el-option
-            v-for="item in memberNotIn"
+            v-for="item in members"
             :key="item.epid"
             :label="item.employee.name"
             :value="item.epid"
@@ -59,7 +59,7 @@ export default {
     rid: String,
     pid: String,
     op: String,
-    memberNotIn: Array,
+    members: Array,
     risk: Object,
     onDialogSubmit: Function,
     onDialogCancel: Function
@@ -110,15 +110,25 @@ export default {
       'eid'
     ])
   },
-  created() {
-    this.populateDialog()
-  },
   methods: {
     populateDialog() {
       RiskAPI.getRiskTemplate().then(response => {
         this.riskTemplate = response.responseMap.risks
       })
-      // console.log(this.riskTemplate)
+      if (this.risk !== null) {
+        this.riskForm = {
+          type: this.risk.type,
+          desc: this.risk.desc,
+          grade: this.risk.grade,
+          influence: this.risk.influence,
+          strategy: this.risk.strategy,
+          frequency: this.risk.frequency,
+          ep_ids: []
+        }
+        for (const it of this.risk.relations) {
+          this.riskForm.ep_ids.push(it.employeeProject.epid)
+        }
+      }
     },
     onSubmit(formName) {
       this.$refs[formName].validate((valid) => {
@@ -153,15 +163,6 @@ export default {
           return false
         }
       })
-      this.riskForm = {
-        type: '',
-        desc: '',
-        grade: '',
-        influence: '',
-        strategy: '',
-        frequency: 0,
-        ep_ids: []
-      }
     },
     onCancel() {
       this.riskForm = {
@@ -170,7 +171,7 @@ export default {
         grade: '',
         influence: '',
         strategy: '',
-        frequency: 0,
+        frequency: '',
         ep_ids: []
       }
       this.onDialogCancel()

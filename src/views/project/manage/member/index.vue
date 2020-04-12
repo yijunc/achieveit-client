@@ -184,7 +184,8 @@ export default {
 
         const map = new Map()
         originMember.forEach(m => {
-          const key = parseInt(m.eid)
+          // console.log(m)
+          const key = m.eid
           if (map.has(key)) {
             map.get(key).role.push(m.role)
           } else {

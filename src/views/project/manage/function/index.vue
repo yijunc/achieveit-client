@@ -1,6 +1,7 @@
 <template>
   <div class="app-container">
     <div style="margin: 10px">功能展示
+      <el-button style="margin: 0 10px" type="primary" plain size="mini" @click="addFirstLevel">添加一级功能</el-button>
       <el-button :loading="updateLoading" style="margin: 0 10px" type="primary" plain size="mini" @click="updateFunc">保存修改</el-button>
     </div>
     <el-tree
@@ -240,6 +241,12 @@ export default {
       var pad = '000'
       var result = (pad + num.toString()).slice(-pad.length)
       return result
+    },
+    addFirstLevel() {
+      this.inputDialog('请输入功能名称', (value) => {
+        const newChild = { id: new Date().getTime(), label: value, children: [] }
+        this.data.push(newChild)
+      })
     }
   }
 }

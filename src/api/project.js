@@ -74,3 +74,26 @@ export function fetchMilestone(pid) {
     method: 'get'
   })
 }
+
+export function addMilestone(pid, data) {
+  return request({
+    url: `/milestone/add/${pid}`,
+    method: 'post',
+    data
+  })
+}
+
+export function editMilestone(mid, data) {
+  return request({
+    url: `/milestone/${mid}`,
+    method: 'put',
+    data
+  })
+}
+
+export function delMilestone(mid) {
+  return request({
+    url: `/milestone/deleteByMid/${mid}`,
+    method: 'delete'
+  })
+}

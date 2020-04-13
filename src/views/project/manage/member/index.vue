@@ -155,7 +155,6 @@ export default {
       const originMember = []
       fetchProjectByPid(this.pid).then(response => {
         const employees = response.responseMap.EmployeeProjects
-        const workflow = response.responseMap.Project.workflow
 
         // get employee from project info
         for (const index in employees) {
@@ -192,8 +191,7 @@ export default {
 
         const map = new Map()
         originMember.forEach(m => {
-          // console.log(m)
-          const key = m.eid
+          const key = parseInt(m.eid)
           if (map.has(key)) {
             map.get(key).role.concat(m.role)
           } else {
@@ -204,9 +202,6 @@ export default {
         console.log(this.members)
         this.tableLoading = false
         // console.log(this.members)
-      }).catch(() => {
-        this.$message.error('获取成员错误')
-        this.tableLoading = false
       })
     },
     handleEdit(row) {
@@ -223,9 +218,6 @@ export default {
             this.getPjMembers()
             this.tableLoading = false
           }
-        }).catch(() => {
-          this.$message.error('删除成员错误')
-          this.tableLoading = false
         })
       }
       // console.log(row)
@@ -249,9 +241,6 @@ export default {
           this.getPjMembers()
           this.tableLoading = false
         }
-      }).catch(() => {
-        this.$message.error('编辑成员错误')
-        this.tableLoading = false
       })
       this.dialogEditRoleVisible = false
     },
@@ -280,9 +269,6 @@ export default {
             this.dialogAddNewVisible = true
           }
         }
-      }).catch(() => {
-        this.$message.error('编辑Dialog初始化错误')
-        this.tableLoading = false
       })
     },
     onAddNewDialogCancel() {
@@ -297,9 +283,6 @@ export default {
           this.getPjMembers()
           this.tableLoading = false
         }
-      }).catch(() => {
-        this.$message.error('编辑人工错误')
-        this.tableLoading = false
       })
       this.dialogAddNewVisible = false
     },

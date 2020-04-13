@@ -18,6 +18,16 @@
         size="mini"
         @click="updateFunc"
       >保存修改</el-button>
+      <el-button
+        v-if="this.$store.getters.manage_roles.includes(this.$store.getters.roles[0])"
+        :loading="downloadLoading"
+        icon="el-icon-document"
+        style="margin: 0 10px"
+        type="primary"
+        plain
+        size="mini"
+        @click="exportExcel"
+      >导出</el-button>
     </div>
     <el-tree
       v-loading="treeLoading"
@@ -35,8 +45,8 @@
           style="padding-left: 20px"
         >
           <el-button
-            :disabled="!isManage"
             v-if="node.parent==undefined || node.parent.parent==undefined"
+            :disabled="!isManage"
             icon="el-icon-document-add"
             type="text"
             size="mini"
@@ -125,7 +135,8 @@ export default {
       },
       updateLoading: false,
       treeLoading: false,
-      isManage: this.$store.getters.manage_roles.includes(this.$store.getters.roles[0])
+      isManage: this.$store.getters.manage_roles.includes(this.$store.getters.roles[0]),
+      downloadLoading: false
     }
   },
   created() {
@@ -230,20 +241,7 @@ export default {
     },
     updateFunc() {
       this.updateLoading = true
-
-      const func = {}
-      for (let i = 0; i < this.data.length; i++) {
-        for (let j = -1; j < (this.data[i].children !== undefined ? this.data[i].children.length : 0); j++) {
-          if (j === -1) {
-            const index = this.getIndexWithLeadingZeros(i + 1) + '000'
-            func[index] = this.data[i].label
-          } else {
-            const index = this.getIndexWithLeadingZeros(i + 1) + this.getIndexWithLeadingZeros(j + 1, 3)
-            func[index] = this.data[i].children[j].label
-          }
-        }
-      }
-      console.log(func)
+      const func = this.generateJson()
 
       updateProject(this.pid, { 'function': func }).then(response => {
         if (response.status === 200) {
@@ -262,6 +260,38 @@ export default {
         this.updateLoading = false
       })
     },
+    generateJson() {
+      const func = {}
+      for (let i = 0; i < this.data.length; i++) {
+        for (let j = -1; j < (this.data[i].children !== undefined ? this.data[i].children.length : 0); j++) {
+          if (j === -1) {
+            const index = this.getIndexWithLeadingZeros(i + 1) + '000'
+            func[index] = this.data[i].label
+          } else {
+            const index = this.getIndexWithLeadingZeros(i + 1) + this.getIndexWithLeadingZeros(j + 1, 3)
+            func[index] = this.data[i].children[j].label
+          }
+        }
+      }
+      console.log(func)
+      return func
+    },
+    generateList() {
+      const func = []
+      for (let i = 0; i < this.data.length; i++) {
+        for (let j = -1; j < (this.data[i].children !== undefined ? this.data[i].children.length : 0); j++) {
+          if (j === -1) {
+            const index = this.getIndexWithLeadingZeros(i + 1) + '000'
+            func.push({ 'level': index, 'func': this.data[i].label })
+          } else {
+            const index = this.getIndexWithLeadingZeros(i + 1) + this.getIndexWithLeadingZeros(j + 1, 3)
+            func.push({ 'level': index, 'func': this.data[i].children[j].label })
+          }
+        }
+      }
+      console.log(func)
+      return func
+    },
     getIndexWithLeadingZeros(num) {
       var pad = '000'
       var result = (pad + num.toString()).slice(-pad.length)
@@ -272,6 +302,26 @@ export default {
         const newChild = { id: new Date().getTime(), label: value, children: [] }
         this.data.push(newChild)
       })
+    },
+    exportExcel() {
+      this.downloadLoading = true
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = ['level', 'func']
+        const filterVal = ['level', 'func']
+        const list = this.generateList()
+        const data = this.formatJson(filterVal, list)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: this.pid + '功能',
+          autoWidth: true,
+          bookType: 'xlsx'
+        })
+        this.downloadLoading = false
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => v[j]))
     }
   }
 }

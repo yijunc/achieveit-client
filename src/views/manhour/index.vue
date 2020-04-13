@@ -1,21 +1,34 @@
 <template>
   <div class="app-container">
     <div class="filter-wrap mb-2">
-      <div style="display: flex">
-        <el-date-picker
-          v-model="selectedDate"
-          type="date"
-          placeholder="日期查询"
-          @keyup.enter.native="handleFilter"
-        />
-        <el-button icon="el-icon-search" type="primary" size="small" style="margin-left: 10px" @click="handleFilter">
-          搜索
-        </el-button>
-      </div>
+      <el-row style="width: 100%">
+        <el-col :xs="24" :sm="24" :md="12" :lg="3">
+          <el-select v-model="statusSearch" placeholder="工时状态">
+            <el-option label="全部" value="" />
+            <el-option
+              v-for="s in Object.keys(manhourStatus)"
+              :key="manhourStatus[s].value"
+              :label="manhourStatus[s].text"
+              :value="manhourStatus[s].value"
+            />
+          </el-select>
+        </el-col>
+        <el-col :xs="24" :sm="24" :md="12" :lg="7" style="margin-left: 10px">
+          <el-date-picker
+            v-model="selectedDate"
+            type="date"
+            placeholder="上报日期查询"
+            @keyup.enter.native="handleFilter"
+          />
+          <el-button icon="el-icon-search" type="primary" size="small" style="margin-left: 10px" @click="handleFilter">
+            搜索
+          </el-button>
+        </el-col>
+      </el-row>
     </div>
 
     <el-table
-      :data="manhourList"
+      :data="tableData"
       border
       fit
       highlight-current-row
@@ -111,8 +124,19 @@ export default {
         length: 10,
         date: null
       },
+      statusSearch: '',
       selectedDate: null, // 日期filter使用
       pageCount: 1
+    }
+  },
+  computed: {
+    tableData: function() {
+      return this.manhourList
+        .filter(data => !this.statusSearch || data.status === this.statusSearch)
+    },
+    total: function() {
+      return this.manhourList
+        .filter(data => !this.statusSearch || data.status === this.statusSearch).length
     }
   },
   mounted() {

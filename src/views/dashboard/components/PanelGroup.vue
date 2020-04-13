@@ -81,7 +81,7 @@ export default {
           this.$router.push('/defect')
           break
         case 'risk':
-          this.$router.push('/risk')
+          this.$router.push('#')
           break
         case 'manhour':
           this.$router.push('/manhour')

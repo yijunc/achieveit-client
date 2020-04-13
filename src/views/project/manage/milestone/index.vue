@@ -21,15 +21,7 @@
 
       <el-table-column prop="mid" sortable label="ID" min-width="20" align="center" />
 
-      <el-table-column prop="desc" label="里程碑描述" min-width="30" align="center">
-        <template slot="header" slot-scope="scope">
-          <el-input
-            v-model="search"
-            size="mini"
-            placeholder="搜索里程碑内容"
-          />
-        </template>
-      </el-table-column>>
+      <el-table-column prop="desc" label="里程碑描述" min-width="30" align="center" />
 
       <el-table-column prop="time" width="150px" align="center" label="最后更新时间" sortable>
         <template slot-scope="scope">
@@ -82,7 +74,7 @@ export default {
       return null
     }
   },
-  props: { pid: String },
+  props: ['pid'],
   data() {
     return {
       tableData: [],
@@ -94,21 +86,28 @@ export default {
   methods: {
     getMilestones() {
       this.tableLoading = true
+      console.log(this.pid)
       fetchMilestone(this.pid).then(response => {
-        const milestones = response.responseMap.milestone
+        const milestones = response.responseMap.milestones
         console.log(milestones)
         this.tableData = milestones
         this.tableLoading = false
       })
+    },
+    handleEdit(row) {
+      console.log(row)
+    },
+    handleDelete(row) {
+      console.log(row)
+    },
+    openAddDialog() {
+      this.dialogVisible = true
+    },
+    onClosed() {
+    },
+    onConfirmed() {
     }
-  },
-  handleEdit(row) { console.log(row) },
-  handleDelete(row) { console.log(row) },
-  openAddDialog() {
-    this.dialogVisible = true
-  },
-  onClosed() {},
-  onConfirmed() {}
+  }
 }
 </script>
 

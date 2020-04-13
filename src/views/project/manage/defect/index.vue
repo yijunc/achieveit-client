@@ -38,26 +38,26 @@
       style="width: 100%"
       :default-sort="{prop: 'did', order: 'descending'}"
     >
-      <el-table-column prop="did" label="ID" width="70" align="center" sortable />
+      <el-table-column prop="did" label="ID" min-width="20" align="center" sortable />
       <el-table-column prop="desc" label="缺陷描述" show-overflow-tooltip>
         <template slot-scope="{row}">
           <span style="margin-left: 10px">{{ row.desc }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column prop="projectName" label="项目名称" width="150" align="center" show-overflow-tooltip>
-        <template slot-scope="{row}">
-          <span style="margin-left: 10px">{{ row.projectName }}</span>
-        </template>
-      </el-table-column>
+<!--      <el-table-column prop="projectName" label="项目名称" min-width="50" align="center" show-overflow-tooltip>-->
+<!--        <template slot-scope="{row}">-->
+<!--          <span style="margin-left: 10px">{{ row.projectName }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
 
-      <el-table-column prop="commit" label="commit" width="150" align="center" show-overflow-tooltip>
+      <el-table-column prop="commit" label="commit" min-width="50" align="center" show-overflow-tooltip>
         <template slot-scope="{row}">
           <el-link :href="row.git_repo" target="_blank" type="primary">{{ row.commit }}</el-link>
         </template>
       </el-table-column>
 
-      <el-table-column label="git仓库地址" width="150" show-overflow-tooltip align="center">
+      <el-table-column label="git仓库地址" min-width="50" show-overflow-tooltip align="center">
         <template slot-scope="{row}">
           <el-link
             :href="row.git_repo"
@@ -78,13 +78,13 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="employeeName" width="85" label="创建人" align="center" show-overflow-tooltip>
+      <el-table-column prop="employeeName" min-width="30" label="创建人" align="center" show-overflow-tooltip>
         <template slot-scope="{row}">
           <span style="margin-left: 10px">{{ row.employeeName }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="权限" width="150" show-overflow-tooltip align="center">
+      <el-table-column label="权限" min-width="70" show-overflow-tooltip align="center">
         <template slot-scope="{row}">
           <span style="margin-left: 10px">{{ defectAuthority[row.authority_desc].text }}</span>
         </template>
@@ -110,6 +110,7 @@
     </el-table>
 
     <el-pagination
+      small
       :current-page="currentPage"
       :page-size="length"
       :total="total"

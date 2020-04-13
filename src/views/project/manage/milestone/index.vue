@@ -47,7 +47,20 @@
     </el-table>
 
     <el-dialog title="编辑里程碑" :visible.sync="dialogVisible" @close="onClosed">
-
+      <el-form ref="form" :model="form" label-width="120px" label-position="left" size="medium">
+        <el-form-item label="里程碑ID">
+          <el-input v-model="form.mid" :disabled="true" />
+        </el-form-item>
+        <el-form-item label="里程碑描述">
+          <el-input v-model="form.desc" />
+        </el-form-item>
+        <el-form-item label="时间">
+          <el-date-picker v-model="form.time" type="datetime" placeholder="选择日期时间" />
+        </el-form-item>
+        <el-form-item label="项目ID" >
+          <el-input v-model="form.project_id"  disabled="true"/>
+        </el-form-item>
+      </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible=false">取 消</el-button>
         <el-button type="primary" @click="onConfirmed">确 定</el-button>
@@ -57,7 +70,7 @@
 </template>
 
 <script>
-import { fetchMilestone } from '@/api/project'
+import { fetchMilestone, addMilestone, editMilestone, delMilestone } from '@/api/project'
 export default {
   name: 'Milestone',
   filters: {
@@ -79,33 +92,70 @@ export default {
     return {
       tableData: [],
       tableLoading: false,
-      dialogVisible: false
+      dialogVisible: false,
+      form: {}
     }
   },
   created() { this.getMilestones() },
   methods: {
     getMilestones() {
       this.tableLoading = true
-      console.log(this.pid)
       fetchMilestone(this.pid).then(response => {
         const milestones = response.responseMap.milestones
-        console.log(milestones)
         this.tableData = milestones
         this.tableLoading = false
       })
     },
     handleEdit(row) {
-      console.log(row)
+      this.dialogVisible = true
+      this.form = row
+      this.form['type'] = 'edit'
     },
     handleDelete(row) {
       console.log(row)
+      delMilestone(row.mid).then(response => {
+        if (response.status === 200) {
+          this.$message({ message: '删除成功', type: 'success' })
+        } else {
+          this.$message.error(response.message)
+        }
+        this.getMilestones()
+      })
     },
     openAddDialog() {
       this.dialogVisible = true
+      this.form = {}
+      this.form['type'] = 'add'
     },
     onClosed() {
+      this.form = {}
     },
     onConfirmed() {
+      const param = {
+        'time': this.form.time,
+        'desc': this.form.desc
+      }
+      if (this.form['type'] === 'add') {
+        addMilestone(this.pid, param).then(response => {
+          if (response.status === 200) {
+            this.$message({ message: '增加成功', type: 'success' })
+          } else {
+            this.$message.error(response.message)
+          }
+          this.getMilestones()
+          this.dialogVisible = false
+        })
+      } else if (this.form['type'] === 'edit') {
+        editMilestone(this.form.mid, param).then(response => {
+          if (response.status === 200) {
+            this.$message({ message: '编辑成功', type: 'success' })
+          } else {
+            this.$message.error(response.message)
+          }
+          this.getMilestones()
+          this.dialogVisible = false
+        })
+      }
     }
   }
 }

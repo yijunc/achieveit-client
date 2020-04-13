@@ -216,9 +216,11 @@ export default {
           if (response.status === 200) {
             this.$message({ message: '删除成功', type: 'success' })
             // this.members.splice(this.members.indexOf(row), 1)
-            this.getPjMembers()
-            this.tableLoading = false
+          } else {
+            this.$message.error(response.message)
           }
+          this.getPjMembers()
+          this.tableLoading = false
         })
       }
       // console.log(row)
@@ -239,9 +241,11 @@ export default {
         if (response.status === 200) {
           this.$message({ message: '编辑职位成功', type: 'success' })
           // this.selectedRow.role = this.editRoleCheckList
-          this.getPjMembers()
-          this.tableLoading = false
+        } else {
+          this.$message.error(response.message)
         }
+        this.getPjMembers()
+        this.tableLoading = false
       })
       this.dialogEditRoleVisible = false
     },
@@ -281,10 +285,13 @@ export default {
       editMemberRole(eid, this.pid, param).then(response => {
         if (response.status === 200) {
           this.$message({ message: '新增成员成功', type: 'success' })
-          this.getPjMembers()
           this.tableLoading = false
+        } else {
+          this.$message.error(response.message)
         }
+        this.tableLoading = false
       })
+      this.getPjMembers()
       this.dialogAddNewVisible = false
     },
     handleCurrentChange(currentPage) {

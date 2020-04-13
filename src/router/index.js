@@ -66,7 +66,6 @@ export const constantRoutes = [
       }
     ]
   },
-
   {
     path: '/defect',
     component: Layout,

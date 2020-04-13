@@ -1,7 +1,14 @@
 <template>
   <div>
     <div style="margin: 10px">人员管理
-      <el-button style="margin: 0 10px" type="primary" plain size="mini" @click="openAddNewDialog">新增</el-button>
+      <el-button
+        v-if="this.$store.getters.manage_roles.includes(this.$store.getters.roles[0])"
+        style="margin: 0 10px"
+        type="primary"
+        plain
+        size="mini"
+        @click="openAddNewDialog"
+      >新增</el-button>
     </div>
     <el-table v-loading="tableLoading" border stripe :data="tableData" style="width: 100%">
 
@@ -39,6 +46,7 @@
       </el-table-column>
 
       <el-table-column
+        v-if="this.$store.getters.manage_roles.includes(this.$store.getters.roles[0])"
         fixed="right"
         label="操作"
         width="100"

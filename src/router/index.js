@@ -214,7 +214,7 @@ export const asyncRoutes = [
         component: () => import('@/views/project/manage/index'),
         meta: {
           title: '项目管理',
-          roles: ['pm_manager', 'configurer', 'pm', 'epg_leader', 'qa_manager']
+          // roles: ['pm_manager', 'configurer', 'pm', 'epg_leader', 'qa_manager']
         },
         hidden: true,
         children: [

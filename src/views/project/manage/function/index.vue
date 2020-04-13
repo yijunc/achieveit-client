@@ -1,8 +1,23 @@
 <template>
   <div class="app-container">
     <div style="margin: 10px">功能展示
-      <el-button style="margin: 0 10px" type="primary" plain size="mini" @click="addFirstLevel">添加一级功能</el-button>
-      <el-button :loading="updateLoading" style="margin: 0 10px" type="primary" plain size="mini" @click="updateFunc">保存修改</el-button>
+      <el-button
+        v-if="this.$store.getters.manage_roles.includes(this.$store.getters.roles[0])"
+        style="margin: 0 10px"
+        type="primary"
+        plain
+        size="mini"
+        @click="addFirstLevel"
+      >添加一级功能</el-button>
+      <el-button
+        v-if="this.$store.getters.manage_roles.includes(this.$store.getters.roles[0])"
+        :loading="updateLoading"
+        style="margin: 0 10px"
+        type="primary"
+        plain
+        size="mini"
+        @click="updateFunc"
+      >保存修改</el-button>
     </div>
     <el-tree
       v-loading="treeLoading"
@@ -16,8 +31,11 @@
     >
       <span slot-scope="{ node, data }" class="custom-tree-node">
         <span>{{ node.label }}</span>
-        <span style="padding-left: 20px">
+        <span
+          style="padding-left: 20px"
+        >
           <el-button
+            :disabled="!isManage"
             v-if="node.parent==undefined || node.parent.parent==undefined"
             icon="el-icon-document-add"
             type="text"
@@ -25,12 +43,14 @@
             @click="() => append(data)"
           />
           <el-button
+            :disabled="!isManage"
             icon="el-icon-edit"
             type="text"
             size="mini"
             @click="() => edit(node, data)"
           />
           <el-button
+            :disabled="!isManage"
             type="text"
             size="mini"
             icon="el-icon-delete"
@@ -40,7 +60,11 @@
       </span>
     </el-tree>
     <el-divider />
-    <upload-excel-component :on-success="handleSuccess" :before-upload="beforeUpload" />
+    <upload-excel-component
+      v-if="this.$store.getters.manage_roles.includes(this.$store.getters.roles[0])"
+      :on-success="handleSuccess"
+      :before-upload="beforeUpload"
+    />
   </div>
 </template>
 
@@ -100,7 +124,8 @@ export default {
         '003004': '3-4'
       },
       updateLoading: false,
-      treeLoading: false
+      treeLoading: false,
+      isManage: this.$store.getters.manage_roles.includes(this.$store.getters.roles[0])
     }
   },
   created() {

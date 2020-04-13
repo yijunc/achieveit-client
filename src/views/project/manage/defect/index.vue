@@ -78,6 +78,11 @@
           </el-tag>
         </template>
       </el-table-column>
+      <el-table-column prop="employeeName" width="85" label="创建人" align="center" show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <span style="margin-left: 10px">{{ row.employeeName }}</span>
+        </template>
+      </el-table-column>
 
       <el-table-column label="权限" width="150" show-overflow-tooltip align="center">
         <template slot-scope="{row}">
@@ -172,7 +177,6 @@ export default {
         type: 'danger'
       }).then(() => {
         defectApi.deleteDefect(did).then((response) => {
-          console.log(response)
           this.$message.success('删除成功!')
           this.getDefectList()
         })
@@ -195,7 +199,8 @@ export default {
           project_id: data.project_id,
           commit: data.commit,
           git_repo: data.git_repo,
-          projectName: data.employeeProject.project.name, // 和defect页面的稍稍有点不一样，因为接口返回的数据有点不同
+          projectName: data.employeeProject ? data.employeeProject.project.name : null, // 和defect页面的稍稍有点不一样，因为接口返回的数据有点不同
+          employeeName: data.employeeProject ? data.employeeProject.employee.name : null,
           status: data.status,
           authority_desc: data.authority_desc
         }

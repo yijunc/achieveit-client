@@ -6,6 +6,7 @@
 
     <div class="right-menu">
       <template>
+        <!-- <search id="header-search" class="notification-container right-menu-item" /> -->
         <notification class="notification-container right-menu-item hover-effect" />
         <span class="right-menu-item">欢迎回来，{{ name }}！</span>
       </template>

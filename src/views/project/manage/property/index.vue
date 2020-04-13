@@ -47,15 +47,16 @@
           <span style="margin-left: 10px">{{ row.projectName }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="employeeName" label="租借员工ID" align="center" show-overflow-tooltip>
-        <template slot-scope="{row}">
-          <span style="margin-left: 10px">{{ row.employee_id }}</span>
-        </template>
-      </el-table-column>
 
       <el-table-column prop="expire_time" label="到期时间" align="center" sortable show-overflow-tooltip>
         <template slot-scope="{row}">
           <span style="margin-left: 10px">{{ row.expire_time }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column prop="employeeName" label="租借人ID" align="center" show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <span style="margin-left: 10px">{{ row.employee_id }}</span>
         </template>
       </el-table-column>
 
@@ -217,10 +218,11 @@ export default {
         cancelButtonText: '取消',
         type: 'success'
       }).then(() => {
-        row.expire_time = dayjs()
-        row.expired = true
-        propertyApi.updateOccupy(row.poid, row).then(response => {
+        this.queryParams.expire_time = dayjs().toISOString()
+        this.queryParams.is_intact = row.is_intact
+        propertyApi.updateOccupy(row.poid, this.queryParams).then(response => {
           this.$message.success('归还成功!')
+          this.getPoList()
         })
       }).catch(() => {
       })

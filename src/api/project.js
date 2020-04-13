@@ -67,3 +67,10 @@ export function deleteMemberRole(epid) {
     method: 'delete'
   })
 }
+
+export function fetchMilestone(pid) {
+  return request({
+    url: `/milestone/getByPid/${pid}`,
+    method: 'get'
+  })
+}

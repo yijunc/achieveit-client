@@ -94,14 +94,14 @@
         <template slot-scope="{row}">
           <el-button
             size="small"
-            :disabled="defectAuthority[row.authority_desc].code > authority || (defectAuthority[row.authority_desc].code == 1 && authority == 2)"
+            :disabled="eid!=row.employee_id && (defectAuthority[row.authority_desc].code > authority || (defectAuthority[row.authority_desc].code == 1 && authority == 2))"
             @click="handleEdit(row)"
           >编辑
           </el-button>
           <el-button
             size="small"
             type="danger"
-            :disabled="defectAuthority[row.authority_desc].code > authority || (defectAuthority[row.authority_desc].code == 1 && authority == 2)"
+            :disabled="eid!=row.employee_id && (defectAuthority[row.authority_desc].code > authority || (defectAuthority[row.authority_desc].code == 1 && authority == 2))"
             @click="handleDelete(row.did)"
           >删除
           </el-button>
@@ -201,6 +201,7 @@ export default {
           commit: data.commit,
           git_repo: data.git_repo,
           projectName: data.employeeProject ? data.employeeProject.project.name : null, // 和defect页面的稍稍有点不一样，因为接口返回的数据有点不同
+          employee_id: data.employeeProject ? data.employeeProject.employee_id : null,
           employeeName: data.employeeProject ? data.employeeProject.employee.name : null, // 如果创建缺陷的人被删了，就置空
           status: data.status,
           authority_desc: data.authority_desc

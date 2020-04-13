@@ -133,10 +133,6 @@ export default {
     tableData: function() {
       return this.manhourList
         .filter(data => !this.statusSearch || data.status === this.statusSearch)
-    },
-    total: function() {
-      return this.manhourList
-        .filter(data => !this.statusSearch || data.status === this.statusSearch).length
     }
   },
   mounted() {

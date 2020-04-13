@@ -204,6 +204,9 @@ export default {
         console.log(this.members)
         this.tableLoading = false
         // console.log(this.members)
+      }).catch(() => {
+        this.$message.error('获取成员错误')
+        this.tableLoading = false
       })
     },
     handleEdit(row) {
@@ -220,6 +223,9 @@ export default {
             this.getPjMembers()
             this.tableLoading = false
           }
+        }).catch(() => {
+          this.$message.error('删除成员错误')
+          this.tableLoading = false
         })
       }
       // console.log(row)
@@ -243,6 +249,9 @@ export default {
           this.getPjMembers()
           this.tableLoading = false
         }
+      }).catch(() => {
+        this.$message.error('编辑成员错误')
+        this.tableLoading = false
       })
       this.dialogEditRoleVisible = false
     },
@@ -271,6 +280,9 @@ export default {
             this.dialogAddNewVisible = true
           }
         }
+      }).catch(() => {
+        this.$message.error('编辑Dialog初始化错误')
+        this.tableLoading = false
       })
     },
     onAddNewDialogCancel() {
@@ -285,6 +297,9 @@ export default {
           this.getPjMembers()
           this.tableLoading = false
         }
+      }).catch(() => {
+        this.$message.error('编辑人工错误')
+        this.tableLoading = false
       })
       this.dialogAddNewVisible = false
     },

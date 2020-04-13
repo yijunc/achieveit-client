@@ -23,6 +23,9 @@
         <el-tab-pane key="property" label="设备管理" name="property">
           <Property :pid="pid" />
         </el-tab-pane>
+        <el-tab-pane key="milestone" label="我的里程碑" name="milestone">
+          <Milestone :pid="pid" />
+        </el-tab-pane>
       </el-tabs>
     </div>
   </div>
@@ -36,10 +39,11 @@ import Function from './function/index'
 import Defect from './defect/index'
 import Risk from './risk/index'
 import Property from './property/index'
+import Milestone from './milestone/index'
 
 export default {
   name: 'Manage',
-  components: { Overview, Workflow, Member, Function, Defect, Risk, Property },
+  components: { Overview, Workflow, Member, Function, Defect, Risk, Property, Milestone },
   data() {
     return {
       pid: null,
@@ -50,7 +54,7 @@ export default {
         { label: '功能管理', key: 'function' },
         { label: '缺陷管理', key: 'defect' },
         { label: '风险管理', key: 'risk' },
-        { label: '设备管理', key: 'property' },
+        { label: '设备管理', key: 'property' }
       ],
       activeName: 'overview',
       createdTimes: 0

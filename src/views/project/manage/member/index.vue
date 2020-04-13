@@ -289,9 +289,10 @@ export default {
         } else {
           this.$message.error(response.message)
         }
+        this.getPjMembers()
         this.tableLoading = false
+        this.dialogAddNewVisible = false
       })
-      this.getPjMembers()
       this.dialogAddNewVisible = false
     },
     handleCurrentChange(currentPage) {

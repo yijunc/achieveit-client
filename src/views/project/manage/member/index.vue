@@ -1,7 +1,14 @@
 <template>
   <div>
     <div style="margin: 10px">人员管理
-      <el-button style="margin: 0 10px" type="primary" plain size="mini" @click="openAddNewDialog">新增</el-button>
+      <el-button
+        v-if="this.$store.getters.manage_roles.includes(this.$store.getters.roles[0])"
+        style="margin: 0 10px"
+        type="primary"
+        plain
+        size="mini"
+        @click="openAddNewDialog"
+      >新增</el-button>
     </div>
     <el-table v-loading="tableLoading" border stripe :data="tableData" style="width: 100%">
 
@@ -39,6 +46,7 @@
       </el-table-column>
 
       <el-table-column
+        v-if="this.$store.getters.manage_roles.includes(this.$store.getters.roles[0])"
         fixed="right"
         label="操作"
         width="100"
@@ -169,18 +177,18 @@ export default {
           }
         }
 
-        for (const workflowMemberIndex in this.workflowMember) {
-          const member = {}
-          Object.keys(this.memberMap).forEach(key => {
-            if (key !== 'role') {
-              member[this.memberMap[key].jsonKey] = workflow[this.workflowMember[workflowMemberIndex]][this.memberMap[key].jsonKey]
-            } else {
-              member['role'] = [this.workflowMember[workflowMemberIndex]]
-            }
-          })
-          // console.log(member)
-          originMember.push(member)
-        }
+        // for (const workflowMemberIndex in this.workflowMember) {
+        //   const member = {}
+        //   Object.keys(this.memberMap).forEach(key => {
+        //     if (key !== 'role') {
+        //       member[this.memberMap[key].jsonKey] = workflow[this.workflowMember[workflowMemberIndex]][this.memberMap[key].jsonKey]
+        //     } else {
+        //       member['role'] = [this.workflowMember[workflowMemberIndex]]
+        //     }
+        //   })
+        //   // console.log(member)
+        //   originMember.push(member)
+        // }
 
         const map = new Map()
         originMember.forEach(m => {

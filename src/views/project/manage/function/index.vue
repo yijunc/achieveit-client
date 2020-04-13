@@ -1,8 +1,33 @@
 <template>
   <div class="app-container">
     <div style="margin: 10px">功能展示
-      <el-button style="margin: 0 10px" type="primary" plain size="mini" @click="addFirstLevel">添加一级功能</el-button>
-      <el-button :loading="updateLoading" style="margin: 0 10px" type="primary" plain size="mini" @click="updateFunc">保存修改</el-button>
+      <el-button
+        v-if="this.$store.getters.manage_roles.includes(this.$store.getters.roles[0])"
+        style="margin: 0 10px"
+        type="primary"
+        plain
+        size="mini"
+        @click="addFirstLevel"
+      >添加一级功能</el-button>
+      <el-button
+        v-if="this.$store.getters.manage_roles.includes(this.$store.getters.roles[0])"
+        :loading="updateLoading"
+        style="margin: 0 10px"
+        type="primary"
+        plain
+        size="mini"
+        @click="updateFunc"
+      >保存修改</el-button>
+      <el-button
+        v-if="this.$store.getters.manage_roles.includes(this.$store.getters.roles[0])"
+        :loading="downloadLoading"
+        icon="el-icon-document"
+        style="margin: 0 10px"
+        type="primary"
+        plain
+        size="mini"
+        @click="exportExcel"
+      >导出</el-button>
     </div>
     <el-tree
       v-loading="treeLoading"
@@ -16,21 +41,26 @@
     >
       <span slot-scope="{ node, data }" class="custom-tree-node">
         <span>{{ node.label }}</span>
-        <span style="padding-left: 20px">
+        <span
+          style="padding-left: 20px"
+        >
           <el-button
             v-if="node.parent==undefined || node.parent.parent==undefined"
+            :disabled="!isManage"
             icon="el-icon-document-add"
             type="text"
             size="mini"
             @click="() => append(data)"
           />
           <el-button
+            :disabled="!isManage"
             icon="el-icon-edit"
             type="text"
             size="mini"
             @click="() => edit(node, data)"
           />
           <el-button
+            :disabled="!isManage"
             type="text"
             size="mini"
             icon="el-icon-delete"
@@ -40,7 +70,11 @@
       </span>
     </el-tree>
     <el-divider />
-    <upload-excel-component :on-success="handleSuccess" :before-upload="beforeUpload" />
+    <upload-excel-component
+      v-if="this.$store.getters.manage_roles.includes(this.$store.getters.roles[0])"
+      :on-success="handleSuccess"
+      :before-upload="beforeUpload"
+    />
   </div>
 </template>
 
@@ -100,7 +134,9 @@ export default {
         '003004': '3-4'
       },
       updateLoading: false,
-      treeLoading: false
+      treeLoading: false,
+      isManage: this.$store.getters.manage_roles.includes(this.$store.getters.roles[0]),
+      downloadLoading: false
     }
   },
   created() {
@@ -205,20 +241,7 @@ export default {
     },
     updateFunc() {
       this.updateLoading = true
-
-      const func = {}
-      for (let i = 0; i < this.data.length; i++) {
-        for (let j = -1; j < (this.data[i].children !== undefined ? this.data[i].children.length : 0); j++) {
-          if (j === -1) {
-            const index = this.getIndexWithLeadingZeros(i + 1) + '000'
-            func[index] = this.data[i].label
-          } else {
-            const index = this.getIndexWithLeadingZeros(i + 1) + this.getIndexWithLeadingZeros(j + 1, 3)
-            func[index] = this.data[i].children[j].label
-          }
-        }
-      }
-      console.log(func)
+      const func = this.generateJson()
 
       updateProject(this.pid, { 'function': func }).then(response => {
         if (response.status === 200) {
@@ -237,6 +260,38 @@ export default {
         this.updateLoading = false
       })
     },
+    generateJson() {
+      const func = {}
+      for (let i = 0; i < this.data.length; i++) {
+        for (let j = -1; j < (this.data[i].children !== undefined ? this.data[i].children.length : 0); j++) {
+          if (j === -1) {
+            const index = this.getIndexWithLeadingZeros(i + 1) + '000'
+            func[index] = this.data[i].label
+          } else {
+            const index = this.getIndexWithLeadingZeros(i + 1) + this.getIndexWithLeadingZeros(j + 1, 3)
+            func[index] = this.data[i].children[j].label
+          }
+        }
+      }
+      console.log(func)
+      return func
+    },
+    generateList() {
+      const func = []
+      for (let i = 0; i < this.data.length; i++) {
+        for (let j = -1; j < (this.data[i].children !== undefined ? this.data[i].children.length : 0); j++) {
+          if (j === -1) {
+            const index = this.getIndexWithLeadingZeros(i + 1) + '000'
+            func.push({ 'level': index, 'func': this.data[i].label })
+          } else {
+            const index = this.getIndexWithLeadingZeros(i + 1) + this.getIndexWithLeadingZeros(j + 1, 3)
+            func.push({ 'level': index, 'func': this.data[i].children[j].label })
+          }
+        }
+      }
+      console.log(func)
+      return func
+    },
     getIndexWithLeadingZeros(num) {
       var pad = '000'
       var result = (pad + num.toString()).slice(-pad.length)
@@ -247,6 +302,26 @@ export default {
         const newChild = { id: new Date().getTime(), label: value, children: [] }
         this.data.push(newChild)
       })
+    },
+    exportExcel() {
+      this.downloadLoading = true
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = ['level', 'func']
+        const filterVal = ['level', 'func']
+        const list = this.generateList()
+        const data = this.formatJson(filterVal, list)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: this.pid + '功能',
+          autoWidth: true,
+          bookType: 'xlsx'
+        })
+        this.downloadLoading = false
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => v[j]))
     }
   }
 }

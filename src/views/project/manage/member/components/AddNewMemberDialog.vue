@@ -73,8 +73,8 @@ export default {
       this.onAddNewDialogCancel()
     },
     onSubmit() {
-      this.addRoleCheckList = []
       this.onAddNewDialogConfirm(this.currentRow.eid, this.addRoleCheckList)
+      this.addRoleCheckList = []
     }
   }
 }

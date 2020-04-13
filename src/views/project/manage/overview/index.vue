@@ -21,6 +21,7 @@
           <el-collapse-item>
             <template slot="title">
               基本信息 <i
+                v-if="this.$store.getters.manage_roles.includes(this.$store.getters.roles[0])"
                 style="padding-left: 10px"
                 class="header-icon el-icon-edit"
                 @click="openDialog"
@@ -29,8 +30,8 @@
             <div
               v-for="(name,key) in projectInfoMap"
               :key="key"
-              v-bind="project"
               v-loading="infoLoading"
+              v-bind="project"
               style="font-size: 14px;line-height: 2"
             >
               <div v-if="key == 'starttime' || key == 'endtime'">
@@ -129,6 +130,8 @@ export default {
   },
   created() {
     this.fetchProject()
+    console.log(this.$store.getters.roles)
+    console.log(this.$store.getters.manage_roles)
   },
   methods: {
     fetchProject() {

@@ -9,6 +9,7 @@ const getters = {
   notification: state => state.notification.msg,
   permission_routes: state => state.permission.routes,
   visitedViews: state => state.tagsView.visitedViews,
-  cachedViews: state => state.tagsView.cachedViews
+  cachedViews: state => state.tagsView.cachedViews,
+  manage_roles: state => ['pm_manager', 'configurer', 'pm', 'epg_leader', 'qa_manager']
 }
 export default getters

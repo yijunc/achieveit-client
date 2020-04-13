@@ -47,8 +47,8 @@
       style="width: 100%"
       :default-sort="{prop: 'did', order: 'descending'}"
     >
-      <el-table-column prop="did" label="ID" min-width="20" align="center" sortable />
-      <el-table-column prop="desc" label="缺陷描述" show-overflow-tooltip>
+      <el-table-column prop="did" label="ID" min-width="30" align="center" sortable />
+      <el-table-column prop="desc" label="缺陷描述" min-width="120" show-overflow-tooltip>
         <template slot-scope="{row}">
           <span style="margin-left: 10px">{{ row.desc }}</span>
         </template>
@@ -88,7 +88,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="权限" min-width="150" show-overflow-tooltip align="center">
+      <el-table-column label="权限" min-width="100" show-overflow-tooltip align="center">
         <template slot-scope="{row}">
           <span style="margin-left: 10px">{{ defectAuthority[row.authority_desc].text }}</span>
         </template>

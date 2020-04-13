@@ -201,7 +201,7 @@ export default {
           commit: data.commit,
           git_repo: data.git_repo,
           projectName: data.employeeProject ? data.employeeProject.project.name : null, // 和defect页面的稍稍有点不一样，因为接口返回的数据有点不同
-          employeeName: data.employeeProject ? data.employeeProject.employee.name : null,
+          employeeName: data.employeeProject ? data.employeeProject.employee.name : null, // 如果创建缺陷的人被删了，就置空
           status: data.status,
           authority_desc: data.authority_desc
         }

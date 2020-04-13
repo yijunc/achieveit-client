@@ -54,7 +54,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="employeeName" label="租借人ID" align="center" show-overflow-tooltip>
+      <el-table-column prop="employeeName" label="租借人ID" min-width="50" align="center" show-overflow-tooltip>
         <template slot-scope="{row}">
           <span style="margin-left: 10px">{{ row.employee_id }}</span>
         </template>

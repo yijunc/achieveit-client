@@ -69,7 +69,7 @@
       </el-table-column>
       <el-table-column prop="eids" label="人员分配" min-width="50" align="center">
         <template slot-scope="{row}">
-          <el-popover v-for="it in row.relations" :key="it.employeeProject.employee.eid" trigger="hover" placement="top">
+          <el-popover style="display: inline-block; margin-right: 1px" v-for="it in row.relations" :key="it.employeeProject.employee.eid" trigger="hover" placement="top">
             <p>ID: {{ it.employeeProject.employee.eid }}</p>
             <p>Email: {{ it.employeeProject.employee.email }}</p>
             <div slot="reference" class="name-wrapper">
@@ -108,9 +108,8 @@
       @current-change="handleCurrentChange"
     />
 
-    <el-dialog width="50%" :title="dialogTitle" :visible.sync="dialogVisible" @open="handleOpen" @close="handleClose">
+    <el-dialog width="50%" :title="dialogTitle" :visible.sync="dialogVisible" @close="handleClose">
       <RiskDialog
-        ref="dialog"
         :op="dialogOp"
         :on-dialog-submit="handleClose"
         :on-dialog-cancel="handleClose"
@@ -210,17 +209,14 @@ export default {
       }).then(() => {
         RiskAPI.deleteRisk(this.eid, row.rid).then(response => {
           this.$message.success('删除成功!')
+          this.getRiskList()
         })
-        this.getRiskList()
       })
-    },
-    handleOpen() {
-      this.$refs.dialog.populateDialog()
     },
     handleClose() {
       this.dialogVisible = false
-      this.getRiskList()
       this.riskForDialog = null
+      this.getRiskList()
     },
     handleCurrentChange(currentPage) {
       this.currentPage = currentPage

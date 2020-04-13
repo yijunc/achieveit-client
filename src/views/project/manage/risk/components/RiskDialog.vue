@@ -31,6 +31,9 @@
           <el-option key="p3" label="p3" value="p3" />
         </el-select>
       </el-form-item>
+      <el-form-item label="提醒频率 / 天" prop="frequency">
+        <el-input-number v-model="riskForm.frequency" :min="1" :max="10" />
+      </el-form-item>
       <el-form-item label="风险人员" prop="ep_ids">
         <el-select v-model="riskForm.ep_ids" multiple class="selector" filterable placeholder="请选择">
           <el-option
@@ -56,7 +59,6 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'RiskDialog',
   props: {
-    rid: String,
     pid: String,
     op: String,
     members: Array,
@@ -66,6 +68,7 @@ export default {
   },
   data() {
     return {
+      rid: '',
       template_id: 0,
       riskTemplate: [],
       riskForm: {
@@ -88,7 +91,7 @@ export default {
           { min: 3, message: '长度需要大于 3 个字符', trigger: 'blur' }
         ],
         grade: [
-          { required: true, message: '请选择风险紧急度', trigger: 'change' }
+          { required: true, message: '请选择风险紧急度', trigger: 'blur' }
         ],
         influence: [
           { required: true, message: '请输入风险影响', trigger: 'blur' }
@@ -97,10 +100,10 @@ export default {
           { required: true, message: '请填写风险策略', trigger: 'blur' }
         ],
         frequency: [
-          { required: true, message: '请填写提醒频率', trigger: 'change' }
+          { required: true, message: '请填写提醒频率', trigger: 'blur' }
         ],
         ep_ids: [
-          { required: true, type: 'array', message: '请选择风险人员', trigger: 'change' }
+          { required: true, type: 'array', message: '请选择风险人员', trigger: 'blur' }
         ]
       }
     }
@@ -109,6 +112,39 @@ export default {
     ...mapGetters([
       'eid'
     ])
+  },
+  watch: {
+    risk: function(risk) {
+      if (risk !== null) {
+        this.riskForm = {
+          type: risk.type,
+          desc: risk.desc,
+          grade: risk.grade,
+          influence: risk.influence,
+          strategy: risk.strategy,
+          frequency: risk.frequency,
+          ep_ids: []
+        }
+        for (const it of risk.relations) {
+          this.riskForm.ep_ids.push(it.employeeProject.epid)
+        }
+        this.rid = risk.rid
+      } else {
+        this.riskForm = {
+          type: '',
+          desc: '',
+          grade: '',
+          influence: '',
+          strategy: '',
+          frequency: '',
+          ep_ids: []
+        }
+        this.rid = ''
+      }
+    }
+  },
+  created() {
+    this.populateDialog()
   },
   methods: {
     populateDialog() {
@@ -128,6 +164,7 @@ export default {
         for (const it of this.risk.relations) {
           this.riskForm.ep_ids.push(it.employeeProject.epid)
         }
+        this.rid = this.risk.rid
       }
     },
     onSubmit(formName) {
@@ -147,7 +184,7 @@ export default {
               })
               break
             case 'update':
-              RiskAPI.updateRisk(this.eid, this.riskForm.rid, this.riskForm).then((response) => {
+              RiskAPI.updateRisk(this.eid, this.rid, this.riskForm).then((response) => {
                 this.$message.success('提交成功')
                 this.loading = false
                 this.onDialogSubmit()

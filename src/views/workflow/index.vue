@@ -32,7 +32,7 @@
       </el-table-column>
       <el-table-column prop="todo" sortable class-name="status-col" align="center" min-width="50" label="WorkFlow操作">
         <template slot-scope="{row}">
-          <el-tag v-for="(todo, index) in row.workflow.todo" :key="index" :type="todo | todoStyleFilter" @click="checkTodoTag(row)">
+          <el-tag v-for="(todo, index) in row.workflow.todo" style="margin-right: 1px" :key="index" :type="todo | todoStyleFilter" @click="checkTodoTag(row)">
             {{ todo | todoStringFormat }}
           </el-tag>
         </template>

@@ -169,18 +169,18 @@ export default {
           }
         }
 
-        for (const workflowMemberIndex in this.workflowMember) {
-          const member = {}
-          Object.keys(this.memberMap).forEach(key => {
-            if (key !== 'role') {
-              member[this.memberMap[key].jsonKey] = workflow[this.workflowMember[workflowMemberIndex]][this.memberMap[key].jsonKey]
-            } else {
-              member['role'] = [this.workflowMember[workflowMemberIndex]]
-            }
-          })
-          // console.log(member)
-          originMember.push(member)
-        }
+        // for (const workflowMemberIndex in this.workflowMember) {
+        //   const member = {}
+        //   Object.keys(this.memberMap).forEach(key => {
+        //     if (key !== 'role') {
+        //       member[this.memberMap[key].jsonKey] = workflow[this.workflowMember[workflowMemberIndex]][this.memberMap[key].jsonKey]
+        //     } else {
+        //       member['role'] = [this.workflowMember[workflowMemberIndex]]
+        //     }
+        //   })
+        //   // console.log(member)
+        //   originMember.push(member)
+        // }
 
         const map = new Map()
         originMember.forEach(m => {

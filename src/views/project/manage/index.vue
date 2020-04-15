@@ -23,7 +23,7 @@
         <el-tab-pane key="property" label="设备管理" name="property">
           <Property :pid="pid" />
         </el-tab-pane>
-        <el-tab-pane key="milestone" label="我的里程碑" name="milestone">
+        <el-tab-pane key="milestone" label="里程碑" name="milestone">
           <Milestone :pid="pid" />
         </el-tab-pane>
       </el-tabs>

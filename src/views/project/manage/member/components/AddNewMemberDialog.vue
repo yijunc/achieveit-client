@@ -73,8 +73,13 @@ export default {
       this.onAddNewDialogCancel()
     },
     onSubmit() {
-      this.onAddNewDialogConfirm(this.currentRow.eid, this.addRoleCheckList)
-      this.addRoleCheckList = []
+      if (this.currentRow === null) {
+        this.$message.error('什么都没选')
+      } else {
+        this.onAddNewDialogConfirm(this.currentRow.eid, this.addRoleCheckList)
+        this.addRoleCheckList = []
+        this.currentRow = null
+      }
     }
   }
 }

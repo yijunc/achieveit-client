@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="margin: 10px">人员管理
+    <div style="margin: 10px">项目里程碑
       <el-button
         v-if="this.$store.getters.manage_roles.includes(this.$store.getters.roles[0])"
         style="margin: 0 10px"

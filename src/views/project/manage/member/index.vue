@@ -218,6 +218,8 @@ export default {
             this.getPjMembers()
             this.tableLoading = false
           }
+        }).catch(() => {
+          this.tableLoading = false
         })
       }
       // console.log(row)
@@ -241,6 +243,8 @@ export default {
           this.getPjMembers()
           this.tableLoading = false
         }
+      }).catch(() => {
+        this.tableLoading = false
       })
       this.dialogEditRoleVisible = false
     },
@@ -269,6 +273,8 @@ export default {
             this.dialogAddNewVisible = true
           }
         }
+      }).catch(() => {
+        this.tableLoading = false
       })
     },
     onAddNewDialogCancel() {
@@ -283,6 +289,8 @@ export default {
           this.getPjMembers()
           this.tableLoading = false
         }
+      }).catch(() => {
+        this.tableLoading = false
       })
       this.dialogAddNewVisible = false
     },

@@ -48,6 +48,14 @@
         <span style="margin-right:20px;">username: Alias</span>
         <span> password: 123456</span>
       </div>
+      <div>
+        <p>Ceej,pm</p>
+        <p>Ella,qa_manager</p>
+        <p>Father,epg_leader</p>
+        <p>Helen,configurer</p>
+        <p>Lily,member</p>
+        <p>Nora,member</p>
+      </div>
 
     </el-form>
   </div>

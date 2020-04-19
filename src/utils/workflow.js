@@ -56,7 +56,7 @@ export function codeToString(code) {
 }
 export function generateWhatToDo(flowbits, role) {
   const bits = generateBits(flowbits)
-  console.log(bits, canDo(7))
+  console.log(bits)
 
   function canDo(performance_bit) {
     return canProjectDo(flowbits, performance_bit) && bits[performance_bit] === 0
@@ -160,7 +160,10 @@ export function generateWhatToDo(flowbits, role) {
         return [4]
       }
       return [-1]
+    case 'member':
+      return [-1]
   }
+  return ret
 }
 
 export function canProjectDo(flowbits, performance_bit) {
